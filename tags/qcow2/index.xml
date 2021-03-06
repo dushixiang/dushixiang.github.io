@@ -9,10 +9,10 @@
     <lastBuildDate>Thu, 31 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/qcow2/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>压缩qcow2 镜像文件</title>
-      <link>http://www.example.com/posts/29/</link>
+      <link>http://www.example.com/posts/qcow2-image-compression/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/29/</guid>
+      <guid>http://www.example.com/posts/qcow2-image-compression/</guid>
       <description>压缩qcow2    首先，需要对虚拟机剩余空间进行写零操作：
 dd if=/dev/zero of=/zero.dat 删除 zero.dat：
 rm /zero.dat 关闭虚拟机，执行qemu-img的convert命令进行转换：

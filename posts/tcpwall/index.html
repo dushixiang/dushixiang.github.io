@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
+我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
+通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl&#43;C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
+如何阻断一个已经建立的tcp连接？    阻断一个已经建立的tcp连接通常有这几种方案：
+ 服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）  前三种局限性太大，只能用第4种了。
+如何实现伪造RST数据报文包？    GoPacket 是go基于libpcap构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。
+在学习了tcpkill的源码之后，我使用go开发了一个增强版的tcpwall，tcpwall不仅可以实现和tcpkill同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。
+如何使用    阻断指定IP和端口的TCP连接（不关心是源或者目的）
+tcpwall -i {interface} -host {host} -port {port} 阻断指定源IP和源端口的TCP连接
+tcpwall -i {interface} -shost {src_host} -sport {src_port} 阻断指定目的IP和目的端口的TCP连接
+tcpwall -i {interface} -dhost {dst_host} -dport {dst_port} 阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）
+tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他     -timeout 时间（秒）指定等待多久之后退出程序  项目地址 https://github.">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="tcpkill在go语言下的实现和增强"/>
+<meta name="twitter:description" content="tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
+我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
+通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl&#43;C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
+如何阻断一个已经建立的tcp连接？    阻断一个已经建立的tcp连接通常有这几种方案：
+ 服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）  前三种局限性太大，只能用第4种了。
+如何实现伪造RST数据报文包？    GoPacket 是go基于libpcap构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。
+在学习了tcpkill的源码之后，我使用go开发了一个增强版的tcpwall，tcpwall不仅可以实现和tcpkill同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。
+如何使用    阻断指定IP和端口的TCP连接（不关心是源或者目的）
+tcpwall -i {interface} -host {host} -port {port} 阻断指定源IP和源端口的TCP连接
+tcpwall -i {interface} -shost {src_host} -sport {src_port} 阻断指定目的IP和目的端口的TCP连接
+tcpwall -i {interface} -dhost {dst_host} -dport {dst_port} 阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）
+tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他     -timeout 时间（秒）指定等待多久之后退出程序  项目地址 https://github."/>
+
+    <meta property="og:title" content="tcpkill在go语言下的实现和增强" />
+<meta property="og:description" content="tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
+我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
+通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl&#43;C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
+如何阻断一个已经建立的tcp连接？    阻断一个已经建立的tcp连接通常有这几种方案：
+ 服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）  前三种局限性太大，只能用第4种了。
+如何实现伪造RST数据报文包？    GoPacket 是go基于libpcap构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。
+在学习了tcpkill的源码之后，我使用go开发了一个增强版的tcpwall，tcpwall不仅可以实现和tcpkill同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。
+如何使用    阻断指定IP和端口的TCP连接（不关心是源或者目的）
+tcpwall -i {interface} -host {host} -port {port} 阻断指定源IP和源端口的TCP连接
+tcpwall -i {interface} -shost {src_host} -sport {src_port} 阻断指定目的IP和目的端口的TCP连接
+tcpwall -i {interface} -dhost {dst_host} -dport {dst_port} 阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）
+tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他     -timeout 时间（秒）指定等待多久之后退出程序  项目地址 https://github." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/tcpwall/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-10-31T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-10-31T00:00:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  tcpkill在go语言下的实现和增强 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/tcpwall/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/tcpwall/">
+              tcpkill在go语言下的实现和增强
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2020-10-31T00:00:00Z'>
+                October 31, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/tool/">tool</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <a href="/tags/tcp/">tcp</a>
+      <span class="separator">•</span>
+    <a href="/tags/tcpkill/">tcpkill</a>
+      <span class="separator">•</span>
+    <a href="/tags/dsniff/">dsniff</a>
+      <span class="separator">•</span>
+    <a href="/tags/gopacket/">GoPacket</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <h2 id="tcpwall">
+  tcpwall
+  <a class="heading-link" href="#tcpwall">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案<strong>iptables</strong>，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。</p>
+<p>我在互联网上检索的时候发现了<strong>tcpkill</strong>这个工具，tcpkill是一个网络分析工具集<strong>dsniff</strong>中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。</p>
+<p>通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过<em><strong>Ctrl+C</strong></em>来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。</p>
+<h2 id="如何阻断一个已经建立的tcp连接">
+  如何阻断一个已经建立的tcp连接？
+  <a class="heading-link" href="#%e5%a6%82%e4%bd%95%e9%98%bb%e6%96%ad%e4%b8%80%e4%b8%aa%e5%b7%b2%e7%bb%8f%e5%bb%ba%e7%ab%8b%e7%9a%84tcp%e8%bf%9e%e6%8e%a5">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>阻断一个已经建立的tcp连接通常有这几种方案：</p>
+<ol>
+<li>服务端主动断开</li>
+<li>客户端主动断开</li>
+<li>拔掉网线（时间要超过tcp超时时间）</li>
+<li>伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）</li>
+</ol>
+<p>前三种局限性太大，只能用第4种了。</p>
+<h2 id="如何实现伪造rst数据报文包">
+  如何实现伪造RST数据报文包？
+  <a class="heading-link" href="#%e5%a6%82%e4%bd%95%e5%ae%9e%e7%8e%b0%e4%bc%aa%e9%80%a0rst%e6%95%b0%e6%8d%ae%e6%8a%a5%e6%96%87%e5%8c%85">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p><a href="https://github.com/google/gopacket">GoPacket</a> 是go基于<strong>libpcap</strong>构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。</p>
+<p>在学习了<strong>tcpkill</strong>的源码之后，我使用go开发了一个增强版的<strong>tcpwall</strong>，<strong>tcpwall</strong>不仅可以实现和<strong>tcpkill</strong>同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。</p>
+<h2 id="如何使用">
+  如何使用
+  <a class="heading-link" href="#%e5%a6%82%e4%bd%95%e4%bd%bf%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>阻断指定IP和端口的TCP连接（不关心是源或者目的）</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tcpwall -i {interface} -host {host} -port {port}
+</code></pre></div><p>阻断指定源IP和源端口的TCP连接</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tcpwall -i {interface} -shost {src_host} -sport {src_port}
+</code></pre></div><p>阻断指定目的IP和目的端口的TCP连接</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tcpwall -i {interface} -dhost {dst_host} -dport {dst_port}
+</code></pre></div><p>阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port}
+</code></pre></div><h2 id="其他">
+  其他
+  <a class="heading-link" href="#%e5%85%b6%e4%bb%96">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ul>
+<li>-timeout 时间（秒）指定等待多久之后退出程序</li>
+</ul>
+<p>项目地址 <a href="https://github.com/dushixiang/tcpwall">https://github.com/dushixiang/tcpwall</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
+使用方式    使用ip netns help查看使用帮助
+Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验    我们将要构建如下图的网络
+首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
+# 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10.">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux Network Namespace (netns) 详解"/>
+<meta name="twitter:description" content="Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
+使用方式    使用ip netns help查看使用帮助
+Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验    我们将要构建如下图的网络
+首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
+# 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10."/>
+
+    <meta property="og:title" content="Linux Network Namespace (netns) 详解" />
+<meta property="og:description" content="Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
+使用方式    使用ip netns help查看使用帮助
+Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验    我们将要构建如下图的网络
+首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
+# 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/linux-netns/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-08T23:12:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-11-08T23:12:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  Linux Network Namespace (netns) 详解 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/linux-netns/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/linux-netns/">
+              Linux Network Namespace (netns) 详解
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2020-11-08T23:12:00Z'>
+                November 8, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/linux%E7%BD%91%E7%BB%9C/">Linux网络</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <a href="/tags/linux/">linux</a>
+      <span class="separator">•</span>
+    <a href="/tags/network/">network</a>
+      <span class="separator">•</span>
+    <a href="/tags/netns/">netns</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。</p>
+<h3 id="使用方式">
+  使用方式
+  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8%e6%96%b9%e5%bc%8f">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>使用<code>ip netns help</code>查看使用帮助</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Usage: ip netns list
+       ip netns add NAME
+       ip netns <span style="color:#fff;font-weight:bold">set</span> NAME NETNSID
+       ip [-all] netns delete [NAME]
+       ip netns identify [PID]
+       ip netns pids NAME
+       ip [-all] netns <span style="color:#fff;font-weight:bold">exec</span> [NAME] cmd ...
+       ip netns monitor
+       ip netns list-id
+</code></pre></div><h3 id="开始实验">
+  开始实验
+  <a class="heading-link" href="#%e5%bc%80%e5%a7%8b%e5%ae%9e%e9%aa%8c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>我们将要构建如下图的网络</p>
+<p><img src="https://oss.typesafe.cn/netns.png?t=2" alt="https://oss.typesafe.cn/netns.png"></p>
+<p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 添加并启动虚拟网卡tap设备</span>
+ip tuntap add dev tap0 mode tap 
+ip tuntap add dev tap1 mode tap 
+ip link <span style="color:#fff;font-weight:bold">set</span> tap0 up
+ip link <span style="color:#fff;font-weight:bold">set</span> tap1 up
+<span style="color:#007f7f"># 配置IP</span>
+ip addr add 10.0.0.1/24 dev tap0
+ip addr add 10.0.0.2/24 dev tap1
+<span style="color:#007f7f"># 添加netns</span>
+ip netns add ns0
+ip netns add ns1
+<span style="color:#007f7f"># 将虚拟网卡tap0，tap1分别移动到ns0和ns1中</span>
+ip link <span style="color:#fff;font-weight:bold">set</span> tap0 netns ns0
+ip link <span style="color:#fff;font-weight:bold">set</span> tap1 netns ns1
+</code></pre></div><p>在宿主机器上使用<code>ping 10.0.0.1</code>测试与tap0的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+^C
+--- 10.0.0.1 ping statistics ---
+<span style="color:#ff0;font-weight:bold">2</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 58ms
+</code></pre></div><p>在宿主机器上使用<code>ping 10.0.0.2</code>测试与tap1的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+^C
+--- 10.0.0.2 ping statistics ---
+<span style="color:#ff0;font-weight:bold">2</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 36ms
+</code></pre></div><blockquote>
+<p>由于长时间未收到ICMP的回复报文，我使用Ctrl+C退出了。</p>
+</blockquote>
+<p>使用<code>ip netns exec ns0 ping 10.0.0.2</code>在命名空间ns0中测试与tap1的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">connect: 网络不可达
+</code></pre></div><p>使用<code>ip netns exec ns1 ping 10.0.0.1</code>在命名空间ns1中测试与tap0的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">connect: 网络不可达
+</code></pre></div><blockquote>
+<p>在netns中执行命令有两种方式，一种是先在宿主机器上执行<code>ip netns exec &lt;netns name&gt; bash</code>进入netns，然后就可以像是在本机一样执行命令了。另一种是每次在宿主机器上使用完整的命令，为了明显区分，我们这里都使用完整的命令，例如<code>ip netns exec ns0 ping 10.0.0.2</code>的含义为在命名空间<strong>ns0</strong>中执行<code>ping 10.0.0.2</code>命令</p>
+</blockquote>
+<p>可以看到在宿主机器上访问netns是丢包，而在netns中互相访问是<strong>网络不可达</strong>了，这是为什么呢？让我们来检查一下netns吧。</p>
+<p>使用<code>ip netns exec ns0 ip a</code>在ns0中查看网卡</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">1: lo: &lt;LOOPBACK&gt; mtu <span style="color:#ff0;font-weight:bold">65536</span> qdisc noop state DOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+16: tap0: &lt;BROADCAST,MULTICAST&gt; mtu <span style="color:#ff0;font-weight:bold">1500</span> qdisc noop state DOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/ether 42:ad:98:a2:cc:81 brd ff:ff:ff:ff:ff:ff
+</code></pre></div><p>使用<code>ip netns exec ns1 ip a</code>在ns1中查看网卡</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">1: lo: &lt;LOOPBACK&gt; mtu <span style="color:#ff0;font-weight:bold">65536</span> qdisc noop state DOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+17: tap1: &lt;BROADCAST,MULTICAST&gt; mtu <span style="color:#ff0;font-weight:bold">1500</span> qdisc noop state DOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/ether 12:06:1d:06:41:57 brd ff:ff:ff:ff:ff:ff
+</code></pre></div><p><strong>可以看到不仅本地环回lo和tap设备的状态都是DOWN，甚至就连tap设备的IP信息也没有了，这是因为在不同的网络命名空间中移动虚拟网络接口时会重置虚拟网络接口的状态。</strong></p>
+<p>我们将ns0和ns1中的相关设备都重新启动并配置上IP</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> tap0 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip addr add 10.0.0.1/24 dev tap0
+
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> tap1 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip addr add 10.0.0.2/24 dev tap1
+</code></pre></div><p>首先我们测试一下netns中本地网络是否正常</p>
+<p>使用<code>ip netns exec ns0 ping 10.0.0.1</code>在命名空间ns0中测试本地网卡是否启动</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.1: icmp_seq=<span style="color:#ff0;font-weight:bold">1</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.036 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.1: icmp_seq=<span style="color:#ff0;font-weight:bold">2</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.033 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.1: icmp_seq=<span style="color:#ff0;font-weight:bold">3</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.084 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.1: icmp_seq=<span style="color:#ff0;font-weight:bold">4</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.044 ms
+^C
+--- 10.0.0.1 ping statistics ---
+<span style="color:#ff0;font-weight:bold">4</span> packets transmitted, <span style="color:#ff0;font-weight:bold">4</span> received, 0% packet loss, <span style="color:#fff;font-weight:bold">time</span> 65ms
+rtt min/avg/max/mdev = 0.033/0.049/0.084/0.021 ms
+</code></pre></div><p>使用<code>ip netns exec ns1 ping 10.0.0.2</code>在命名空间ns1中测试本地网卡是否启动</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">1</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.033 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">2</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.034 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">3</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.065 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">4</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.035 ms
+^C
+--- 10.0.0.1 ping statistics ---
+<span style="color:#ff0;font-weight:bold">4</span> packets transmitted, <span style="color:#ff0;font-weight:bold">4</span> received, 0% packet loss, <span style="color:#fff;font-weight:bold">time</span> 65ms
+rtt min/avg/max/mdev = 0.033/0.049/0.084/0.021 ms
+</code></pre></div><p>可以看出本地网络没有问题，然后我们再来测试一下两个netns之间的网络连通性</p>
+<p>使用<code>ip netns exec ns0 ping 10.0.0.2</code>在命名空间ns0中测试与tap1的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+^C
+--- 10.0.0.2 ping statistics ---
+<span style="color:#ff0;font-weight:bold">3</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 84ms
+</code></pre></div><p>使用<code>ip netns exec ns1 ping 10.0.0.1</code>在命名空间ns1中测试与tap0的网络连通性</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
+^C
+--- 10.0.0.1 ping statistics ---
+<span style="color:#ff0;font-weight:bold">2</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 30ms
+</code></pre></div><p>可以看出没有任何ICMP回复包，netns确实把在同一台主机上的两张虚拟网卡隔离起来了。在这里我们只是简单的使用<code>ping</code>命令来测试网络的连通性，实际上可以做到更多，例如修改某一个netns的路由表或者防火墙规则，完全不会影响到其他的netns，当然也不会影响到宿主机器，在这里由于篇幅原因就不再展开实验了，感兴趣的同学可以实验一下。下一节我们将学习另一个网络设备veth pair，使用它来把两个netns连接起来，让两个隔离的​netns之间可以互相通信。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

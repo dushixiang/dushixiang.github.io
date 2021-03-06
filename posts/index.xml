@@ -9,10 +9,10 @@
     <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="http://www.example.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 环回网络接口</title>
-      <link>http://www.example.com/posts/37/</link>
+      <link>http://www.example.com/posts/linux-loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/37/</guid>
+      <guid>http://www.example.com/posts/linux-loopback/</guid>
       <description>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
 Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
 环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
@@ -24,19 +24,19 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
     
     <item>
       <title>Linux 修改最大文件描述符</title>
-      <link>http://www.example.com/posts/35/</link>
+      <link>http://www.example.com/posts/linux-limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/35/</guid>
+      <guid>http://www.example.com/posts/linux-limit/</guid>
       <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     
     <item>
       <title>压缩qcow2 镜像文件</title>
-      <link>http://www.example.com/posts/29/</link>
+      <link>http://www.example.com/posts/qcow2-image-compression/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/29/</guid>
+      <guid>http://www.example.com/posts/qcow2-image-compression/</guid>
       <description>压缩qcow2    首先，需要对虚拟机剩余空间进行写零操作：
 dd if=/dev/zero of=/zero.dat 删除 zero.dat：
 rm /zero.dat 关闭虚拟机，执行qemu-img的convert命令进行转换：
@@ -45,10 +45,10 @@ qemu-img convert -c -O qcow2 /path/old.img.qcow2 /path/new.img.qcow2 </descripti
     
     <item>
       <title>Open vSwitch 入门实践（6）VXLAN实验</title>
-      <link>http://www.example.com/posts/33/</link>
+      <link>http://www.example.com/posts/ovs-learn-6/</link>
       <pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/33/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-6/</guid>
       <description>什么是VXLAN？    VXLAN是一种隧道封装协议，在三层网络上封装二层网络数据报文。简单来说就是可以在已经规划好网络拓扑的设备上封装出一个新的二层网络，因此VXLAN这类网络又被称之为overylay网络，底下承载VXLAN网络的就被称之为underlay网络。
 VXLAN解决了什么问题？    最近几年，阿里云，腾讯云，京东云，华为云等等厂商每到节日都会打折出售大量云服务器，1核1G内存50G磁盘的服务器几十块就能买到一年的使用权，作为一个专业的羊毛党，哪个手里没有几台小破水管机器？但是这么多的云服务器是厂商如何做隔离的呢？了解过网络的同学或许会说VLAN。但是VLAN这种只能隔离4094个虚拟网络的技术别说满足不了羊毛党了，就连正常的用户估计都撑不住。那不隔离能行吗，厂商规划一个特别大的网段，让大家都在这里面耍，正常用户还好，万一这个时候进来一个大黑客，估计就会全部GG。
 因此，隔离是必不可少的，其中关键的技术就是overlay网络。
@@ -62,10 +62,10 @@ VXLAN解决了什么问题？    最近几年，阿里云，腾讯云，京东�
     
     <item>
       <title>Open vSwitch 入门实践（5）OVS Flow Table 流表规则</title>
-      <link>http://www.example.com/posts/32/</link>
+      <link>http://www.example.com/posts/ovs-learn-5/</link>
       <pubDate>Tue, 29 Dec 2020 18:38:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/32/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-5/</guid>
       <description>OpenvSwitch flow table 流表     OpenFlow（OF）被认为是第一个软件定义网络（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。
  如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。
 操作命令    查看流表规则    # 查看br-tun上的全部流表规则 ovs-ofctl dump-flows br-tun 添加或修改流表规则    ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]” 如果你有过编程的经验，流表规则其实就是一个个简单的if语句，伪代码如下。
@@ -75,10 +75,10 @@ if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作
     
     <item>
       <title>Open vSwitch 入门实践（4）使用OVS配置端口镜像</title>
-      <link>http://www.example.com/posts/31/</link>
+      <link>http://www.example.com/posts/ovs-learn-4/</link>
       <pubDate>Mon, 28 Dec 2020 19:23:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/31/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-4/</guid>
       <description>前言    当我们想要在不影响虚拟网络设备数据报文收发的情况下获取对应虚拟网络设备的流量时，端口镜像是一个很好的选择。端口镜像是指将经过指定端口（镜像端口）的报文复制一份到另一个指定端口（观察端口），通过观察端口接收到的数据报文，就可以有效识别虚拟网络的运行情况。
 OVS提供了相关命令来配置或删除端口镜像，下面我们来实验一下。
 如何使用    端口镜像类型    端口镜像分为镜像源和镜像目的两部分。
@@ -88,10 +88,10 @@ ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors=@m \  -- --id=@&amp;
     
     <item>
       <title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title>
-      <link>http://www.example.com/posts/30/</link>
+      <link>http://www.example.com/posts/ovs-learn-3/</link>
       <pubDate>Sun, 27 Dec 2020 11:38:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/30/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-3/</guid>
       <description>使用OVS构建分布式隔离网络    前言    上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
 实验1：分布式无隔离网络    网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
  管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
@@ -100,10 +100,10 @@ ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors=@m \  -- --id=@&amp;
     
     <item>
       <title>Open vSwitch 入门实践（2）使用OVS构建隔离网络</title>
-      <link>http://www.example.com/posts/25/</link>
+      <link>http://www.example.com/posts/ovs-learn-2/</link>
       <pubDate>Thu, 26 Nov 2020 22:55:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/25/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-2/</guid>
       <description>前言    在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。
 实验    接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。
 实验一：单机无隔离网络    使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。
@@ -112,10 +112,10 @@ ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors=@m \  -- --id=@&amp;
     
     <item>
       <title>Open vSwitch 入门实践（1）Open vSwitch 是什么</title>
-      <link>http://www.example.com/posts/6/</link>
+      <link>http://www.example.com/posts/ovs-learn-1/</link>
       <pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/6/</guid>
+      <guid>http://www.example.com/posts/ovs-learn-1/</guid>
       <description>OVS简介    Open vSwitch 是什么？    Open vSwitch(以下简称OVS)是一个用C语言开发的多层虚拟交换机，使用Apcahe 2开源许可证，现如今基本上已经成为了开源SDN（软件定义网络）基础设施层的事实标准。
 OVS支持哪些功能？     支持NetFlow、sFlow(R)、IPFIX、SPAN、RSPAN和GRE隧道镜像等多种流量监控协议 支持LACP (IEEE 802.1AX-2008) 支持标准802.1Q VLAN协议，允许端口配置trunk模式 支持组播 支持BFD和802.1ag链路监控 支持STP（IEEE 802.1D-1998）和RSTP（IEEE 802.1D-2004） 支持细粒度的QoS（服务质量）配置 支持HFSC qdisc 支持接管每一个虚拟机的流量 支持基于源MAC的负载均衡、主备模式和L4哈希的端口绑带 支持OpenFlow协议（包含了很多对虚拟化的扩展） 支持IPv6 支持多种隧道协议（GRE、VXLAN、STT、Geneve和IPsec） 支持C和Python的远程配置协议 支持内核和用户空间的转发引擎选项 具有流缓存引擎的多表转发管道 转发层抽象以简化向新软件和硬件平台的移植  OVS的术语解释    Bridge    中文名称网桥，一个Bridge代表一个以太网交换机（Switch），一台主机中可以创建一个或多个Bridge，Bridge可以根据一定的规则，把某一个端口接收到的数据报文转发到另一个或多个端口上，也可以修改或者丢弃数据报文。
 Port    中文名称端口，需要注意的是它和TCP里面的端口不是同样的概念，它更像是物理交换机上面的插口，可以接水晶头的那种。Port隶属于Bridge，必须先添加了Bridge才能在Bridge上添加Port。Port有以下几种类型：
@@ -128,10 +128,10 @@ Port    中文名称端口，需要注意的是它和TCP里面的端口不是同
     
     <item>
       <title>服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。</title>
-      <link>http://www.example.com/posts/24/</link>
+      <link>http://www.example.com/posts/4dnat/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/24/</guid>
+      <guid>http://www.example.com/posts/4dnat/</guid>
       <description>前言    你是否遇到过这样的场景，服务器不能上网，但是又需要安装某个软件，面对如蛛网般杂乱的rpm包依赖关系，放弃或许是最好的选择，这样你就不必再为无法完成工作而痛苦又懊恼。
 但是今天，你有了一个更好的选择。
 4DNAT    4DNAT取名源自4和DNAT。这个工具工作在OSI模型的第四层传输层，同时4和for谐音，意为专门为目标地址转换而服务的工具。4DNAT使用go语言开发，具有天然的跨平台性，并且完全使用go标准库开发，没有任何的第三方依赖，编译之后只有一个二进制可执行文件。它有4种工作模式：
@@ -144,10 +144,10 @@ http代理    ./4dnat -proxy http 1080 https代理    ./4dnat -proxy https 1080 
     
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>http://www.example.com/posts/19/</link>
+      <link>http://www.example.com/posts/vctl/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/19/</guid>
+      <guid>http://www.example.com/posts/vctl/</guid>
       <description>前言    作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
  先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。  对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。
@@ -161,10 +161,10 @@ vctl system stop 接下来就是和普通的docker命令一样了。
     
     <item>
       <title>Linux Bridge 详解</title>
-      <link>http://www.example.com/posts/18/</link>
+      <link>http://www.example.com/posts/linux-bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/18/</guid>
+      <guid>http://www.example.com/posts/linux-bridge/</guid>
       <description>Linux Bridge 详解    Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？    操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
@@ -174,10 +174,10 @@ never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;br
     
     <item>
       <title>Linux veth pair 详解</title>
-      <link>http://www.example.com/posts/12/</link>
+      <link>http://www.example.com/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/12/</guid>
+      <guid>http://www.example.com/posts/linux-veth-pair/</guid>
       <description>Linux veth pair 详解    veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
 如何使用？    创建一对veth
@@ -188,10 +188,10 @@ ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;
     
     <item>
       <title>Linux Network Namespace (netns) 详解</title>
-      <link>http://www.example.com/posts/10/</link>
+      <link>http://www.example.com/posts/linux-netns/</link>
       <pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/10/</guid>
+      <guid>http://www.example.com/posts/linux-netns/</guid>
       <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
 使用方式    使用ip netns help查看使用帮助
 Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验    我们将要构建如下图的网络
@@ -201,10 +201,10 @@ Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns
     
     <item>
       <title>Linux tun/tap 详解</title>
-      <link>http://www.example.com/posts/9/</link>
+      <link>http://www.example.com/posts/linux-tun-tap/</link>
       <pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/9/</guid>
+      <guid>http://www.example.com/posts/linux-tun-tap/</guid>
       <description>在计算机网络中，tun与tap是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。
  tun/tap是什么？    tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。
 tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。
@@ -219,6 +219,26 @@ tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，�
 使用方式    Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。
 使用ip tuntap help查看使用帮助
 Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] [ mode { tun | tap } ] [ user USER ] [ group GROUP ] [ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ] Where:	USER := { STRING | NUMBER } GROUP := { STRING | NUMBER } 示例    # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
+    </item>
+    
+    <item>
+      <title>tcpkill在go语言下的实现和增强</title>
+      <link>http://www.example.com/posts/tcpwall/</link>
+      <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/posts/tcpwall/</guid>
+      <description>tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
+我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
+通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl+C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
+如何阻断一个已经建立的tcp连接？    阻断一个已经建立的tcp连接通常有这几种方案：
+ 服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）  前三种局限性太大，只能用第4种了。
+如何实现伪造RST数据报文包？    GoPacket 是go基于libpcap构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。
+在学习了tcpkill的源码之后，我使用go开发了一个增强版的tcpwall，tcpwall不仅可以实现和tcpkill同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。
+如何使用    阻断指定IP和端口的TCP连接（不关心是源或者目的）
+tcpwall -i {interface} -host {host} -port {port} 阻断指定源IP和源端口的TCP连接
+tcpwall -i {interface} -shost {src_host} -sport {src_port} 阻断指定目的IP和目的端口的TCP连接
+tcpwall -i {interface} -dhost {dst_host} -dport {dst_port} 阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）
+tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他     -timeout 时间（秒）指定等待多久之后退出程序  项目地址 https://github.</description>
     </item>
     
   </channel>

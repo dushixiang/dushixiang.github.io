@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
+Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
+环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
+那环回网络接口是如何判断目的IP是否为本机地址的呢？
+答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：
+ip route show table local 输出内容如下：
+broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 local 127.0.0.1 dev lo proto kernel scope host src 127.">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux 环回网络接口"/>
+<meta name="twitter:description" content="在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
+Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
+环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
+那环回网络接口是如何判断目的IP是否为本机地址的呢？
+答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：
+ip route show table local 输出内容如下：
+broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 local 127.0.0.1 dev lo proto kernel scope host src 127."/>
+
+    <meta property="og:title" content="Linux 环回网络接口" />
+<meta property="og:description" content="在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
+Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
+环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
+那环回网络接口是如何判断目的IP是否为本机地址的呢？
+答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：
+ip route show table local 输出内容如下：
+broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 local 127.0.0.1 dev lo proto kernel scope host src 127." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/linux-loopback/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-01-28T22:59:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-01-28T22:59:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  Linux 环回网络接口 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/linux-loopback/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/linux-loopback/">
+              Linux 环回网络接口
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2021-01-28T22:59:00Z'>
+                January 28, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/linux%E7%BD%91%E7%BB%9C/">Linux网络</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <a href="/tags/linux/">linux</a>
+      <span class="separator">•</span>
+    <a href="/tags/network/">network</a>
+      <span class="separator">•</span>
+    <a href="/tags/loopback/">loopback</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动<code>nginx</code>之后，在浏览器输入<code>lcoalhost</code>或者<code>127.0.0.1</code>就可以访问到本机上面的<code>http</code>服务。</p>
+<h2 id="linux是如何访问本机ip的">
+  Linux是如何访问本机IP的？
+  <a class="heading-link" href="#linux%e6%98%af%e5%a6%82%e4%bd%95%e8%ae%bf%e9%97%ae%e6%9c%ac%e6%9c%baip%e7%9a%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过<code>TCP/IP</code>与同一台主机上的其他服务进行通信，以<code>127</code>开头的<code>IPv4</code>地址就是为它保留的，主流<code>Linux</code>操作系统为环回网卡分配的地址都是<code>127.0.0.1</code>，主机名是<code>localhost</code>。</p>
+<p>环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。</p>
+<p>那环回网络接口是如何判断目的IP是否为本机地址的呢？</p>
+<p>答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ip route show table <span style="color:#fff;font-weight:bold">local</span>
+</code></pre></div><p>输出内容如下：</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 
+<span style="color:#fff;font-weight:bold">local</span> 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 
+broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 
+broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 
+<span style="color:#fff;font-weight:bold">local</span> 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 
+<span style="color:#fff;font-weight:bold">local</span> 127.0.0.1 dev lo proto kernel scope host src 127.0.0.1
+</code></pre></div><p>其中<code>local</code>开头的便是本地IP，<code>dev</code>后面是网卡名称。</p>
+<p>查完了本地路由表之后会再查主路由表，也就是我们经常操作的路由表。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ip route show table main
+</code></pre></div><p>输出内容如下</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">default via 10.141.128.1 dev eth0 proto static metric <span style="color:#ff0;font-weight:bold">100</span> 
+10.141.128.0/18 dev eth0 proto kernel scope link src 10.141.155.131 metric <span style="color:#ff0;font-weight:bold">100</span>
+</code></pre></div><h2 id="环回网络接口">
+  环回网络接口
+  <a class="heading-link" href="#%e7%8e%af%e5%9b%9e%e7%bd%91%e7%bb%9c%e6%8e%a5%e5%8f%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>现在我们再来看下环回网络接口</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ifconfig lo
+</code></pre></div><p>输出</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">lo: flags=73&lt;UP,LOOPBACK,RUNNING&gt;  mtu <span style="color:#ff0;font-weight:bold">65536</span>
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen <span style="color:#ff0;font-weight:bold">128</span>  scopeid 0x10&lt;host&gt;
+        loop  txqueuelen <span style="color:#ff0;font-weight:bold">1000</span>  (Local Loopback)
+        RX packets <span style="color:#ff0;font-weight:bold">1554227</span>  bytes <span style="color:#ff0;font-weight:bold">123327716</span> (117.6 MiB)
+        RX errors <span style="color:#ff0;font-weight:bold">0</span>  dropped <span style="color:#ff0;font-weight:bold">0</span>  overruns <span style="color:#ff0;font-weight:bold">0</span>  frame <span style="color:#ff0;font-weight:bold">0</span>
+        TX packets <span style="color:#ff0;font-weight:bold">1554227</span>  bytes <span style="color:#ff0;font-weight:bold">123327716</span> (117.6 MiB)
+        TX errors <span style="color:#ff0;font-weight:bold">0</span>  dropped <span style="color:#ff0;font-weight:bold">0</span> overruns <span style="color:#ff0;font-weight:bold">0</span>  carrier <span style="color:#ff0;font-weight:bold">0</span>  collisions <span style="color:#ff0;font-weight:bold">0</span>
+</code></pre></div><p>可以看到本地环回接口的<code>IPv4</code>地址是<code>127.0.0.1</code>，子网掩码是<code>255.0.0.0</code>，对应A类网络号<code>127</code>，有趣的是当我们访问 <code>127.0.0.1-127.255.255.254</code>之间的任意一个地址都会访问到本机。</p>
+<p><code>IPv6</code>地址<code>::1</code>，前缀是<code>128</code>位，表示只有一个地址。</p>
+<p>环回网络接口的当前<code>MTU</code>是<code>64KB</code>，不过最高可以设置到<code>2GB</code>，真是恐怖如斯。</p>
+<p>下面几条<code>RX</code>,<code>TX</code>开头的分别代表收发到的数据报文个数和大小以及错包、丢包、溢出次数和无效帧。</p>
+<h2 id="faq">
+  FAQ
+  <a class="heading-link" href="#faq">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h4 id="虚拟网卡的ip属于本机ip吗">
+  虚拟网卡的IP属于本机IP吗？
+  <a class="heading-link" href="#%e8%99%9a%e6%8b%9f%e7%bd%91%e5%8d%a1%e7%9a%84ip%e5%b1%9e%e4%ba%8e%e6%9c%ac%e6%9c%baip%e5%90%97">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>属于，因为与宿主机器共用同一个网络协议栈。</p>
+<h4 id="宿主机器上创建netnsnetns内部的ip属于本机ip吗">
+  宿主机器上创建netns，netns内部的IP属于本机IP吗？
+  <a class="heading-link" href="#%e5%ae%bf%e4%b8%bb%e6%9c%ba%e5%99%a8%e4%b8%8a%e5%88%9b%e5%bb%banetnsnetns%e5%86%85%e9%83%a8%e7%9a%84ip%e5%b1%9e%e4%ba%8e%e6%9c%ac%e6%9c%baip%e5%90%97">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h4>
+<p>不属于，因为netns拥有独立的网络协议栈，在netns内部也可以看到它本身的环回网络接口。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

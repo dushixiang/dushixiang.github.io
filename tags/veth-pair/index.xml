@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 09 Nov 2020 22:45:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/veth-pair/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux veth pair 详解</title>
-      <link>http://www.example.com/posts/12/</link>
+      <link>http://www.example.com/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/12/</guid>
+      <guid>http://www.example.com/posts/linux-veth-pair/</guid>
       <description>Linux veth pair 详解    veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
 如何使用？    创建一对veth
