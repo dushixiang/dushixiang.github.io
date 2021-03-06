@@ -32,6 +32,15 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
     </item>
     
     <item>
+      <title>服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。</title>
+      <link>http://www.example.com/about/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/about/</guid>
+      <description> 后端开发，完美主义。擅长Java，偶尔写Python、Golang。 微信: type-safe Github: https://github.com/dushixiang 微信公众号：  </description>
+    </item>
+    
+    <item>
       <title>压缩qcow2 镜像文件</title>
       <link>http://www.example.com/posts/qcow2-image-compression/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
