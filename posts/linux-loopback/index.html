@@ -9,7 +9,7 @@
     
     
 
-    <meta name="author" content="没有理想的人不伤心">
+    <meta name="author" content="dushixiang">
     <meta name="description" content="在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
 Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
 环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
@@ -40,12 +40,12 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://www.example.com/posts/linux-loopback/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-01-28T22:59:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-01-28T22:59:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+<meta property="article:modified_time" content="2021-01-28T22:59:00&#43;00:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
 
 
 
     <title>
-  Linux 环回网络接口 · 我在对面的角落
+  Linux 环回网络接口 · 没有理想的人不伤心
 </title>
 
     
@@ -109,7 +109,7 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
       <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="/">
-      我在对面的角落
+      没有理想的人不伤心
     </a>
     
       <input type="checkbox" id="menu-toggle" />
@@ -302,7 +302,7 @@ broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1
           2020 -
         
         2021
-         没有理想的人不伤心 
+         dushixiang 
       
       
          · 

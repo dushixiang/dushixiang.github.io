@@ -9,7 +9,7 @@
     
     
 
-    <meta name="author" content="没有理想的人不伤心">
+    <meta name="author" content="dushixiang">
     <meta name="description" content="使用OVS构建分布式隔离网络    前言    上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
 实验1：分布式无隔离网络    网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
  管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
@@ -31,12 +31,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://www.example.com/posts/ovs-learn-3/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-12-27T11:38:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-12-27T11:38:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+<meta property="article:modified_time" content="2020-12-27T11:38:00&#43;00:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
 
 
 
     <title>
-  Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络 · 我在对面的角落
+  Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络 · 没有理想的人不伤心
 </title>
 
     
@@ -100,7 +100,7 @@
       <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="/">
-      我在对面的角落
+      没有理想的人不伤心
     </a>
     
       <input type="checkbox" id="menu-toggle" />
@@ -448,7 +448,7 @@ ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.2
           2020 -
         
         2021
-         没有理想的人不伤心 
+         dushixiang 
       
       
          · 

@@ -9,7 +9,7 @@
     
     
 
-    <meta name="author" content="没有理想的人不伤心">
+    <meta name="author" content="dushixiang">
     <meta name="description" content="tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
 我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
 通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl&#43;C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
@@ -55,12 +55,12 @@ tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dp
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://www.example.com/posts/tcpwall/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-10-31T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2020-10-31T00:00:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+<meta property="article:modified_time" content="2020-10-31T00:00:00&#43;00:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
 
 
 
     <title>
-  tcpkill在go语言下的实现和增强 · 我在对面的角落
+  tcpkill在go语言下的实现和增强 · 没有理想的人不伤心
 </title>
 
     
@@ -124,7 +124,7 @@ tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dp
       <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="/">
-      我在对面的角落
+      没有理想的人不伤心
     </a>
     
       <input type="checkbox" id="menu-toggle" />
@@ -308,7 +308,7 @@ tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dp
           2020 -
         
         2021
-         没有理想的人不伤心 
+         dushixiang 
       
       
          · 
