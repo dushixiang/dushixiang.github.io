@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network on 我在对面的角落</title>
+    <link>http://www.example.com/tags/network/</link>
+    <description>Recent content in network on 我在对面的角落</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Mon, 09 Nov 2020 22:45:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux veth pair 详解</title>
+      <link>http://www.example.com/posts/12/</link>
+      <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/posts/12/</guid>
+      <description>Linux veth pair 详解    veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
+由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
+如何使用？    创建一对veth
+ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;gt; 实验    我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：
+我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。
+# 创建一对veth ip link add veth0 type veth peer name veth1 # 将veth移动到netns中 ip link set veth0 netns ns0 ip link set veth1 netns ns1 # 启动 ip netns exec ns0 ip link set veth0 up ip netns exec ns1 ip link set veth1 up 接下来我们测试一下。</description>
+    </item>
+    
+  </channel>
+</rss>

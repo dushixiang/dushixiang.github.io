@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="使用OVS构建分布式隔离网络    前言    上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
+实验1：分布式无隔离网络    网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
+ 管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
+ 配置     配置环境 主机A  ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1 # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络"/>
+<meta name="twitter:description" content="使用OVS构建分布式隔离网络    前言    上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
+实验1：分布式无隔离网络    网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
+ 管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
+ 配置     配置环境 主机A  ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1 # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10."/>
+
+    <meta property="og:title" content="Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络" />
+<meta property="og:description" content="使用OVS构建分布式隔离网络    前言    上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
+实验1：分布式无隔离网络    网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
+ 管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
+ 配置     配置环境 主机A  ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1 # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/30/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-27T11:38:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-27T11:38:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/30/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/30/">
+              Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2020-12-27T11:38:00Z'>
+                December 27, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/ovs/">ovs</a></div>
+
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <h1 id="使用ovs构建分布式隔离网络">
+  使用OVS构建分布式隔离网络
+  <a class="heading-link" href="#%e4%bd%bf%e7%94%a8ovs%e6%9e%84%e5%bb%ba%e5%88%86%e5%b8%83%e5%bc%8f%e9%9a%94%e7%a6%bb%e7%bd%91%e7%bb%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="前言">
+  前言
+  <a class="heading-link" href="#%e5%89%8d%e8%a8%80">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。</p>
+<h2 id="实验1分布式无隔离网络">
+  实验1：分布式无隔离网络
+  <a class="heading-link" href="#%e5%ae%9e%e9%aa%8c1%e5%88%86%e5%b8%83%e5%bc%8f%e6%97%a0%e9%9a%94%e7%a6%bb%e7%bd%91%e7%bb%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：</p>
+<ol>
+<li>管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。</li>
+<li>我们要将业务网卡绑定到OVS网桥上，也就是<code>Normal</code>类型的<code>Port</code>。这种方式添加的<code>Port</code>不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。</li>
+</ol>
+<blockquote>
+<p>需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为<code>trunk</code>模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为<code>仅主机模式</code>。</p>
+</blockquote>
+<p><img src="https://oss.typesafe.cn/ovs-di-network0.png?t=2" alt="分布式无隔离网络"></p>
+<h3 id="配置">
+  配置
+  <a class="heading-link" href="#%e9%85%8d%e7%bd%ae">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>配置环境 <code>主机A</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ovs-vsctl add-br br-int
+<span style="color:#007f7f"># 请修改eth1为当前实验环境的业务网卡名称</span>
+ovs-vsctl add-port br-int eth1
+
+<span style="color:#007f7f"># 添加两个内部端口</span>
+ovs-vsctl add-port br-int vnet0 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet0 type=internal
+ovs-vsctl add-port br-int vnet1 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet1 type=internal
+<span style="color:#007f7f"># 添加两个netns</span>
+ip netns add ns0
+ip netns add ns1
+<span style="color:#007f7f"># 将内部端口分别移动到netns中</span>
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 netns ns0
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 netns ns1
+
+<span style="color:#007f7f"># 启动端口并配置IP</span>
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip addr add 10.0.0.1/24 dev vnet0
+
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip addr add 10.0.0.2/24 dev vnet1
+</code></pre></div><ul>
+<li>配置环境 <code>主机B</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ovs-vsctl add-br br-int
+<span style="color:#007f7f"># 请修改eth1为当前实验环境的业务网卡名称</span>
+ovs-vsctl add-port br-int eth1
+
+<span style="color:#007f7f"># 添加两个内部端口</span>
+ovs-vsctl add-port br-int vnet0 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet0 type=internal
+ovs-vsctl add-port br-int vnet1 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet1 type=internal
+<span style="color:#007f7f"># 添加两个netns</span>
+ip netns add ns0
+ip netns add ns1
+<span style="color:#007f7f"># 将内部端口分别移动到netns中</span>
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 netns ns0
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 netns ns1
+
+<span style="color:#007f7f"># 启动端口并配置IP</span>
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip addr add 10.0.0.3/24 dev vnet0
+
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip addr add 10.0.0.4/24 dev vnet1
+</code></pre></div><h3 id="测试">
+  测试
+  <a class="heading-link" href="#%e6%b5%8b%e8%af%95">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>测试 <code>主机A</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.3
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.4
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.3
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.4
+</code></pre></div><ul>
+<li>测试 <code>主机B</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.1
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.2
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.1
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.2
+</code></pre></div><ul>
+<li>测试结果</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>主机A</th>
+<th>主机B</th>
+<th>ping 结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ns0</td>
+<td>ns0</td>
+<td>可通信 ✅</td>
+</tr>
+<tr>
+<td>ns0</td>
+<td>ns1</td>
+<td>可通信 ✅</td>
+</tr>
+<tr>
+<td>ns1</td>
+<td>ns0</td>
+<td>可通信 ✅</td>
+</tr>
+<tr>
+<td>ns1</td>
+<td>ns1</td>
+<td>可通信 ✅</td>
+</tr>
+</tbody>
+</table>
+<p>根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。</p>
+<h2 id="实验2分布式隔离网络">
+  实验2：分布式隔离网络
+  <a class="heading-link" href="#%e5%ae%9e%e9%aa%8c2%e5%88%86%e5%b8%83%e5%bc%8f%e9%9a%94%e7%a6%bb%e7%bd%91%e7%bb%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>构建分布式隔离网络和单节点的操作方法一致，即给对应的端口配置VLAN tag。如下图所示，我们分别给主机A、B上的端口配置VLAN tag为100和200。</p>
+<p><img src="https://oss.typesafe.cn/ovs-di-network1.png?t=2" alt="分布式无隔离网络"></p>
+<h3 id="配置-1">
+  配置
+  <a class="heading-link" href="#%e9%85%8d%e7%bd%ae-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>配置环境 <code>主机A</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet0 tag=<span style="color:#ff0;font-weight:bold">100</span>
+ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet1 tag=<span style="color:#ff0;font-weight:bold">200</span>
+</code></pre></div><ul>
+<li>配置环境 <code>主机B</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet0 tag=<span style="color:#ff0;font-weight:bold">100</span>
+ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet1 tag=<span style="color:#ff0;font-weight:bold">200</span>
+</code></pre></div><h3 id="测试-1">
+  测试
+  <a class="heading-link" href="#%e6%b5%8b%e8%af%95-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>测试 <code>主机A</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.3
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.4
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.3
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.4
+</code></pre></div><ul>
+<li>测试 <code>主机B</code></li>
+</ul>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.1
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ping 10.0.0.2
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.1
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ping 10.0.0.2
+</code></pre></div><ul>
+<li>测试结果</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>主机A</th>
+<th>主机B</th>
+<th>ping 结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ns0</td>
+<td>ns0</td>
+<td>可通信 ✅</td>
+</tr>
+<tr>
+<td>ns0</td>
+<td>ns1</td>
+<td>不通信 ❌</td>
+</tr>
+<tr>
+<td>ns1</td>
+<td>ns0</td>
+<td>不通信 ❌</td>
+</tr>
+<tr>
+<td>ns1</td>
+<td>ns1</td>
+<td>可通信 ✅</td>
+</tr>
+</tbody>
+</table>
+<p>根据测试结果可以看到我们使用OVS成功的隔离了分布在不同主机上的虚拟网络设备。</p>
+<blockquote>
+<p>本文首发我的微信公众号：我在对面的角落
+欢迎关注，接收第一时间更新通知。</p>
+</blockquote>
+<p><img src="https://oss.typesafe.cn/wx1.png" alt="欢迎关注微信公众号 接收第一时间更新通知"></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

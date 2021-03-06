@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="OpenvSwitch flow table 流表     OpenFlow（OF）被认为是第一个软件定义网络（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。
+ 如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。
+操作命令    查看流表规则    # 查看br-tun上的全部流表规则 ovs-ofctl dump-flows br-tun 添加或修改流表规则    ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]” 如果你有过编程的经验，流表规则其实就是一个个简单的if语句，伪代码如下。
+if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作1， 动作2... } 删除流表规则    # 删除br-tun上的全部流表规则 ovs-ofctl del-flows br-tun # 删除br-tun上匹配xx的全部流表规则 ovs-ofctl del-flows br-tun xx 流表匹配条件    OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:
+ OVS匹配条件 OSI模型第二层【数据链路层】 OSI模型第三层【网络层】 OSI模型第四层【传输层】  OVS匹配条件    in_port=port    流量进入的端口编号或者名称，示例 in_port=br-int">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open vSwitch 入门实践（5）OVS Flow Table 流表规则"/>
+<meta name="twitter:description" content="OpenvSwitch flow table 流表     OpenFlow（OF）被认为是第一个软件定义网络（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。
+ 如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。
+操作命令    查看流表规则    # 查看br-tun上的全部流表规则 ovs-ofctl dump-flows br-tun 添加或修改流表规则    ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]” 如果你有过编程的经验，流表规则其实就是一个个简单的if语句，伪代码如下。
+if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作1， 动作2... } 删除流表规则    # 删除br-tun上的全部流表规则 ovs-ofctl del-flows br-tun # 删除br-tun上匹配xx的全部流表规则 ovs-ofctl del-flows br-tun xx 流表匹配条件    OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:
+ OVS匹配条件 OSI模型第二层【数据链路层】 OSI模型第三层【网络层】 OSI模型第四层【传输层】  OVS匹配条件    in_port=port    流量进入的端口编号或者名称，示例 in_port=br-int"/>
+
+    <meta property="og:title" content="Open vSwitch 入门实践（5）OVS Flow Table 流表规则" />
+<meta property="og:description" content="OpenvSwitch flow table 流表     OpenFlow（OF）被认为是第一个软件定义网络（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。
+ 如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。
+操作命令    查看流表规则    # 查看br-tun上的全部流表规则 ovs-ofctl dump-flows br-tun 添加或修改流表规则    ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]” 如果你有过编程的经验，流表规则其实就是一个个简单的if语句，伪代码如下。
+if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作1， 动作2... } 删除流表规则    # 删除br-tun上的全部流表规则 ovs-ofctl del-flows br-tun # 删除br-tun上匹配xx的全部流表规则 ovs-ofctl del-flows br-tun xx 流表匹配条件    OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:
+ OVS匹配条件 OSI模型第二层【数据链路层】 OSI模型第三层【网络层】 OSI模型第四层【传输层】  OVS匹配条件    in_port=port    流量进入的端口编号或者名称，示例 in_port=br-int" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/32/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-12-29T18:38:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-12-29T18:38:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  Open vSwitch 入门实践（5）OVS Flow Table 流表规则 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/32/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/32/">
+              Open vSwitch 入门实践（5）OVS Flow Table 流表规则
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2020-12-29T18:38:00Z'>
+                December 29, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/ovs/">ovs</a></div>
+
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <h1 id="openvswitch-flow-table-流表">
+  OpenvSwitch flow table 流表
+  <a class="heading-link" href="#openvswitch-flow-table-%e6%b5%81%e8%a1%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<blockquote>
+<p>OpenFlow（OF）被认为是第一个<a href="https://zh.wikipedia.org/wiki/%E8%BB%9F%E4%BB%B6%E5%AE%9A%E7%BE%A9%E7%B6%B2%E7%B5%A1">软件定义网络</a>（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。</p>
+</blockquote>
+<p>如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。</p>
+<h1 id="操作命令">
+  操作命令
+  <a class="heading-link" href="#%e6%93%8d%e4%bd%9c%e5%91%bd%e4%bb%a4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h3 id="查看流表规则">
+  查看流表规则
+  <a class="heading-link" href="#%e6%9f%a5%e7%9c%8b%e6%b5%81%e8%a1%a8%e8%a7%84%e5%88%99">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 查看br-tun上的全部流表规则</span>
+ovs-ofctl dump-flows br-tun
+</code></pre></div><h3 id="添加或修改流表规则">
+  添加或修改流表规则
+  <a class="heading-link" href="#%e6%b7%bb%e5%8a%a0%e6%88%96%e4%bf%ae%e6%94%b9%e6%b5%81%e8%a1%a8%e8%a7%84%e5%88%99">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]”
+</code></pre></div><p>如果你有过编程的经验，流表规则其实就是一个个简单的<code>if</code>语句，伪代码如下。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">if (流表匹配条件){
+	动作1，
+	动作2...
+}
+
+if (流表匹配条件){
+	动作1，
+	动作2...
+}
+</code></pre></div><h3 id="删除流表规则">
+  删除流表规则
+  <a class="heading-link" href="#%e5%88%a0%e9%99%a4%e6%b5%81%e8%a1%a8%e8%a7%84%e5%88%99">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 删除br-tun上的全部流表规则</span>
+ovs-ofctl del-flows br-tun
+
+<span style="color:#007f7f"># 删除br-tun上匹配xx的全部流表规则</span>
+ovs-ofctl del-flows br-tun xx  
+</code></pre></div><h1 id="流表匹配条件">
+  流表匹配条件
+  <a class="heading-link" href="#%e6%b5%81%e8%a1%a8%e5%8c%b9%e9%85%8d%e6%9d%a1%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:</p>
+<ul>
+<li>OVS匹配条件</li>
+<li>OSI模型第二层【数据链路层】</li>
+<li>OSI模型第三层【网络层】</li>
+<li>OSI模型第四层【传输层】</li>
+</ul>
+<h2 id="ovs匹配条件">
+  OVS匹配条件
+  <a class="heading-link" href="#ovs%e5%8c%b9%e9%85%8d%e6%9d%a1%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="in_portport">
+  in_port=port
+  <a class="heading-link" href="#in_portport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>流量进入的端口编号或者名称，示例 <code>in_port=br-int</code></p>
+<h3 id="tablenumber">
+  table=number
+  <a class="heading-link" href="#tablenumber">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>规则保存的流表编号，范围是 0-254，默认值：0。</p>
+<h2 id="osi模型第二层数据链路层">
+  OSI模型第二层【数据链路层】
+  <a class="heading-link" href="#osi%e6%a8%a1%e5%9e%8b%e7%ac%ac%e4%ba%8c%e5%b1%82%e6%95%b0%e6%8d%ae%e9%93%be%e8%b7%af%e5%b1%82">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p><em><code>dl</code> 即是 <code>data link</code> 的缩写。</em></p>
+<h3 id="dl_typeethertype">
+  dl_type=ethertype
+  <a class="heading-link" href="#dl_typeethertype">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配以太网协议类型以太类型，以10到65535之间的整数（包括0和65535）指定，以十进制或以0x前缀的十六进制数表示，示例如下。</p>
+<ul>
+<li>
+<p><code>dl_type=0x0800</code> 匹配IPv4数据包，等同于<code>dl_type=ip</code> 。</p>
+</li>
+<li>
+<p><code>dl_type=0x086dd</code> 匹配IPv6数据包，等同于<code>dl_type=ipv6</code> 。</p>
+</li>
+<li>
+<p><code>dl_type=0x0806</code> 匹配ARP数据包，等同于<code>dl_type=arp</code> 。</p>
+</li>
+<li>
+<p><code>dl_type=0x8035</code> 匹配RARP数据包，等同于 <code>dl_type=rarp</code>。</p>
+</li>
+</ul>
+<h3 id="dl_vlanvlan">
+  dl_vlan=vlan
+  <a class="heading-link" href="#dl_vlanvlan">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>数据包的 VLAN Tag 值，范围是 0-4095，<code>0xffff</code> 代表不包含 VLAN Tag 的数据包</p>
+<h3 id="dl_vlan_pcppriority">
+  dl_vlan_pcp=priority
+  <a class="heading-link" href="#dl_vlan_pcppriority">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>VLAN 优先级，取值区间为[0-7]。数字越大，表示优先级越高。</p>
+<h3 id="dl_srcxxxxxxxxxxxx">
+  dl_src=xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#dl_srcxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="dl_dstxxxxxxxxxxxx">
+  dl_dst=xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#dl_dstxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>源或目的的 MAC地址</p>
+<ul>
+<li>地址<code>01:00:00:00:00:00/01:00:00:00:00:00</code> 代表广播</li>
+<li>地址<code>00:00:00:00:00:00/01:00:00:00:00:00</code> 代表单播</li>
+<li>地址<code>fe:ff:ff:ff:ff:ff </code>匹配除多播位以外的所有位，基本上不会用到。</li>
+<li>地址<code>ff:ff:ff:ff:ff:ff </code>完全匹配（等同于省略子网掩码）。</li>
+<li>地址<code>00:00:00:00:00:00</code> 匹配全部位（等同于 <code>dl_dst=*</code>）。</li>
+</ul>
+<h2 id="osi模型第三层网络层">
+  OSI模型第三层【网络层】
+  <a class="heading-link" href="#osi%e6%a8%a1%e5%9e%8b%e7%ac%ac%e4%b8%89%e5%b1%82%e7%bd%91%e7%bb%9c%e5%b1%82">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="nw_srcipnetmask">
+  nw_src=ip[/netmask]
+  <a class="heading-link" href="#nw_srcipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="nw_dstipnetmask">
+  nw_dst=ip[/netmask]
+  <a class="heading-link" href="#nw_dstipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>如果dl_type为0x0800（可能是通过简写形式，例如ip或tcp），则匹配IPv4源（或目标）地址ip，可以将其指定为IP地址或主机名（例如192.168.1.1或www.example.com）。可选的网络掩码允许将匹配限制为IPv4地址前缀。网络掩码可以指定为点分四边形（例如192.168.1.0/255.255.255.0）或CIDR块（例如192.168.1.0/24）。 Open vSwitch 1.8和更高版本支持任意点状四元掩码；早期版本仅支持CIDR掩码，即等效于某些CIDR块的虚线四边形。</p>
+<ul>
+<li>当指定 <code>dl_type</code>为<code>0x0800 </code>或者<code>ip</code>时，匹配源或者目标的 IPv4 地址，可以将其指定为IP地址或主机名，例如<code>192.168.1.1</code>或<code>www.typesafe.cn</code>。同时也可以写作<code>192.168.1.0/255.255.255.0</code>或者<code>192.168.1.0/24</code>的形式。</li>
+<li>当指定<code>dl_type</code>为<code>0x0806</code>或<code>arp</code>时，分别与IPv4和Ethernet的ARP数据包中的<code>ar_spa</code>或<code>ar_tpa</code>字段匹配。</li>
+<li>当指定<code>dl_type</code>为<code>0x8035</code>或<code>rarp</code>时，分别与IPv4和Ethernet的RARP数据包中的<code>ar_spa</code>或<code>ar_tpa</code>字段匹配。</li>
+<li>当指定<code>dl_type</code>为<code>0x0800</code>、<code>0x0806</code>或<code>0x8035</code>之外的其他值时，将忽略<code>nw_src</code>和<code>nw_dst</code>的值。</li>
+</ul>
+<h3 id="nw_protoproto">
+  nw_proto=proto
+  <a class="heading-link" href="#nw_protoproto">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="ipprotoproto">
+  ipproto=proto
+  <a class="heading-link" href="#ipprotoproto">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<ul>
+<li>如果指定<code>ip</code>或<code>dl_type=0x0800</code>，则匹配IP协议类型proto，该协议类型被指定为0到255之间的十进制数（包括1和0，用于包含ICMP数据包或6以匹配TCP数据包）。</li>
+<li>如果指定了<code>ipv6</code>或<code>dl_type=0x86dd</code>，则匹配IPv6标头类型原型，该形式指定为0到255之间的十进制数字（例如，包括58以匹配ICMPv6数据包或6以匹配TCP）。标头类型是设计文档中描述的终端标头。</li>
+<li>当指定<code>arp</code>或<code>dl_type=0x0806</code>时，与ARP操作码的低8位匹配。大于255的ARP操作码被视为0。</li>
+<li>指定<code>rarp</code>或<code>dl_type=0x8035</code>时，与ARP操作码的低8位匹配。大于255的ARP操作码被视为0。</li>
+<li>当通配符dl_type或将其设置为<code>0x0800</code>、<code>0x0806</code>、<code>0x8035</code>或<code>0x86dd</code>之外的其他值时，将忽略nw_proto的值（请参见上面的流语法）。</li>
+</ul>
+<h3 id="nw_tostos">
+  nw_tos=tos
+  <a class="heading-link" href="#nw_tostos">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配IP ToS / DSCP或IPv6流量类别字段tos，该字段tos指定为0到255之间的十进制数字（包括0和255）。请注意，出于匹配目的，将忽略两个较低的保留位。</p>
+<p>当通配符dl_type或将其设置为<code>0x0800</code>或<code>0x86dd</code>之外的其他值时，将忽略nw_tos的值。</p>
+<h3 id="ip_dscpdscp">
+  ip_dscp=dscp
+  <a class="heading-link" href="#ip_dscpdscp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配IP ToS / DSCP或IPv6流量类字段dscp，该字段指定为介于0和63之间（含0和63）的十进制数。</p>
+<p>当通配符dl_type或将其设置为<code>0x0800</code>或<code>0x86dd</code>之外的其他值时，将忽略ip_dscp的值（请参见上面的流语法）。</p>
+<h3 id="nw_ecnecn">
+  nw_ecn=ecn
+  <a class="heading-link" href="#nw_ecnecn">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="ip_ecnecn">
+  ip_ecn=ecn
+  <a class="heading-link" href="#ip_ecnecn">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配IP ToS或IPv6流量类别字段中的ecn位，该ecn位指定为0到3（含0和3）之间的十进制数。当通配符dl_type或将其设置为<code>0x0800</code>或<code>0x86dd</code>之外的其他值时，将忽略nw_ecn的值（请参见上面的流语法）。</p>
+<h3 id="nw_ttlttl">
+  nw_ttl=ttl
+  <a class="heading-link" href="#nw_ttlttl">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配IP TTL或IPv6跃点限制值ttl，该值指定为0到255之间的十进制数字（包括0和255）。</p>
+<p>当通配符dl_type或将其设置为<code>0x0800</code>或<code>0x86dd</code>之外的其他值时，将忽略nw_ttl的值（请参见上面的流语法）。</p>
+<h2 id="osi模型第四层传输层">
+  OSI模型第四层【传输层】
+  <a class="heading-link" href="#osi%e6%a8%a1%e5%9e%8b%e7%ac%ac%e5%9b%9b%e5%b1%82%e4%bc%a0%e8%be%93%e5%b1%82">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="tcp_srcport">
+  tcp_src=port
+  <a class="heading-link" href="#tcp_srcport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="tcp_dstport">
+  tcp_dst=port
+  <a class="heading-link" href="#tcp_dstport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="udp_srcport">
+  udp_src=port
+  <a class="heading-link" href="#udp_srcport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="udp_dstport">
+  udp_dst=port
+  <a class="heading-link" href="#udp_dstport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="sctp_srcport">
+  sctp_src=port
+  <a class="heading-link" href="#sctp_srcport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="sctp_dstport">
+  sctp_dst=port
+  <a class="heading-link" href="#sctp_dstport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配TCP，UDP或SCTP源端口或目标端口，端口号指定为0到65535（含0和65535）之间的十进制数。</p>
+<p>当通配符dl_type和nw_proto或将其设置为不表示适当协议的值时，这些设置的值将被忽略（请参见上面的流语法）。</p>
+<h3 id="tcp_srcportmask">
+  tcp_src=port/mask
+  <a class="heading-link" href="#tcp_srcportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="tcp_dstportmask">
+  tcp_dst=port/mask
+  <a class="heading-link" href="#tcp_dstportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="udp_srcportmask">
+  udp_src=port/mask
+  <a class="heading-link" href="#udp_srcportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="udp_dstportmask">
+  udp_dst=port/mask
+  <a class="heading-link" href="#udp_dstportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="sctp_srcportmask">
+  sctp_src=port/mask
+  <a class="heading-link" href="#sctp_srcportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="sctp_dstportmask">
+  sctp_dst=port/mask
+  <a class="heading-link" href="#sctp_dstportmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>TCP（或UDP或SCTP）源或目标端口上的按位匹配。端口和掩码是16位数字，以十进制或十六进制写为0x。掩码中的每个1位要求端口中的相应位必须匹配。掩码中的每个0位都会导致忽略相应的位。</p>
+<p>传输端口上的按位匹配很少在隔离中有用，但是可以使用一组匹配项来减少在一系列传输端口上进行匹配所需的流数。例如，假设目标是将TCP源端口1000匹配到1999（含）。一种方法是插入1000个流，每个流在单个源端口上匹配。另一种方法是查看1000和1999的二进制表示形式，如下所示：</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ff0;font-weight:bold">01111101000</span>
+<span style="color:#ff0;font-weight:bold">11111001111</span>
+</code></pre></div><p>然后将其转换为一系列按位匹配，以实现相同的结果：</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">01111101xxx
+0111111xxxx
+10xxxxxxxxx
+110xxxxxxxx
+1110xxxxxxx
+11110xxxxxx
+1111100xxxx
+</code></pre></div><p>使用ovs-ofctl所需的语法编写时，这些内容如下：</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tcp,tcp_src=0x03e8/0xfff8
+tcp,tcp_src=0x03f0/0xfff0
+tcp,tcp_src=0x0400/0xfe00
+tcp,tcp_src=0x0600/0xff00
+tcp,tcp_src=0x0700/0xff80
+tcp,tcp_src=0x0780/0xffc0
+tcp,tcp_src=0x07c0/0xfff0
+</code></pre></div><p>仅Open vSwitch 1.6和更高版本支持传输端口上的按位匹配。</p>
+<p>与上述完全匹配形式一样，按位匹配形式仅在dl_type和nw_proto指定TCP或UDP或SCTP时适用。</p>
+<h3 id="tp_srcport">
+  tp_src=port
+  <a class="heading-link" href="#tp_srcport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="tp_dstport">
+  tp_dst=port
+  <a class="heading-link" href="#tp_dstport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>这些是L4端口匹配项已弃用的通用形式。在新代码中，请使用上述特定于TCP，UDP或SCTP的形式。</p>
+<h3 id="tcp_flagsflagsmask">
+  tcp_flags=flags/mask
+  <a class="heading-link" href="#tcp_flagsflagsmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="tcp_flagsflag-flag">
+  tcp_flags=[+flag&hellip;][-flag&hellip;]
+  <a class="heading-link" href="#tcp_flagsflag-flag">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>TCP标志按位匹配。标志和掩码是16位数字，以十进制或以0x为前缀的十六进制表示。掩码中的每个1位要求标志中的相应位必须匹配。掩码中的每个0位都会导致忽略相应的位。
+或者，可以通过标志的符号名（在下面列出）来指定标志，每个标志名的前面都带有+，表示必须设置的标志，或者-表示必须取消设置的标志，且标志之间没有其他定界符。未提及的标志是通配符。例如，tcp，tcp_flags = + syn-ack匹配不是ACK的TCP SYN。 TCP协议当前定义9个标志位，并保留另外3个位（必须作为零发送），请参阅RFC 793、3168和3540。这些标志位的编号从最低有效位开始：</p>
+<ul>
+<li>0：fin 查找不再有来自发送方的数据。</li>
+<li>1：syn 同步同步序列号。</li>
+<li>2：rst 重置连接。</li>
+<li>3：psh 推送功能。</li>
+<li>4：ack 确认字段有效。</li>
+<li>5：urg 紧急指针字段有效。</li>
+<li>6：ece ECN回显。</li>
+<li>7：cer 减少拥塞窗口。</li>
+<li>8：ns 现时总和</li>
+<li>9-11：保留。</li>
+<li>12-15：不处理，必须为零。</li>
+</ul>
+<h3 id="icmp_typetype">
+  icmp_type=type
+  <a class="heading-link" href="#icmp_typetype">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="icmp_codecode">
+  icmp_code=code
+  <a class="heading-link" href="#icmp_codecode">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type和nw_proto指定ICMP或ICMPv6时，type匹配ICMP类型，而代码匹配ICMP代码。每个参数都指定为介于0和255之间（含两端）的十进制数。</p>
+<p>当dl_type和nw_proto采用其他值时，这些设置的值将被忽略（请参见上面的流语法）。</p>
+<h3 id="metadatavaluemask">
+  metadata=value[/mask]
+  <a class="heading-link" href="#metadatavaluemask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在元数据字段中完全匹配值或使用可选掩码匹配值。 value和mask是64位整数，默认情况下为十进制（使用0x前缀指定十六进制）。允许使用任意掩码值：掩码中的1位表示值中的对应位必须完全匹配，而该位则使用0位通配符。在Open vSwitch 1.8中添加了对元数据的匹配。</p>
+<h3 id="ip">
+  ip
+  <a class="heading-link" href="#ip">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0800</code></p>
+<h3 id="ipv6">
+  ipv6
+  <a class="heading-link" href="#ipv6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd</code></p>
+<h3 id="icmp">
+  icmp
+  <a class="heading-link" href="#icmp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0800,nw_proto=1</code></p>
+<h3 id="icmp6">
+  icmp6
+  <a class="heading-link" href="#icmp6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=58</code></p>
+<h3 id="tcp">
+  tcp
+  <a class="heading-link" href="#tcp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0800,nw_proto=6</code></p>
+<h3 id="tcp6">
+  tcp6
+  <a class="heading-link" href="#tcp6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=6</code></p>
+<h3 id="udp">
+  udp
+  <a class="heading-link" href="#udp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0800,nw_proto=17</code></p>
+<h3 id="udp6">
+  udp6
+  <a class="heading-link" href="#udp6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=17</code></p>
+<h3 id="sctp">
+  sctp
+  <a class="heading-link" href="#sctp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0800,nw_proto=132</code></p>
+<h3 id="sctp6">
+  sctp6
+  <a class="heading-link" href="#sctp6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=132</code></p>
+<h3 id="arp">
+  arp
+  <a class="heading-link" href="#arp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x0806</code></p>
+<h3 id="rarp">
+  rarp
+  <a class="heading-link" href="#rarp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x8035</code></p>
+<h3 id="mpls">
+  mpls
+  <a class="heading-link" href="#mpls">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x8847</code></p>
+<h3 id="mplsm">
+  mplsm
+  <a class="heading-link" href="#mplsm">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x8848</code></p>
+<h3 id="vlan_tcitcimask">
+  vlan_tci=tci[/mask]
+  <a class="heading-link" href="#vlan_tcitcimask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配修改后的VLAN TCI tci。如果省略mask，则tci是要匹配的确切VLAN TCI；如果指定了mask，则mask中的1位表示tci中的对应位必须完全匹配，而0位通配符表示该位。 tci和mask均为16位值，默认情况下为十进制。使用0x前缀以十六进制指定它们。</p>
+<p>对于没有802.1Q标头的数据包，vlan_tci与之匹配的值为0。否则，它是802.1Q标头中的TCI值，其中CFI位（值为0x1000）被强制为1。</p>
+<ul>
+<li>
+<p>vlan_tci=0
+仅匹配没有802.1Q标头的数据包。</p>
+</li>
+<li>
+<p>vlan_tci=0xf123
+匹配VLAN 0x123中标记为优先级7的数据包。</p>
+</li>
+<li>
+<p>vlan_tci=0x1123/0x1fff
+匹配标记有VLAN 0x123（和任何优先级）的数据包。</p>
+</li>
+<li>
+<p>vlan_tci=0x5000/0xf000
+匹配标记为优先级2的数据包（在任何VLAN中）。</p>
+</li>
+<li>
+<p>vlan_tci=0/0xfff
+匹配没有802.1Q标头或带有VLAN 0（和任何优先级）标记的数据包。</p>
+</li>
+<li>
+<p>vlan_tci=0x5000/0xe000
+匹配没有802.1Q标头或带有优先级2标记的数据包（在任何VLAN中）。</p>
+</li>
+<li>
+<p>vlan_tci=0/0xefff
+匹配没有802.1Q标头或带有VLAN 0和优先级0标记的数据包。</p>
+</li>
+</ul>
+<p>使用dl_vlan和dl_vlan_pcp也可以实现某些匹配可能性。</p>
+<h3 id="ip_fragfrag_type">
+  ip_frag=frag_type
+  <a class="heading-link" href="#ip_fragfrag_type">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type指定IP或IPv6时，frag_type指定要匹配的IP片段或非片段类型。支持以下frag_type值：</p>
+<ul>
+<li>
+<p>no</p>
+<p>仅匹配非分段数据包。</p>
+</li>
+<li>
+<p>yes</p>
+<p>匹配所有片段。</p>
+</li>
+<li>
+<p>first</p>
+<p>仅匹配偏移量为0的片段。</p>
+</li>
+<li>
+<p>later</p>
+<p>仅匹配非零偏移量的片段。</p>
+</li>
+<li>
+<p>not_later
+匹配零碎的非碎片数据包和碎片。</p>
+</li>
+</ul>
+<h3 id="arp_spaipnetmask">
+  arp_spa=ip[/netmask]
+  <a class="heading-link" href="#arp_spaipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="arp_tpaipnetmask">
+  arp_tpa=ip[/netmask]
+  <a class="heading-link" href="#arp_tpaipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type指定ARP或RARP时，arp_spa和arp_tpa分别与源和目标IPv4地址匹配。可以将地址指定为IP地址或主机名（例如192.168.1.1或www.example.com）。可选的网络掩码允许将匹配限制为IPv4地址前缀。网络掩码可以指定为点分四边形（例如192.168.1.0/255.255.255.0）或CIDR块（例如192.168.1.0/24）。</p>
+<h3 id="arp_shaxxxxxxxxxxxx">
+  arp_sha=xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#arp_shaxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="arp_thaxxxxxxxxxxxx">
+  arp_tha=xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#arp_thaxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type指定ARP或RARP时，arp_sha和arp_tha分别匹配源和目标硬件地址。地址指定为以冒号分隔的6对十六进制数字（例如00:0A:E4:25:6B:B0）。</p>
+<h3 id="arp_shaxxxxxxxxxxxxxxxxxxxxxxxx">
+  arp_sha=xx:xx:xx:xx:xx:xx/xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#arp_shaxxxxxxxxxxxxxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="arp_thaxxxxxxxxxxxxxxxxxxxxxxxx">
+  arp_tha=xx:xx:xx:xx:xx:xx/xx:xx:xx:xx:xx:xx
+  <a class="heading-link" href="#arp_thaxxxxxxxxxxxxxxxxxxxxxxxx">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type指定ARP或RARP时，arp_sha和arp_tha分别匹配源和目标硬件地址。地址指定为以冒号分隔的6对十六进制数字（例如00:0A:E4:25:6B:B0），并在斜杠后加上通配符掩码。</p>
+<h3 id="arp_opopcode">
+  arp_op=opcode
+  <a class="heading-link" href="#arp_opopcode">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type指定ARP或RARP时，arp_op与ARP操作码匹配。只能指定1到255之间的ARP操作码进行匹配。</p>
+<h3 id="ipv6_srcipv6netmask">
+  ipv6_src=ipv6[/netmask]
+  <a class="heading-link" href="#ipv6_srcipv6netmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="ipv6_dstipv6netmask">
+  ipv6_dst=ipv6[/netmask]
+  <a class="heading-link" href="#ipv6_dstipv6netmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type为0x86dd时（可能通过简写形式，例如ipv6或tcp6），匹配IPv6源（或目标）地址ipv6，该地址可以按RFC 2373中的规定指定。首选格式为<code>x:x:x:x:x:x:x:x</code>，其中x是地址的八个16位块的十六进制值。 ::的单个实例可用于指示16位零的多个组。可选的网络掩码允许将匹配限制为IPv6地址前缀。网络掩码被指定为IPv6地址（例如<code>2001:db8:3c4d:1::/ffff:ffff:ffff:ffff::</code>)或CIDR块（例如<code>2001:db8:3c4d:1::/64</code>）。打开vSwitch 1.8及更高版本，支持仲裁掩码；早期版本仅支持CIDR掩码，即CIDR块和等同于CIDR块的IPv6地址。</p>
+<h3 id="ipv6_labellabel">
+  ipv6_label=label
+  <a class="heading-link" href="#ipv6_labellabel">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>当dl_type为0x86dd时（可能通过简写形式，例如ipv6或tcp6），匹配IPv6流标签label。</p>
+<h3 id="tun_idtunnel-idmask">
+  tun_id=tunnel-id[/mask]
+  <a class="heading-link" href="#tun_idtunnel-idmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>###tunnel_id=tunnel-id[/mask]</p>
+<p>匹配隧道标识符tunnel-id。只有通过带有密钥的隧道到达的数据包（例如具有RFC 2890密钥扩展名和非零密钥值的GRE）才会具有非零的隧道ID。如果省略mask，则tunnel-id是要匹配的确切隧道ID；如果指定了mask，则mask中的1位表示tunnel-id中的相应位必须完全匹配，而0位通配符则将该位匹配。</p>
+<h3 id="tun_flagsflags">
+  tun_flags=flags
+  <a class="heading-link" href="#tun_flagsflags">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配标志，指示隧道封装的各个方面。当前，仅定义一个标志：</p>
+<ul>
+<li>
+<p>oma</p>
+<p>隧道协议指示这是一个OAM控制数据包。</p>
+</li>
+</ul>
+<p>可以在标志前面加上+或-来分别指示该标志应匹配为存在或不存在。另外，可以指定没有前缀的标志，并用|分隔。表示完全匹配。</p>
+<p>请注意，较新版本的Open vSwitch可能会引入具有不同含义的其他标志。因此，不建议在此字段上使用完全匹配，因为这些新标志的行为是未知的，应忽略。</p>
+<p>对于非隧道数据包，该值为0。</p>
+<p>此字段是在Open vSwitch 2.5中引入的。</p>
+<h3 id="tun_srcipnetmask">
+  tun_src=ip[/netmask]
+  <a class="heading-link" href="#tun_srcipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="tun_dstipnetmask">
+  tun_dst=ip[/netmask]
+  <a class="heading-link" href="#tun_dstipnetmask">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>匹配隧道IPv4源（或目标）地址ip。仅通过隧道到达的数据包将具有非零的隧道地址。该地址可以指定为IP地址或主机名（例如192.168.1.1或www.example.com）。可选的网络掩码允许将匹配限制为被掩码的IPv4地址。子网掩码可以指定为点分四边形（例如192.168.1.0/255.255.255.0）或CIDR块（例如192.168.1.0/24）。</p>
+<h3 id="ipv6-1">
+  ipv6
+  <a class="heading-link" href="#ipv6-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd</code></p>
+<h3 id="tcp6-1">
+  tcp6
+  <a class="heading-link" href="#tcp6-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=6</code></p>
+<h3 id="udp6-1">
+  udp6
+  <a class="heading-link" href="#udp6-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=17</code></p>
+<h3 id="sctp6-1">
+  sctp6
+  <a class="heading-link" href="#sctp6-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=132</code></p>
+<h3 id="icmp6-1">
+  icmp6
+  <a class="heading-link" href="#icmp6-1">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>等同于<code>dl_type=0x86dd,nw_proto=58</code></p>
+<h1 id="流表动作">
+  流表动作
+  <a class="heading-link" href="#%e6%b5%81%e8%a1%a8%e5%8a%a8%e4%bd%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>满足匹配条件之后将会执行的动作。</p>
+<h3 id="outputport">
+  output:port
+  <a class="heading-link" href="#outputport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将数据包输出到OpenFlow端口号port。如果port是数据包的输入端口，则不输出数据包。</p>
+<h3 id="groupgroup_id">
+  group:group_id
+  <a class="heading-link" href="#groupgroup_id">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将数据包输出到OpenFlow组group_id。仅OpenFlow 1.1+支持组表。有关更多详细信息，请参见组语法。</p>
+<h3 id="normal">
+  normal
+  <a class="heading-link" href="#normal">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>使数据包经过设备的常规L2 / L3处理。 （并非所有OpenFlow交换机都执行此操作。）</p>
+<h3 id="flood">
+  flood
+  <a class="heading-link" href="#flood">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在所有交换机物理端口上输出数据包，而不是在接收数据包的端口以及任何禁用洪泛的端口上进行输出（通常，这些端口是IEEE 802.1D生成树协议禁用的端口）。</p>
+<h3 id="all">
+  all
+  <a class="heading-link" href="#all">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在所有交换机物理端口上输出数据包，而不是在接收数据包的端口上。</p>
+<h3 id="local">
+  local
+  <a class="heading-link" href="#local">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在与本地网桥名称相同的网络设备对应的``本地端口'&lsquo;上输出数据包。</p>
+<h3 id="in_port">
+  in_port
+  <a class="heading-link" href="#in_port">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在接收数据包的端口上输出数据包。</p>
+<h3 id="enqueueportqueue">
+  enqueue(port,queue)
+  <a class="heading-link" href="#enqueueportqueue">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将数据包放入端口port中的指定队列中，该队列必须是OpenFlow端口号或关键字（例如LOCAL）。支持的队列数取决于交换机；具体取决于交换机。一些OpenFlow实现根本不支持排队。</p>
+<h3 id="drop">
+  drop
+  <a class="heading-link" href="#drop">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>丢弃数据包，因此不会进行进一步的处理或转发。如果使用丢弃动作，则不能指定其他动作。</p>
+<h3 id="mod_vlan_vidvlan_vid">
+  mod_vlan_vid:vlan_vid
+  <a class="heading-link" href="#mod_vlan_vidvlan_vid">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>修改报文的VLAN ID。根据需要添加或修改VLAN标记以匹配指定的值。如果添加了VLAN标记，则使用零优先级（请参阅mod_vlan_pcp操作来设置此优先级）。</p>
+<h3 id="mod_vlan_pcpvlan_pcp">
+  mod_vlan_pcp:vlan_pcp
+  <a class="heading-link" href="#mod_vlan_pcpvlan_pcp">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>修改报文的VLAN优先级。根据需要添加或修改VLAN标记以匹配指定的值。有效值介于0（最低）和7（最高）之间。如果添加了VLAN标记，则使用的vid为零（请参阅mod_vlan_vid操作进行设置）。</p>
+<h3 id="strip_vlan">
+  strip_vlan
+  <a class="heading-link" href="#strip_vlan">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>从数据包中剥离VLAN标记（如果存在）。</p>
+<h3 id="push_vlanethertype">
+  push_vlan:ethertype
+  <a class="heading-link" href="#push_vlanethertype">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将新的VLAN标签推入数据包。以太网类型用作标签的以太网类型。仅应使用ethertype 0x8100。 （目前尚不支持规范允许的0x88a8。）新标签使用优先级为零且标签为零。</p>
+<h3 id="mod_dl_srcmac">
+  mod_dl_src:mac
+  <a class="heading-link" href="#mod_dl_srcmac">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将源以太网地址设置为mac。</p>
+<h3 id="mod_dl_dstmac">
+  mod_dl_dst:mac
+  <a class="heading-link" href="#mod_dl_dstmac">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将目标以太网地址设置为mac。</p>
+<h3 id="mod_nw_srcip">
+  mod_nw_src:ip
+  <a class="heading-link" href="#mod_nw_srcip">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将IPv4源地址设置为ip。</p>
+<h3 id="mod_nw_dstip">
+  mod_nw_dst:ip
+  <a class="heading-link" href="#mod_nw_dstip">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将IPv4目标地址设置为ip。</p>
+<h3 id="mod_tp_srcport">
+  mod_tp_src:port
+  <a class="heading-link" href="#mod_tp_srcport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将TCP或UDP或SCTP源端口设置为port。</p>
+<h3 id="mod_tp_dstport">
+  mod_tp_dst:port
+  <a class="heading-link" href="#mod_tp_dstport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将TCP或UDP或SCTP目标端口设置为port。</p>
+<h3 id="mod_nw_tostos">
+  mod_nw_tos:tos
+  <a class="heading-link" href="#mod_nw_tostos">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将IPv4 ToS / DSCP或IPv6流量类字段中的DSCP位设置为tos，该值必须为0到255之间的4的倍数。此操作不会修改ToS字段的两个最低有效位（ECN位）。</p>
+<h3 id="mod_nw_ecnecn">
+  mod_nw_ecn:ecn
+  <a class="heading-link" href="#mod_nw_ecnecn">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将IPv4 ToS或IPv6流量类别字段中的ECN比特设置为ecn，该值必须介于0和3之间（包括0和3）。此操作不会修改该字段的六个最高有效位（DSCP位）。</p>
+<p>需要OpenFlow 1.1或更高版本。</p>
+<h3 id="mod_nw_ttlttl">
+  mod_nw_ttl:ttl
+  <a class="heading-link" href="#mod_nw_ttlttl">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将IPv4 TTL或IPv6跳数限制字段设置为ttl，指定为0到255之间的十进制数（包括0和255）。但是，没有很好地指定将ttl设置为零时的开关行为。</p>
+<p>需要OpenFlow 1.1或更高版本。</p>
+<h3 id="resubmitport">
+  resubmit:port
+  <a class="heading-link" href="#resubmitport">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="resubmitporttable">
+  resubmit([port],[table])
+  <a class="heading-link" href="#resubmitporttable">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>重新搜索此OpenFlow流表（或由表指定其编号的表），用in_port字段替换为端口（如果指定了port），并执行找到的操作（如果有），以及此流条目中的任何其他操作。</p>
+<h3 id="set_tunnelid">
+  set_tunnel:id
+  <a class="heading-link" href="#set_tunnelid">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="set_tunnel64id">
+  set_tunnel64:id
+  <a class="heading-link" href="#set_tunnel64id">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>如果输出到将数据包封装在隧道中并支持标识符（例如GRE）的端口，则将标识符设置为id。如果使用set_tunnel形式，并且id可以容纳32位，则此操作将使用Open vSwitch 1.0和更高版本支持的操作扩展。否则，如果id是64位值，则需要Open vSwitch 1.1或更高版本。</p>
+<h3 id="set_queuequeue">
+  set_queue:queue
+  <a class="heading-link" href="#set_queuequeue">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>设置输出数据包时应用于排队的队列。支持的队列数取决于交换机；具体取决于交换机。一些OpenFlow实现根本不支持排队。</p>
+<h3 id="pop_queue">
+  pop_queue
+  <a class="heading-link" href="#pop_queue">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将队列恢复为应用任何set_queue操作之前的值。</p>
+<h3 id="movesrcstartend-dststartend">
+  move:src[start..end]-&gt;dst[start..end]
+  <a class="heading-link" href="#movesrcstartend-dststartend">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将已命名的位从字段src复制到字段dst。 src和dst必须是nicira-ext.h中定义的NXM字段名称，例如NXM_OF_UDP_SRC或NXM_NX_REG0。每个开始和结束对（包括首尾对）必须指定相同的位数，并且必须适合其各自的字段。存在[start..end]的简写形式：使用[bit]指定单个位，或使用[]指定整个字段。</p>
+<h3 id="set_fieldvaluemask-dst">
+  set_field:value[/mask]-&gt;dst
+  <a class="heading-link" href="#set_fieldvaluemask-dst">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<h3 id="loadvaluedststartend">
+  load:value−&gt;dst[start..end]
+  <a class="heading-link" href="#loadvaluedststartend">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>将文字值加载到字段或字段的一部分中。对于set_field，在字段dst的惯用语法中给出了值和可选掩码，表示为字段名。例如，set_field：00：11：22：33：44：55-&gt; eth_src将以太网源地址设置为00：11：22：33：44：55。加载时，值必须是整数值（十进制或以0x开头的十六进制前缀），而dst是该字段的NXM或OXM名称。例如，load：0x001122334455-&gt; OXM_OF_ETH_DST []与前面的set_field示例具有相同的效果。</p>
+<p>出于历史原因，存在这两种形式。 Open vSwitch 1.1引入了NXAST_REG_LOAD作为OpenFlow 1.0的Nicira扩展，并使用load来表达它。后来，Open-Flow 1.2引入了一个标准的OFPAT_SET_FIELD操作，该操作仅限于加载整个字段，因此Open vSwitch添加了具有此限制的表单set_field。 OpenFlow 1.5将OFPAT_SET_FIELD扩展到了它成为NXAST_REG_LOAD的超集的地步。 Open vSwitch会根据所使用的OpenFlow版本转换两种语法：OpenFlow 1.0和1.1中的NXAST_REG_LOAD；在OpenFlow 1.2、1.3和1.4中，NXAST_REG_LOAD用于加载或加载子字段，否则为OFPAT_SET_FIELD； OpenFlow 1.5及更高版本，OFPAT_SET_FIELD。</p>
+<h3 id="pushsrcstartend">
+  push:src[start..end]
+  <a class="heading-link" href="#pushsrcstartend">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>在堆栈顶部的字段中，压入开始（包括结束）位。</p>
+<p>示例：push：NXM_NX_REG2 [0..5]将存储在寄存器2位0到5（含0和5）中的值压入内部堆栈。</p>
+<h3 id="popdststartend">
+  pop:dst[start..end]
+  <a class="heading-link" href="#popdststartend">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>从堆栈的顶部弹出，从弹出的值中检索包含开始到结束的位，并将它们存储在dst中的相应位中。</p>
+<p>示例：pop：NXM_NX_REG2 [0..5]从堆栈顶部弹出该值。根据刚刚弹出的值的0至5位，将寄存器2的0至5位（包括0和5）设置为1。</p>
+<h3 id="multipathfieldsbasisalgorithmn_linksargdststartend">
+  multipath(fields,basis,algorithm,n_links,arg,dst[start..end])
+  <a class="heading-link" href="#multipathfieldsbasisalgorithmn_linksargdststartend">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>使用base作为通用哈希参数对字段进行哈希处理，然后应用多路径链接选择算法（带有参数arg）从0到n_links减去1来选择n_links输出链接之一，并将链接存储到dst [start..end]中，它必须是如上所述的NXM字段。</p>
+<h3 id="其他的请参考官方操作手册httpswwwopenvswitchorgsupportdist-docs-25ovs-ofctl8txt">
+  <a href="https://www.openvswitch.org/support/dist-docs-2.5/ovs-ofctl.8.txt">其他的请参考官方操作手册</a>
+  <a class="heading-link" href="#%e5%85%b6%e4%bb%96%e7%9a%84%e8%af%b7%e5%8f%82%e8%80%83%e5%ae%98%e6%96%b9%e6%93%8d%e4%bd%9c%e6%89%8b%e5%86%8chttpswwwopenvswitchorgsupportdist-docs-25ovs-ofctl8txt">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

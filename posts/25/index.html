@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; child-src 'self'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net/; form-action 'self'; frame-src 'self'; img-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdn.jsdelivr.net/; script-src 'self' 'unsafe-inline' https://www.google-analytics.com; prefetch-src 'self';">
+    
+
+    <meta name="author" content="没有理想的人不伤心">
+    <meta name="description" content="前言    在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。
+实验    接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。
+实验一：单机无隔离网络    使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。
+# 添加网桥 ovs-vsctl add-br br-int # 添加三个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type=internal # 添加三个netns ip netns add ns0 ip netns add ns1 ip netns add ns2 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 ip link set vnet2 netns ns2 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open vSwitch 入门实践（2）使用OVS构建隔离网络"/>
+<meta name="twitter:description" content="前言    在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。
+实验    接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。
+实验一：单机无隔离网络    使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。
+# 添加网桥 ovs-vsctl add-br br-int # 添加三个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type=internal # 添加三个netns ip netns add ns0 ip netns add ns1 ip netns add ns2 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 ip link set vnet2 netns ns2 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10."/>
+
+    <meta property="og:title" content="Open vSwitch 入门实践（2）使用OVS构建隔离网络" />
+<meta property="og:description" content="前言    在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。
+实验    接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。
+实验一：单机无隔离网络    使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。
+# 添加网桥 ovs-vsctl add-br br-int # 添加三个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type=internal # 添加三个netns ip netns add ns0 ip netns add ns1 ip netns add ns2 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 ip link set vnet2 netns ns2 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://www.example.com/posts/25/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-26T22:55:00&#43;00:00" />
+<meta property="article:modified_time" content="2020-11-26T22:55:00&#43;00:00" /><meta property="og:site_name" content="我在对面的角落" />
+
+
+
+    <title>
+  Open vSwitch 入门实践（2）使用OVS构建隔离网络 · 我在对面的角落
+</title>
+
+    
+      <link rel="canonical" href="http://www.example.com/posts/25/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      我在对面的角落
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://www.example.com/posts/25/">
+              Open vSwitch 入门实践（2）使用OVS构建隔离网络
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2020-11-26T22:55:00Z'>
+                November 26, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/ovs/">ovs</a></div>
+
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <h1 id="前言">
+  前言
+  <a class="heading-link" href="#%e5%89%8d%e8%a8%80">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。</p>
+<h1 id="实验">
+  实验
+  <a class="heading-link" href="#%e5%ae%9e%e9%aa%8c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。</p>
+<h2 id="实验一单机无隔离网络">
+  实验一：单机无隔离网络
+  <a class="heading-link" href="#%e5%ae%9e%e9%aa%8c%e4%b8%80%e5%8d%95%e6%9c%ba%e6%97%a0%e9%9a%94%e7%a6%bb%e7%bd%91%e7%bb%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 添加网桥</span>
+ovs-vsctl add-br br-int
+<span style="color:#007f7f"># 添加三个内部端口</span>
+ovs-vsctl add-port br-int vnet0 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet0 type=internal
+ovs-vsctl add-port br-int vnet1 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet1 type=internal
+ovs-vsctl add-port br-int vnet2 -- <span style="color:#fff;font-weight:bold">set</span> Interface vnet2 type=internal
+<span style="color:#007f7f"># 添加三个netns</span>
+ip netns add ns0
+ip netns add ns1
+ip netns add ns2
+<span style="color:#007f7f"># 将内部端口分别移动到netns中</span>
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 netns ns0
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 netns ns1
+ip link <span style="color:#fff;font-weight:bold">set</span> vnet2 netns ns2
+
+<span style="color:#007f7f"># 启动端口并配置IP</span>
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip link <span style="color:#fff;font-weight:bold">set</span> vnet0 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns0 ip addr add 10.0.0.1/24 dev vnet0
+
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip link <span style="color:#fff;font-weight:bold">set</span> vnet1 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns1 ip addr add 10.0.0.2/24 dev vnet1
+
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns2 ip link <span style="color:#fff;font-weight:bold">set</span> lo up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns2 ip link <span style="color:#fff;font-weight:bold">set</span> vnet2 up
+ip netns <span style="color:#fff;font-weight:bold">exec</span> ns2 ip addr add 10.0.0.3/24 dev vnet2
+</code></pre></div><p>测试</p>
+<p>测试<code>ns0</code>和<code>ns1</code>能否通信<code>ip netns exec ns0 ping 10.0.0.2</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">1</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=1.05 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">2</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.059 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">3</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.056 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">4</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.053 ms
+^C
+--- 10.0.0.2 ping statistics ---
+<span style="color:#ff0;font-weight:bold">4</span> packets transmitted, <span style="color:#ff0;font-weight:bold">4</span> received, 0% packet loss, <span style="color:#fff;font-weight:bold">time</span> 3000ms
+rtt min/avg/max/mdev = 0.053/0.304/1.051/0.431 ms
+</code></pre></div><p>测试<code>ns0</code>和<code>ns2</code>能否通信<code>ip netns exec ns0 ping 10.0.0.3</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=64 time=1.17 ms
+64 bytes from 10.0.0.3: icmp_seq=2 ttl=64 time=0.067 ms
+64 bytes from 10.0.0.3: icmp_seq=3 ttl=64 time=0.058 ms
+64 bytes from 10.0.0.3: icmp_seq=4 ttl=64 time=0.064 ms
+^C
+--- 10.0.0.3 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3001ms
+rtt min/avg/max/mdev = 0.058/0.341/1.177/0.482 ms
+</code></pre></div><p>根据测试结果可以看到，三台设备都是可以互相访问的，这样我们就成功搭建了一个无隔离的二层互通网络。</p>
+<h2 id="实验二-单机隔离网络">
+  实验二： 单机隔离网络
+  <a class="heading-link" href="#%e5%ae%9e%e9%aa%8c%e4%ba%8c-%e5%8d%95%e6%9c%ba%e9%9a%94%e7%a6%bb%e7%bd%91%e7%bb%9c">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>使用ovs构建隔离网络也很简单，只需要给相应的端口设置上VLAN标签，就能实现网络的隔离。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 设置vnet0的VLAN tag为100</span>
+ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet0 tag=<span style="color:#ff0;font-weight:bold">100</span>
+<span style="color:#007f7f"># 设置vnet1和vnet2的VLAN tag为200</span>
+ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet1 tag=<span style="color:#ff0;font-weight:bold">200</span>
+ovs-vsctl <span style="color:#fff;font-weight:bold">set</span> Port vnet2 tag=<span style="color:#ff0;font-weight:bold">200</span>
+</code></pre></div><p>使用<code>ovs-vsctl show</code>命令查看VLAN tag是否配置成功</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">90139c71-8d11-49b2-b44c-f34174259dc8
+    Bridge br-int
+        Port <span style="color:#0ff;font-weight:bold">&#34;vnet0&#34;</span>
+            tag: <span style="color:#ff0;font-weight:bold">100</span>
+            Interface <span style="color:#0ff;font-weight:bold">&#34;vnet0&#34;</span>
+                type: internal
+        Port br-int
+            Interface br-int
+                type: internal
+        Port <span style="color:#0ff;font-weight:bold">&#34;vnet2&#34;</span>
+            tag: <span style="color:#ff0;font-weight:bold">200</span>
+            Interface <span style="color:#0ff;font-weight:bold">&#34;vnet2&#34;</span>
+                type: internal
+        Port <span style="color:#0ff;font-weight:bold">&#34;vnet1&#34;</span>
+            tag: <span style="color:#ff0;font-weight:bold">200</span>
+            Interface <span style="color:#0ff;font-weight:bold">&#34;vnet1&#34;</span>
+                type: internal
+    ovs_version: <span style="color:#0ff;font-weight:bold">&#34;2.9.0&#34;</span>
+</code></pre></div><p>测试</p>
+<p>测试<code>ns0</code>与<code>ns1</code>的能否通信 <code>ip netns exec ns0 ping 10.0.0.2</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+^C
+--- 10.0.0.2 ping statistics ---
+<span style="color:#ff0;font-weight:bold">2</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 1000ms
+</code></pre></div><p>测试<code>ns0</code>与<code>ns2</code>的能否通信 <code>ip netns exec ns0 ping 10.0.0.3</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+^C
+--- 10.0.0.3 ping statistics ---
+<span style="color:#ff0;font-weight:bold">2</span> packets transmitted, <span style="color:#ff0;font-weight:bold">0</span> received, 100% packet loss, <span style="color:#fff;font-weight:bold">time</span> 999ms
+</code></pre></div><p>测试<code>ns1</code>与<code>ns2</code>的能否通信 <code>ip netns exec ns1 ping 10.0.0.3</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.3: icmp_seq=<span style="color:#ff0;font-weight:bold">1</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.930 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.3: icmp_seq=<span style="color:#ff0;font-weight:bold">2</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.057 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.3: icmp_seq=<span style="color:#ff0;font-weight:bold">3</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.056 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.3: icmp_seq=<span style="color:#ff0;font-weight:bold">4</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.057 ms
+^C
+--- 10.0.0.3 ping statistics ---
+<span style="color:#ff0;font-weight:bold">4</span> packets transmitted, <span style="color:#ff0;font-weight:bold">4</span> received, 0% packet loss, <span style="color:#fff;font-weight:bold">time</span> 3000ms
+rtt min/avg/max/mdev = 0.056/0.275/0.930/0.378 ms
+</code></pre></div><p>测试<code>ns2</code>与<code>ns1</code>的能否通信 <code>ip netns exec ns2 ping 10.0.0.2</code></p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">1</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.088 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">2</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.057 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">3</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.050 ms
+<span style="color:#ff0;font-weight:bold">64</span> bytes from 10.0.0.2: icmp_seq=<span style="color:#ff0;font-weight:bold">4</span> ttl=<span style="color:#ff0;font-weight:bold">64</span> time=0.060 ms
+^C
+--- 10.0.0.2 ping statistics ---
+<span style="color:#ff0;font-weight:bold">4</span> packets transmitted, <span style="color:#ff0;font-weight:bold">4</span> received, 0% packet loss, <span style="color:#fff;font-weight:bold">time</span> 2999ms
+rtt min/avg/max/mdev = 0.050/0.063/0.088/0.017 ms
+</code></pre></div><p>根据测试结果可以看出，<code>ns0</code>是无法访问到<code>ns1</code>和<code>ns2</code>的，<code>ns1</code>和<code>ns2</code>可以互相访问。这是因为端口<code>vnet0</code>的数据报文发出后被OVS修改了包头，增加了VLAN <code>100</code>标签，与<code>vnet1</code>、<code>vnet2</code>的VLAN <code>200</code>标签不匹配，OVS交换机便不再将<code>vnet0</code>的数据报文发送给其他两个端口，由此便实现了网络隔离。</p>
+<p>清理实验环境</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ovs-vsctl del-br br-int
+ip netns del ns0
+ip netns del ns1
+ip netns del ns2
+</code></pre></div><blockquote>
+<p>本文首发我的微信公众号：我在对面的角落
+欢迎关注，接收第一时间更新通知。</p>
+</blockquote>
+<p><img src="https://oss.typesafe.cn/wx1.png" alt="image"></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "dushixiang" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         没有理想的人不伤心 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    <script>
+(function(f, a, t, h, o, m){
+	a[h]=a[h]||function(){
+		(a[h].q=a[h].q||[]).push(arguments)
+	};
+	o=f.createElement('script'),
+	m=f.getElementsByTagName('script')[0];
+	o.async=1; o.src=t; o.id='fathom-script';
+	m.parentNode.insertBefore(o,m)
+})(document, window, '//analytics.example.com/tracker.js', 'fathom');
+fathom('set', 'siteId', 'ABCDE');
+fathom('trackPageview');
+</script>
+
+
+    <script async defer data-domain="example.com" src="https://analytics.example.com/js/plausible.js"></script>
+
+
+    <script data-goatcounter="https://code.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+
+    
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "token"}'></script>
+
+
+
+    <script type="application/javascript">
+  var _paq = window._paq = window._paq || [];
+   
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.example.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 'ABCDE']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=gid"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'gid');
+</script>
+
+  </body>
+
+</html>

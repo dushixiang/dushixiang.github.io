@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 我在对面的角落</title>
+    <link>http://www.example.com/tags/</link>
+    <description>Recent content in Tags on 我在对面的角落</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 31 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>qcow2</title>
+      <link>http://www.example.com/tags/qcow2/</link>
+      <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/qcow2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>openvswitch</title>
+      <link>http://www.example.com/tags/openvswitch/</link>
+      <pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/openvswitch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ovs</title>
+      <link>http://www.example.com/tags/ovs/</link>
+      <pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/ovs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>4dnat</title>
+      <link>http://www.example.com/tags/4dnat/</link>
+      <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/4dnat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>http://www.example.com/tags/linux/</link>
+      <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>windows</title>
+      <link>http://www.example.com/tags/windows/</link>
+      <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/windows/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>http://www.example.com/tags/network/</link>
+      <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>veth pair</title>
+      <link>http://www.example.com/tags/veth-pair/</link>
+      <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
+      
+      <guid>http://www.example.com/tags/veth-pair/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
