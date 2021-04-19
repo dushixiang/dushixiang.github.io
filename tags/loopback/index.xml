@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>loopback on 没有理想的人不伤心</title>
-    <link>http://www.example.com/tags/loopback/</link>
+    <link>https://typesafe.cn/tags/loopback/</link>
     <description>Recent content in loopback on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/loopback/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/loopback/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 环回网络接口</title>
-      <link>http://www.example.com/posts/linux-loopback/</link>
+      <link>https://typesafe.cn/posts/linux-loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-loopback/</guid>
+      <guid>https://typesafe.cn/posts/linux-loopback/</guid>
       <description>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
 Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
 环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。

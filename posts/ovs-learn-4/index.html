@@ -32,7 +32,7 @@ OVS提供了相关命令来配置或删除端口镜像，下面我们来实验�
 镜像源     select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。 select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。 select_src_port：字符串（端口名称）。表示此端口发送的所有流量。 select_vlan：整形（0-4095）。表示携带此VLAN标签的流量。  镜像目的     output_port：字符串（端口名称）。接收流量报文的观察端口。 output_vlan：整形（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。  基础操作命令    新增端口镜像
 ovs-vsctl -- set Bridge &lt;bridge_name&gt; mirrors=@m \  -- --id=@&lt;port0&gt; get Port &lt;port0&gt; \  -- --id=@&lt;port1&gt; get Port &lt;port1&gt; \  -- --id=@m create Mirror name=&lt;mirror_name&gt; select-dst-port=@&lt;port0&gt; select-src-port=@&lt;port0&gt; output-port=@&lt;port1&gt;  这行命令会输出一个镜像ID" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://www.example.com/posts/ovs-learn-4/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://typesafe.cn/posts/ovs-learn-4/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-12-28T19:23:00&#43;00:00" />
 <meta property="article:modified_time" content="2020-12-28T19:23:00&#43;00:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
 
@@ -43,7 +43,7 @@ ovs-vsctl -- set Bridge &lt;bridge_name&gt; mirrors=@m \  -- --id=@&lt;port0&gt;
 </title>
 
     
-      <link rel="canonical" href="http://www.example.com/posts/ovs-learn-4/">
+      <link rel="canonical" href="https://typesafe.cn/posts/ovs-learn-4/">
     
 
     
@@ -144,7 +144,7 @@ ovs-vsctl -- set Bridge &lt;bridge_name&gt; mirrors=@m \  -- --id=@&lt;port0&gt;
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://www.example.com/posts/ovs-learn-4/">
+            <a class="title-link" href="https://typesafe.cn/posts/ovs-learn-4/">
               Open vSwitch 入门实践（4）使用OVS配置端口镜像
             </a>
           </h1>

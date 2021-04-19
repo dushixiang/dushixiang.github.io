@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>bridge on 没有理想的人不伤心</title>
-    <link>http://www.example.com/tags/bridge/</link>
+    <link>https://typesafe.cn/tags/bridge/</link>
     <description>Recent content in bridge on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 13 Nov 2020 21:47:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/bridge/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 13 Nov 2020 21:47:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/bridge/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux Bridge 详解</title>
-      <link>http://www.example.com/posts/linux-bridge/</link>
+      <link>https://typesafe.cn/posts/linux-bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-bridge/</guid>
+      <guid>https://typesafe.cn/posts/linux-bridge/</guid>
       <description>Linux Bridge 详解    Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？    操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。

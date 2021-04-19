@@ -2,71 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 没有理想的人不伤心</title>
-    <link>http://www.example.com/categories/</link>
+    <link>https://typesafe.cn/categories/</link>
     <description>Recent content in Categories on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 18 Apr 2021 00:08:38 +0800</lastBuildDate><atom:link href="http://www.example.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Apr 2021 00:08:38 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>kafka</title>
-      <link>http://www.example.com/categories/kafka/</link>
+      <link>https://typesafe.cn/categories/kafka/</link>
       <pubDate>Sun, 18 Apr 2021 00:08:38 +0800</pubDate>
       
-      <guid>http://www.example.com/categories/kafka/</guid>
+      <guid>https://typesafe.cn/categories/kafka/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Java</title>
-      <link>http://www.example.com/categories/java/</link>
+      <link>https://typesafe.cn/categories/java/</link>
       <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
       
-      <guid>http://www.example.com/categories/java/</guid>
+      <guid>https://typesafe.cn/categories/java/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linux网络</title>
-      <link>http://www.example.com/categories/linux%E7%BD%91%E7%BB%9C/</link>
+      <link>https://typesafe.cn/categories/linux%E7%BD%91%E7%BB%9C/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/categories/linux%E7%BD%91%E7%BB%9C/</guid>
+      <guid>https://typesafe.cn/categories/linux%E7%BD%91%E7%BB%9C/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Linux</title>
-      <link>http://www.example.com/categories/linux/</link>
+      <link>https://typesafe.cn/categories/linux/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>http://www.example.com/categories/linux/</guid>
+      <guid>https://typesafe.cn/categories/linux/</guid>
       <description></description>
     </item>
     
     <item>
       <title>kvm</title>
-      <link>http://www.example.com/categories/kvm/</link>
+      <link>https://typesafe.cn/categories/kvm/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/categories/kvm/</guid>
+      <guid>https://typesafe.cn/categories/kvm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Open vSwitch</title>
-      <link>http://www.example.com/categories/open-vswitch/</link>
+      <link>https://typesafe.cn/categories/open-vswitch/</link>
       <pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate>
       
-      <guid>http://www.example.com/categories/open-vswitch/</guid>
+      <guid>https://typesafe.cn/categories/open-vswitch/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tool</title>
-      <link>http://www.example.com/categories/tool/</link>
+      <link>https://typesafe.cn/categories/tool/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/categories/tool/</guid>
+      <guid>https://typesafe.cn/categories/tool/</guid>
       <description></description>
     </item>
     

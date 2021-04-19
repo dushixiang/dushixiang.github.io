@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>docker on 没有理想的人不伤心</title>
-    <link>http://www.example.com/tags/docker/</link>
+    <link>https://typesafe.cn/tags/docker/</link>
     <description>Recent content in docker on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Tue, 17 Nov 2020 15:39:00 +0000</lastBuildDate><atom:link href="http://www.example.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Nov 2020 15:39:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>http://www.example.com/posts/vctl/</link>
+      <link>https://typesafe.cn/posts/vctl/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/vctl/</guid>
+      <guid>https://typesafe.cn/posts/vctl/</guid>
       <description>前言    作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
  先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。  对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。

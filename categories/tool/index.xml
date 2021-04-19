@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tool on 没有理想的人不伤心</title>
-    <link>http://www.example.com/categories/tool/</link>
+    <link>https://typesafe.cn/categories/tool/</link>
     <description>Recent content in tool on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 19 Nov 2020 22:33:00 +0000</lastBuildDate><atom:link href="http://www.example.com/categories/tool/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Nov 2020 22:33:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/categories/tool/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。</title>
-      <link>http://www.example.com/posts/4dnat/</link>
+      <link>https://typesafe.cn/posts/4dnat/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/4dnat/</guid>
+      <guid>https://typesafe.cn/posts/4dnat/</guid>
       <description>前言    你是否遇到过这样的场景，服务器不能上网，但是又需要安装某个软件，面对如蛛网般杂乱的rpm包依赖关系，放弃或许是最好的选择，这样你就不必再为无法完成工作而痛苦又懊恼。
 但是今天，你有了一个更好的选择。
 4DNAT    4DNAT取名源自4和DNAT。这个工具工作在OSI模型的第四层传输层，同时4和for谐音，意为专门为目标地址转换而服务的工具。4DNAT使用go语言开发，具有天然的跨平台性，并且完全使用go标准库开发，没有任何的第三方依赖，编译之后只有一个二进制可执行文件。它有4种工作模式：
@@ -25,10 +25,10 @@ http代理    ./4dnat -proxy http 1080 https代理    ./4dnat -proxy https 1080 
     
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>http://www.example.com/posts/vctl/</link>
+      <link>https://typesafe.cn/posts/vctl/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/vctl/</guid>
+      <guid>https://typesafe.cn/posts/vctl/</guid>
       <description>前言    作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
  先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。  对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。
@@ -42,10 +42,10 @@ vctl system stop 接下来就是和普通的docker命令一样了。
     
     <item>
       <title>tcpkill在go语言下的实现和增强</title>
-      <link>http://www.example.com/posts/tcpwall/</link>
+      <link>https://typesafe.cn/posts/tcpwall/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/tcpwall/</guid>
+      <guid>https://typesafe.cn/posts/tcpwall/</guid>
       <description>tcpwall    当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
 我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
 通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl+C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。

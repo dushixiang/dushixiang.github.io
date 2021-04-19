@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tun/tap on 没有理想的人不伤心</title>
-    <link>http://www.example.com/tags/tun/tap/</link>
+    <link>https://typesafe.cn/tags/tun/tap/</link>
     <description>Recent content in tun/tap on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language><atom:link href="http://www.example.com/tags/tun/tap/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language><atom:link href="https://typesafe.cn/tags/tun/tap/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux tun/tap 详解</title>
-      <link>http://www.example.com/posts/linux-tun-tap/</link>
+      <link>https://typesafe.cn/posts/linux-tun-tap/</link>
       <pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-tun-tap/</guid>
+      <guid>https://typesafe.cn/posts/linux-tun-tap/</guid>
       <description>在计算机网络中，tun与tap是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。
  tun/tap是什么？    tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。
 tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。

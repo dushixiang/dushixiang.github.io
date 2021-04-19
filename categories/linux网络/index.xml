@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Linux网络 on 没有理想的人不伤心</title>
-    <link>http://www.example.com/categories/linux%E7%BD%91%E7%BB%9C/</link>
+    <link>https://typesafe.cn/categories/linux%E7%BD%91%E7%BB%9C/</link>
     <description>Recent content in Linux网络 on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="http://www.example.com/categories/linux%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/categories/linux%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 环回网络接口</title>
-      <link>http://www.example.com/posts/linux-loopback/</link>
+      <link>https://typesafe.cn/posts/linux-loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-loopback/</guid>
+      <guid>https://typesafe.cn/posts/linux-loopback/</guid>
       <description>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
 Linux是如何访问本机IP的？    大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
 环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
@@ -24,10 +24,10 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
     
     <item>
       <title>Linux Bridge 详解</title>
-      <link>http://www.example.com/posts/linux-bridge/</link>
+      <link>https://typesafe.cn/posts/linux-bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-bridge/</guid>
+      <guid>https://typesafe.cn/posts/linux-bridge/</guid>
       <description>Linux Bridge 详解    Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？    操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
@@ -37,10 +37,10 @@ never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;br
     
     <item>
       <title>Linux veth pair 详解</title>
-      <link>http://www.example.com/posts/linux-veth-pair/</link>
+      <link>https://typesafe.cn/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-veth-pair/</guid>
+      <guid>https://typesafe.cn/posts/linux-veth-pair/</guid>
       <description>Linux veth pair 详解    veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
 如何使用？    创建一对veth
@@ -51,10 +51,10 @@ ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;
     
     <item>
       <title>Linux Network Namespace (netns) 详解</title>
-      <link>http://www.example.com/posts/linux-netns/</link>
+      <link>https://typesafe.cn/posts/linux-netns/</link>
       <pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-netns/</guid>
+      <guid>https://typesafe.cn/posts/linux-netns/</guid>
       <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
 使用方式    使用ip netns help查看使用帮助
 Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验    我们将要构建如下图的网络
@@ -64,10 +64,10 @@ Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns
     
     <item>
       <title>Linux tun/tap 详解</title>
-      <link>http://www.example.com/posts/linux-tun-tap/</link>
+      <link>https://typesafe.cn/posts/linux-tun-tap/</link>
       <pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-tun-tap/</guid>
+      <guid>https://typesafe.cn/posts/linux-tun-tap/</guid>
       <description>在计算机网络中，tun与tap是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。
  tun/tap是什么？    tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。
 tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。

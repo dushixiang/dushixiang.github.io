@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Linux on 没有理想的人不伤心</title>
-    <link>http://www.example.com/categories/linux/</link>
+    <link>https://typesafe.cn/categories/linux/</link>
     <description>Recent content in Linux on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="http://www.example.com/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="https://typesafe.cn/categories/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 修改最大文件描述符</title>
-      <link>http://www.example.com/posts/linux-limit/</link>
+      <link>https://typesafe.cn/posts/linux-limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>http://www.example.com/posts/linux-limit/</guid>
+      <guid>https://typesafe.cn/posts/linux-limit/</guid>
       <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     

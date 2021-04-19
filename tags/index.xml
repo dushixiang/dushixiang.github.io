@@ -2,233 +2,233 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 没有理想的人不伤心</title>
-    <link>http://www.example.com/tags/</link>
+    <link>https://typesafe.cn/tags/</link>
     <description>Recent content in Tags on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 18 Apr 2021 00:08:38 +0800</lastBuildDate><atom:link href="http://www.example.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Apr 2021 00:08:38 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>kafka</title>
-      <link>http://www.example.com/tags/kafka/</link>
+      <link>https://typesafe.cn/tags/kafka/</link>
       <pubDate>Sun, 18 Apr 2021 00:08:38 +0800</pubDate>
       
-      <guid>http://www.example.com/tags/kafka/</guid>
+      <guid>https://typesafe.cn/tags/kafka/</guid>
       <description></description>
     </item>
     
     <item>
       <title>延迟队列</title>
-      <link>http://www.example.com/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</link>
+      <link>https://typesafe.cn/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</link>
       <pubDate>Sun, 18 Apr 2021 00:08:38 +0800</pubDate>
       
-      <guid>http://www.example.com/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</guid>
+      <guid>https://typesafe.cn/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Java</title>
-      <link>http://www.example.com/tags/java/</link>
+      <link>https://typesafe.cn/tags/java/</link>
       <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
       
-      <guid>http://www.example.com/tags/java/</guid>
+      <guid>https://typesafe.cn/tags/java/</guid>
       <description></description>
     </item>
     
     <item>
       <title>开发</title>
-      <link>http://www.example.com/tags/%E5%BC%80%E5%8F%91/</link>
+      <link>https://typesafe.cn/tags/%E5%BC%80%E5%8F%91/</link>
       <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
       
-      <guid>http://www.example.com/tags/%E5%BC%80%E5%8F%91/</guid>
+      <guid>https://typesafe.cn/tags/%E5%BC%80%E5%8F%91/</guid>
       <description></description>
     </item>
     
     <item>
       <title>linux</title>
-      <link>http://www.example.com/tags/linux/</link>
+      <link>https://typesafe.cn/tags/linux/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/linux/</guid>
+      <guid>https://typesafe.cn/tags/linux/</guid>
       <description></description>
     </item>
     
     <item>
       <title>loopback</title>
-      <link>http://www.example.com/tags/loopback/</link>
+      <link>https://typesafe.cn/tags/loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/loopback/</guid>
+      <guid>https://typesafe.cn/tags/loopback/</guid>
       <description></description>
     </item>
     
     <item>
       <title>network</title>
-      <link>http://www.example.com/tags/network/</link>
+      <link>https://typesafe.cn/tags/network/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/network/</guid>
+      <guid>https://typesafe.cn/tags/network/</guid>
       <description></description>
     </item>
     
     <item>
       <title>limit</title>
-      <link>http://www.example.com/tags/limit/</link>
+      <link>https://typesafe.cn/tags/limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/limit/</guid>
+      <guid>https://typesafe.cn/tags/limit/</guid>
       <description></description>
     </item>
     
     <item>
       <title>sysctl</title>
-      <link>http://www.example.com/tags/sysctl/</link>
+      <link>https://typesafe.cn/tags/sysctl/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/sysctl/</guid>
+      <guid>https://typesafe.cn/tags/sysctl/</guid>
       <description></description>
     </item>
     
     <item>
       <title>qcow2</title>
-      <link>http://www.example.com/tags/qcow2/</link>
+      <link>https://typesafe.cn/tags/qcow2/</link>
       <pubDate>Thu, 31 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/qcow2/</guid>
+      <guid>https://typesafe.cn/tags/qcow2/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ovs</title>
-      <link>http://www.example.com/tags/ovs/</link>
+      <link>https://typesafe.cn/tags/ovs/</link>
       <pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/ovs/</guid>
+      <guid>https://typesafe.cn/tags/ovs/</guid>
       <description></description>
     </item>
     
     <item>
       <title>sdn</title>
-      <link>http://www.example.com/tags/sdn/</link>
+      <link>https://typesafe.cn/tags/sdn/</link>
       <pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/sdn/</guid>
+      <guid>https://typesafe.cn/tags/sdn/</guid>
       <description></description>
     </item>
     
     <item>
       <title>4dnat</title>
-      <link>http://www.example.com/tags/4dnat/</link>
+      <link>https://typesafe.cn/tags/4dnat/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/4dnat/</guid>
+      <guid>https://typesafe.cn/tags/4dnat/</guid>
       <description></description>
     </item>
     
     <item>
       <title>dnat</title>
-      <link>http://www.example.com/tags/dnat/</link>
+      <link>https://typesafe.cn/tags/dnat/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/dnat/</guid>
+      <guid>https://typesafe.cn/tags/dnat/</guid>
       <description></description>
     </item>
     
     <item>
       <title>windows</title>
-      <link>http://www.example.com/tags/windows/</link>
+      <link>https://typesafe.cn/tags/windows/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/windows/</guid>
+      <guid>https://typesafe.cn/tags/windows/</guid>
       <description></description>
     </item>
     
     <item>
       <title>docker</title>
-      <link>http://www.example.com/tags/docker/</link>
+      <link>https://typesafe.cn/tags/docker/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/docker/</guid>
+      <guid>https://typesafe.cn/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
       <title>vmware</title>
-      <link>http://www.example.com/tags/vmware/</link>
+      <link>https://typesafe.cn/tags/vmware/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/vmware/</guid>
+      <guid>https://typesafe.cn/tags/vmware/</guid>
       <description></description>
     </item>
     
     <item>
       <title>bridge</title>
-      <link>http://www.example.com/tags/bridge/</link>
+      <link>https://typesafe.cn/tags/bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/bridge/</guid>
+      <guid>https://typesafe.cn/tags/bridge/</guid>
       <description></description>
     </item>
     
     <item>
       <title>veth pair</title>
-      <link>http://www.example.com/tags/veth-pair/</link>
+      <link>https://typesafe.cn/tags/veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/veth-pair/</guid>
+      <guid>https://typesafe.cn/tags/veth-pair/</guid>
       <description></description>
     </item>
     
     <item>
       <title>netns</title>
-      <link>http://www.example.com/tags/netns/</link>
+      <link>https://typesafe.cn/tags/netns/</link>
       <pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/netns/</guid>
+      <guid>https://typesafe.cn/tags/netns/</guid>
       <description></description>
     </item>
     
     <item>
       <title>dsniff</title>
-      <link>http://www.example.com/tags/dsniff/</link>
+      <link>https://typesafe.cn/tags/dsniff/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/dsniff/</guid>
+      <guid>https://typesafe.cn/tags/dsniff/</guid>
       <description></description>
     </item>
     
     <item>
       <title>GoPacket</title>
-      <link>http://www.example.com/tags/gopacket/</link>
+      <link>https://typesafe.cn/tags/gopacket/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/gopacket/</guid>
+      <guid>https://typesafe.cn/tags/gopacket/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tcp</title>
-      <link>http://www.example.com/tags/tcp/</link>
+      <link>https://typesafe.cn/tags/tcp/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/tcp/</guid>
+      <guid>https://typesafe.cn/tags/tcp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tcpkill</title>
-      <link>http://www.example.com/tags/tcpkill/</link>
+      <link>https://typesafe.cn/tags/tcpkill/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/tcpkill/</guid>
+      <guid>https://typesafe.cn/tags/tcpkill/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tun/tap</title>
-      <link>http://www.example.com/tags/tun/tap/</link>
+      <link>https://typesafe.cn/tags/tun/tap/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://www.example.com/tags/tun/tap/</guid>
+      <guid>https://typesafe.cn/tags/tun/tap/</guid>
       <description></description>
     </item>
     

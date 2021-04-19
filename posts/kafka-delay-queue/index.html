@@ -62,7 +62,7 @@ Java代码实现    import com.fasterxml.jackson.core.JsonProcessingException; i
 KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换sleep。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。
 Java代码实现    import com.fasterxml.jackson.core.JsonProcessingException; import com.fasterxml.jackson.databind.JsonNode; import com.fasterxml.jackson.databind.ObjectMapper; import org.apache.kafka.clients.consumer.*; import org.apache.kafka.clients.producer.KafkaProducer; import org.apache.kafka.clients.producer.ProducerConfig; import org.apache.kafka.clients.producer.ProducerRecord; import org.apache.kafka.common.TopicPartition; import org.apache.kafka.common.serialization.StringDeserializer; import org.apache.kafka.common.serialization.StringSerializer; import org.junit.jupiter.api.BeforeEach; import org.junit.jupiter.api.Test; import org.springframework.boot.test.context.SpringBootTest; import java.time.Duration; import java.util.*; import java.util.concurrent.ExecutionException; @SpringBootTest public class DelayQueueTest { private KafkaConsumer&lt;String, String&gt; consumer; private KafkaProducer&lt;String, String&gt; producer; private volatile Boolean exit = false; private final Object lock = new Object(); private final String servers = &#34;&#34;; @BeforeEach void initConsumer() { Properties props = new Properties(); props." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://www.example.com/posts/kafka-delay-queue/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://typesafe.cn/posts/kafka-delay-queue/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-04-18T00:08:38&#43;08:00" />
 <meta property="article:modified_time" content="2021-04-18T00:08:38&#43;08:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
 
@@ -73,7 +73,7 @@ Java代码实现    import com.fasterxml.jackson.core.JsonProcessingException; i
 </title>
 
     
-      <link rel="canonical" href="http://www.example.com/posts/kafka-delay-queue/">
+      <link rel="canonical" href="https://typesafe.cn/posts/kafka-delay-queue/">
     
 
     
@@ -174,7 +174,7 @@ Java代码实现    import com.fasterxml.jackson.core.JsonProcessingException; i
       <header>
         <div class="post-title">
           <h1 class="title">
-            <a class="title-link" href="http://www.example.com/posts/kafka-delay-queue/">
+            <a class="title-link" href="https://typesafe.cn/posts/kafka-delay-queue/">
               基于kafka实现延迟队列
             </a>
           </h1>
