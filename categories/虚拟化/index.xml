@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Java on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/java/</link>
-    <description>Recent content in Java on 没有理想的人不伤心</description>
+    <title>虚拟化 on 没有理想的人不伤心</title>
+    <link>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
+    <description>Recent content in 虚拟化 on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 19 May 2021 20:18:20 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 May 2021 20:18:20 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>使用libvirt-java采集KVM虚拟机资源利用信息</title>
       <link>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
@@ -17,20 +17,6 @@
 CPU使用率    libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
 cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Java代码如下
 // t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率    不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
-    </item>
-    
-    <item>
-      <title>Java的奇技淫巧</title>
-      <link>https://typesafe.cn/posts/java-unexpected-features/</link>
-      <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
-      
-      <guid>https://typesafe.cn/posts/java-unexpected-features/</guid>
-      <description>Java是一种广泛使用的计算机编程语言、面向对象、泛型编程的特性，广泛应用于企业级Web应用开发和移动应用开发。
-1995年3月23日Sun公司发布了Java，至今已有近26年，可以说是一门十分成熟的开发语言了，但在某些不为人知的地方存在着一些意料之外的特性。
-Java的保留关键字 goto和const    在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。
-int goto = 0; int const = 0; 上面这两行代码的写法存在问题，无法正常编译通过。
-Java标签Label    上面说了在Java里面没有goto这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。
-outerLoop: while (true) { System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); int i = 0; while (true) { System.out.println(&amp;#34;I am the inner loop&amp;#34;); i++; if (i &amp;gt;= 3) { break outerLoop; } } } System.out.println(&amp;#34;Complete the loop&amp;#34;); // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { System.</description>
     </item>
     
   </channel>
