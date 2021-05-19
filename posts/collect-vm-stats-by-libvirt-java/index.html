@@ -10,23 +10,23 @@
     
 
     <meta name="author" content="dushixiang">
-    <meta name="description" content="虚拟化开发相较于普通开发是一个比较冷门的方向，大多数都是使用Python开发，其中利用Java做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
+    <meta name="description" content="虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率    libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
-cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Java代码如下
+cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
 // t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&#34;虚拟机[{}]CPU使用率为: {}&#34;, uuid, cpuUsage); 内存使用率    不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。">
     <meta name="keywords" content="blog,desenvolvedor,pessoal">
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="使用libvirt-java采集KVM虚拟机资源利用信息"/>
-<meta name="twitter:description" content="虚拟化开发相较于普通开发是一个比较冷门的方向，大多数都是使用Python开发，其中利用Java做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
+<meta name="twitter:title" content="使用libvirt-java采集KVM虚拟机状态信息"/>
+<meta name="twitter:description" content="虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率    libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
-cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Java代码如下
+cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
 // t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&#34;虚拟机[{}]CPU使用率为: {}&#34;, uuid, cpuUsage); 内存使用率    不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。"/>
 
-    <meta property="og:title" content="使用libvirt-java采集KVM虚拟机资源利用信息" />
-<meta property="og:description" content="虚拟化开发相较于普通开发是一个比较冷门的方向，大多数都是使用Python开发，其中利用Java做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
+    <meta property="og:title" content="使用libvirt-java采集KVM虚拟机状态信息" />
+<meta property="og:description" content="虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率    libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
-cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Java代码如下
+cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
 // t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&#34;虚拟机[{}]CPU使用率为: {}&#34;, uuid, cpuUsage); 内存使用率    不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/" /><meta property="article:section" content="posts" />
@@ -36,7 +36,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Ja
 
 
     <title>
-  使用libvirt-java采集KVM虚拟机资源利用信息 · 没有理想的人不伤心
+  使用libvirt-java采集KVM虚拟机状态信息 · 没有理想的人不伤心
 </title>
 
     
@@ -142,7 +142,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Ja
         <div class="post-title">
           <h1 class="title">
             <a class="title-link" href="https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/">
-              使用libvirt-java采集KVM虚拟机资源利用信息
+              使用libvirt-java采集KVM虚拟机状态信息
             </a>
           </h1>
         </div>
@@ -175,7 +175,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Ja
 
       <div>
         
-        <p>虚拟化开发相较于普通开发是一个比较冷门的方向，大多数都是使用Python开发，其中利用Java做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 <code>libvirt-java</code> 来采集KVM虚拟机的资源使用信息。</p>
+        <p>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的更是少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 <code>libvirt-java</code> 来采集KVM虚拟机的资源使用信息。</p>
 <h3 id="cpu使用率">
   CPU使用率
   <a class="heading-link" href="#cpu%e4%bd%bf%e7%94%a8%e7%8e%87">
@@ -183,7 +183,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_age) * 100 / (t * vCpus * 10^9) Ja
   </a>
 </h3>
 <p><code>libvirt</code>并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。</p>
-<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-latex" data-lang="latex">cpu<span style="color:#fff;font-weight:bold">_</span>usage = (cpu<span style="color:#fff;font-weight:bold">_</span>time<span style="color:#fff;font-weight:bold">_</span>now - cpu<span style="color:#fff;font-weight:bold">_</span>time<span style="color:#fff;font-weight:bold">_</span>t<span style="color:#fff;font-weight:bold">_</span>second<span style="color:#fff;font-weight:bold">_</span>age) * 100 / (t * vCpus * 10<span style="color:#fff;font-weight:bold">^</span>9)
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-latex" data-lang="latex">cpu<span style="color:#fff;font-weight:bold">_</span>usage = (cpu<span style="color:#fff;font-weight:bold">_</span>time<span style="color:#fff;font-weight:bold">_</span>now - cpu<span style="color:#fff;font-weight:bold">_</span>time<span style="color:#fff;font-weight:bold">_</span>t<span style="color:#fff;font-weight:bold">_</span>second<span style="color:#fff;font-weight:bold">_</span>ago) * 100 / (t * vCpus * 10<span style="color:#fff;font-weight:bold">^</span>9)
 </code></pre></div><p>Java代码如下</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#007f7f">// t秒前的CPU时间
 </span><span style="color:#007f7f"></span><span style="color:#fff;font-weight:bold">long</span> c1 = domain.<span style="color:#007f7f">getInfo</span>().<span style="color:#007f7f">cpuTime</span>;
@@ -323,7 +323,8 @@ Document document = Jsoup.<span style="color:#007f7f">parse</span>(xmlDesc);
   DomainBlockStats domainBlockStats = domain.<span style="color:#007f7f">blockStats</span>(dev);
   log.<span style="color:#007f7f">debug</span>(<span style="color:#0ff;font-weight:bold">&#34;dev {} stats {}&#34;</span>, dev, Json.<span style="color:#007f7f">toJsonString</span>(domainBlockStats));
 }
-</code></pre></div>
+</code></pre></div><p>至此采集虚拟机状态信息算是告一段落，学的越多才发现不会的越多&hellip;</p>
+
       </div>
 
 
