@@ -10,7 +10,7 @@
     
 
     <meta name="author" content="dushixiang">
-    <meta name="description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，docker到底是如何做到的。
+    <meta name="description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器    首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
 [root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &#34;/bin/bash&#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。">
@@ -18,13 +18,13 @@ docker run -itd --name centos-test --net=none centos 启动成功之后我们进
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="容器网络——如何为docker添加网卡？"/>
-<meta name="twitter:description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，docker到底是如何做到的。
+<meta name="twitter:description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器    首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
 [root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &#34;/bin/bash&#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。"/>
 
     <meta property="og:title" content="容器网络——如何为docker添加网卡？" />
-<meta property="og:description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，docker到底是如何做到的。
+<meta property="og:description" content="之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器    首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
 [root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &#34;/bin/bash&#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。" />
@@ -175,14 +175,14 @@ docker run -itd --name centos-test --net=none centos 启动成功之后我们进
 
       <div>
         
-        <p>之前我们介绍<code>Network Namespace</code>（以下简称<code>netns</code>）和<code>veth pair</code>时说过<code>docker</code>是使用这些技术来实现的网络隔离，今天我们就来一探究竟，<code>docker</code>到底是如何做到的。</p>
+        <p>之前我们介绍<code>Network Namespace</code>（以下简称<code>netns</code>）和<code>veth pair</code>时说过<code>docker</code>是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下<code>docker</code>到底是如何做到的。</p>
 <h3 id="启动一个无网络的容器">
   启动一个无网络的容器
   <a class="heading-link" href="#%e5%90%af%e5%8a%a8%e4%b8%80%e4%b8%aa%e6%97%a0%e7%bd%91%e7%bb%9c%e7%9a%84%e5%ae%b9%e5%99%a8">
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h3>
-<p>首先我们使用 <code>--net=none</code> 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。</p>
+<p>首先我们使用 <code>--net=none</code> 参数启动一个无网络的容器，为了方便调试，这里我们使用了<code>centos</code>镜像。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -itd --name centos-test --net=none centos
 </code></pre></div><p>启动成功之后我们进入容器内部确认一下是否无网卡。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[root@localhost ~]<span style="color:#007f7f"># docker ps</span>
@@ -201,8 +201,8 @@ CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          POR
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h3>
-<p>当容器启动时，docker内部会自动为这个容器创建一个netns用于网络隔离，但当我们使用 <code>ip netns list</code> 查看时却看不到任何数据，这是因为docker把 <code>netns</code> 创建在了其他地方，而<code>ip netns list</code>命令只能读目录<code>/var/run/netns</code>下面的数据。</p>
-<p>我们可以通过以下命令来解决这个问题，方便我们学习docker网络。</p>
+<p>当容器启动时，<code>docker</code>内部会自动为这个容器创建一个<code>netns</code>用于网络隔离，但当我们使用 <code>ip netns list</code> 查看时却看不到任何数据，这是因为<code>docker</code>把 <code>netns</code> 创建在了其他地方，而<code>ip netns list</code>命令只能读目录<code>/var/run/netns</code>下面的数据。</p>
+<p>我们可以通过以下命令来解决这个问题，方便我们学习<code>docker</code>网络。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 得到容器对应的进程</span>
 pid=docker inspect -f <span style="color:#0ff;font-weight:bold">&#39;{{.State.Pid}}&#39;</span> <span style="color:#0ff;font-weight:bold">&#34;</span>$container_id<span style="color:#0ff;font-weight:bold">&#34;</span>
 <span style="color:#007f7f"># 手动创建防止文件夹不存在</span>
@@ -221,14 +221,14 @@ ln -s /proc/$pid/ns/net /var/run/netns/$container_id
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
-</code></pre></div><p>可以看到我们成功输出了netns中的网卡信息。</p>
+</code></pre></div><p>可以看到我们成功输出了<code>netns</code>中的网卡信息，并且此信息和从<code>docker</code>容器中看到的一致。</p>
 <h3 id="给docker添加网卡">
   给docker添加网卡
   <a class="heading-link" href="#%e7%bb%99docker%e6%b7%bb%e5%8a%a0%e7%bd%91%e5%8d%a1">
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h3>
-<p>参考前面的<code>Linux Bridge</code>章节，我们首先创建一个网桥，然后创建一对veth pair，一端连接到网桥，一端设置到docker对应的netns中。</p>
+<p>参考前面的<code>Linux Bridge</code>章节，我们首先创建一个网桥，然后创建一对<code>veth pair</code>，一端连接到网桥，一端移动到<code>docker</code>对应的<code>netns</code>中。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 添加网桥</span>
 brctl addbr br0
 <span style="color:#007f7f"># 启动网桥</span>
@@ -244,7 +244,7 @@ ip netns <span style="color:#fff;font-weight:bold">exec</span> 28dc2e8853df ip a
 <span style="color:#007f7f"># 将veth的另一端启动并挂载到网桥上</span>
 ip link <span style="color:#fff;font-weight:bold">set</span> veth0-br up
 brctl addif br0 veth0-br
-</code></pre></div><p>验证netns和docker容器中的网卡。</p>
+</code></pre></div><p>最后验证<code>netns</code>和<code>docker</code>容器中的网卡信息。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[root@localhost ~]<span style="color:#007f7f"># ip netns exec 28dc2e8853df ip a</span>
 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ff0;font-weight:bold">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -264,7 +264,7 @@ brctl addif br0 veth0-br
     link/ether 86:29:e6:0a:2a:cb brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ff0;font-weight:bold">0</span>
     inet 10.0.0.1/24 scope global veth0-ns
        valid_lft forever preferred_lft forever
-</code></pre></div><p>可以看出我们在netns中添加的网卡在docker容器中也可以正确的显示出来。</p>
+</code></pre></div><p>可以看出我们在<code>netns</code>中添加的网卡在<code>docker</code>容器中也可以正确的显示出来，由此证明了此<code>netns</code>和<code>docker</code>容器的对应关系。当我们使用<code>docker</code>命令来创建容器时，<code>docker</code>为我们隐藏了大量细节，轻松使用几条命令便创建好了容器，但这种只知其然不知其所以然的方式对于我们掌握<code>docker</code>并不够，只有了解了底层原理之后才能对其功能掌握的更加深入。</p>
 <h3 id="理解docker的四种网络模式">
   理解docker的四种网络模式
   <a class="heading-link" href="#%e7%90%86%e8%a7%a3docker%e7%9a%84%e5%9b%9b%e7%a7%8d%e7%bd%91%e7%bb%9c%e6%a8%a1%e5%bc%8f">
@@ -298,7 +298,16 @@ brctl addif br0 veth0-br
 </tr>
 </tbody>
 </table>
-
+<p>最后也不要忘记清理实验环境哦。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 删除网桥</span>
+ip link del br0
+<span style="color:#007f7f"># 删除veth pair</span>
+ip link del veth0-br
+<span style="color:#007f7f"># 删除软连接</span>
+rm -rf /var/run/netns/28dc2e8853df
+<span style="color:#007f7f"># 删除容器</span>
+docker rm 28dc2e8853df -f
+</code></pre></div>
       </div>
 
 
