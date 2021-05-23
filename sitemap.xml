@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://typesafe.cn/categories/</loc>
-    <lastmod>2021-05-19T20:18:20+08:00</lastmod>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/tags/docker/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/categories/docker/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/tags/network/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/posts/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/tags/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/posts/how-to-add-port-for-docker/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
+  </url><url>
+    <loc>https://typesafe.cn/</loc>
+    <lastmod>2021-05-23T13:37:00+08:00</lastmod>
   </url><url>
     <loc>https://typesafe.cn/tags/java/</loc>
     <lastmod>2021-05-19T20:18:20+08:00</lastmod>
@@ -11,16 +32,7 @@
     <loc>https://typesafe.cn/tags/libvirt/</loc>
     <lastmod>2021-05-19T20:18:20+08:00</lastmod>
   </url><url>
-    <loc>https://typesafe.cn/posts/</loc>
-    <lastmod>2021-05-19T20:18:20+08:00</lastmod>
-  </url><url>
-    <loc>https://typesafe.cn/tags/</loc>
-    <lastmod>2021-05-19T20:18:20+08:00</lastmod>
-  </url><url>
     <loc>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</loc>
-    <lastmod>2021-05-19T20:18:20+08:00</lastmod>
-  </url><url>
-    <loc>https://typesafe.cn/</loc>
     <lastmod>2021-05-19T20:18:20+08:00</lastmod>
   </url><url>
     <loc>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
@@ -57,9 +69,6 @@
     <lastmod>2021-01-28T22:59:00+00:00</lastmod>
   </url><url>
     <loc>https://typesafe.cn/tags/loopback/</loc>
-    <lastmod>2021-01-28T22:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://typesafe.cn/tags/network/</loc>
     <lastmod>2021-01-28T22:59:00+00:00</lastmod>
   </url><url>
     <loc>https://typesafe.cn/tags/limit/</loc>
@@ -127,9 +136,6 @@
   </url><url>
     <loc>https://typesafe.cn/posts/4dnat/</loc>
     <lastmod>2020-11-19T22:33:00+00:00</lastmod>
-  </url><url>
-    <loc>https://typesafe.cn/tags/docker/</loc>
-    <lastmod>2020-11-17T15:39:00+00:00</lastmod>
   </url><url>
     <loc>https://typesafe.cn/posts/vctl/</loc>
     <lastmod>2020-11-17T15:39:00+00:00</lastmod>
