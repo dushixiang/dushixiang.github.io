@@ -265,9 +265,9 @@ brctl addif br0 veth0-br
     inet 10.0.0.1/24 scope global veth0-ns
        valid_lft forever preferred_lft forever
 </code></pre></div><p>可以看出我们在<code>netns</code>中添加的网卡在<code>docker</code>容器中也可以正确的显示出来，由此证明了此<code>netns</code>和<code>docker</code>容器的对应关系。当我们使用<code>docker</code>命令来创建容器时，<code>docker</code>为我们隐藏了大量细节，轻松使用几条命令便创建好了容器，但这种只知其然不知其所以然的方式对于我们掌握<code>docker</code>并不够，只有了解了底层原理之后才能对其功能掌握的更加深入。</p>
-<h3 id="理解docker的四种网络模式">
-  理解docker的四种网络模式
-  <a class="heading-link" href="#%e7%90%86%e8%a7%a3docker%e7%9a%84%e5%9b%9b%e7%a7%8d%e7%bd%91%e7%bb%9c%e6%a8%a1%e5%bc%8f">
+<h3 id="理解docker的几种网络模式">
+  理解docker的几种网络模式
+  <a class="heading-link" href="#%e7%90%86%e8%a7%a3docker%e7%9a%84%e5%87%a0%e7%a7%8d%e7%bd%91%e7%bb%9c%e6%a8%a1%e5%bc%8f">
     <i class="fa fa-link" aria-hidden="true"></i>
   </a>
 </h3>
@@ -298,6 +298,9 @@ brctl addif br0 veth0-br
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>新版docker新增了ipvlan、macvlan和overlay类型的网络，主要是为了多台宿主机器上面的docker容器隔离与通信，底层网络复杂了很多，之后我们会单独对其进行介绍。</p>
+</blockquote>
 <p>最后也不要忘记清理实验环境哦。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># 删除网桥</span>
 ip link del br0
