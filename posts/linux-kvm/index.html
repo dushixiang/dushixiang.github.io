@@ -296,6 +296,21 @@ TYPE=Ethernet
 BRIDGE=br0
 </code></pre></div><p>最后重启网络。</p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl restart network
+</code></pre></div><p>查看网络信息也可以看到IP配置到了网桥上，网桥上又关联了物理网卡。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[root@localhost network-scripts]<span style="color:#007f7f"># ip a</span>
+8: enp134s0f0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ff0;font-weight:bold">1500</span> qdisc mq master br0 state UP group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/ether 74:a4:b5:01:04:22 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::76a4:b5ff:fe01:422/64 scope link 
+       valid_lft forever preferred_lft forever
+17: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ff0;font-weight:bold">1500</span> qdisc noqueue state UP group default qlen <span style="color:#ff0;font-weight:bold">1000</span>
+    link/ether 74:a4:b5:01:04:22 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.0.52/16 brd 172.16.255.255 scope global br0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::76a4:b5ff:fe01:422/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@localhost network-scripts]<span style="color:#007f7f"># brctl show</span>
+bridge name     bridge id               STP enabled     interfaces
+br0             8000.74a4b5010422       no              enp134s0f0
 </code></pre></div><h3 id="创建虚拟机">
   创建虚拟机
   <a class="heading-link" href="#%e5%88%9b%e5%bb%ba%e8%99%9a%e6%8b%9f%e6%9c%ba">
