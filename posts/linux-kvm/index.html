@@ -16,7 +16,7 @@ yum install -y qemu-kvm libvirt virt-install bridge-utils 这么多软件都是�
    软件 作用     qemu-kvm 整合了QEMU 和 KVM 的一个软件。   libvirt 封装了QEMU的接口，可以更加方便的操作虚拟机，并且提供了很多种编程语言的SDK。   virt-install 用来创建虚拟机的命令行工具。   bridge-utils Linux网桥，用来配置虚拟机的桥接网络。    kvm、qemu和libvirt到底有什么关系？
 KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT，AMD-V，内存的相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。
 QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。
-qemu-kvm则是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
+qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
 libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。
 启动libvirt
 systemctl start libvirtd systemctl enable libvirtd 如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。
@@ -32,7 +32,7 @@ yum install -y qemu-kvm libvirt virt-install bridge-utils 这么多软件都是�
    软件 作用     qemu-kvm 整合了QEMU 和 KVM 的一个软件。   libvirt 封装了QEMU的接口，可以更加方便的操作虚拟机，并且提供了很多种编程语言的SDK。   virt-install 用来创建虚拟机的命令行工具。   bridge-utils Linux网桥，用来配置虚拟机的桥接网络。    kvm、qemu和libvirt到底有什么关系？
 KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT，AMD-V，内存的相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。
 QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。
-qemu-kvm则是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
+qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
 libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。
 启动libvirt
 systemctl start libvirtd systemctl enable libvirtd 如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。
@@ -46,7 +46,7 @@ yum install -y qemu-kvm libvirt virt-install bridge-utils 这么多软件都是�
    软件 作用     qemu-kvm 整合了QEMU 和 KVM 的一个软件。   libvirt 封装了QEMU的接口，可以更加方便的操作虚拟机，并且提供了很多种编程语言的SDK。   virt-install 用来创建虚拟机的命令行工具。   bridge-utils Linux网桥，用来配置虚拟机的桥接网络。    kvm、qemu和libvirt到底有什么关系？
 KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT，AMD-V，内存的相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。
 QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。
-qemu-kvm则是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
+qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。
 libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。
 启动libvirt
 systemctl start libvirtd systemctl enable libvirtd 如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。
@@ -238,7 +238,7 @@ yum install -y virt-manager 在支持x11转发的ssh客户端（例如：MobaXte
 <p><strong>kvm、qemu和libvirt到底有什么关系？</strong></p>
 <p>KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT，AMD-V，内存的相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。</p>
 <p>QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。</p>
-<p>qemu-kvm则是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。</p>
+<p>qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，大概在1%-2%之间。</p>
 <p>libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。</p>
 <p><strong>启动libvirt</strong></p>
 <div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl start libvirtd
@@ -254,9 +254,18 @@ systemctl <span style="color:#fff;font-weight:bold">enable</span> libvirtd
 </h3>
 <p>和vmware类型，kvm也支持多种类型的网络，主要分为三种。</p>
 <ol>
-<li><strong>NAT模式</strong> 虚拟机需要把流量发送到宿主机，宿主机器转换网络信息后再发出，外部机器无法感知到虚拟机的存在。此种方式宿主机器相当于一个路由器，因此宿主机上会有一个和虚拟机同网段的IP，并且虚拟机的网关地址是宿主机的这个IP。</li>
-<li><strong>主机模式</strong> 虚拟机只能互相访问，不能访问宿主机。此种方式与NAT模式类似，但它没有与虚拟机同网段的IP，因此虚拟机也不能借助于宿主机来访问外部网络。</li>
-<li><strong>桥接模式</strong> 虚拟机和宿主机都关联在一个网桥上，因此虚拟机可以与宿主机在同一个网段，并且外部机器可以直接访问到虚拟机，虚拟机也可以借助网桥来访问外部网络。</li>
+<li>
+<p><strong>NAT模式</strong> 虚拟机需要把流量发送到宿主机，宿主机器转换网络信息后再发出，外部机器无法感知到虚拟机的存在。此种方式宿主机器相当于一个路由器，因此宿主机上会有一个和虚拟机同网段的IP，并且虚拟机的网关地址是宿主机的这个IP。</p>
+</li>
+<li>
+<p><strong>主机模式</strong> 虚拟机只能互相访问，不能访问宿主机。此种方式与NAT模式类似，但它没有与虚拟机同网段的IP，因此虚拟机也不能借助于宿主机来访问外部网络。</p>
+</li>
+<li>
+<p><strong>桥接模式</strong> 虚拟机和宿主机都关联在一个网桥上，因此虚拟机可以与宿主机在同一个网段，并且外部机器可以直接访问到虚拟机，虚拟机也可以借助网桥来访问外部网络。</p>
+<blockquote>
+<p>还有一种模式在openstack等云平台上使用较为广泛，网桥上绑定的物理网卡没有IP，对应交换机配置端口为trunk模式，虚拟机 端口连接到网桥上，并配置端口不同的VLAN tag以达到隔离和互联的目的。</p>
+</blockquote>
+</li>
 </ol>
 <h3 id="配置桥接网络">
   配置桥接网络
