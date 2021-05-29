@@ -6,22 +6,22 @@
     <description>Recent content in Categories on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 23 May 2021 13:37:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 29 May 2021 17:07:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>虚拟化</title>
+      <link>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
+      <pubDate>Sat, 29 May 2021 17:07:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>docker</title>
       <link>https://typesafe.cn/categories/docker/</link>
       <pubDate>Sun, 23 May 2021 13:37:00 +0800</pubDate>
       
       <guid>https://typesafe.cn/categories/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>虚拟化</title>
-      <link>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
-      <pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate>
-      
-      <guid>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</guid>
       <description></description>
     </item>
     

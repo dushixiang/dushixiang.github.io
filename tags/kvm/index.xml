@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>虚拟化 on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
-    <description>Recent content in 虚拟化 on 没有理想的人不伤心</description>
+    <title>kvm on 没有理想的人不伤心</title>
+    <link>https://typesafe.cn/tags/kvm/</link>
+    <description>Recent content in kvm on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 29 May 2021 17:07:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 29 May 2021 17:07:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/kvm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux虚拟化</title>
       <link>https://typesafe.cn/posts/linux-kvm/</link>
@@ -25,18 +25,6 @@ libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API�
 systemctl start libvirtd systemctl enable libvirtd 如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。
 yum install -y virt-manager 在支持x11转发的ssh客户端（例如：MobaXterm）上可以直接输入 virt-manager 来启动。
 虚拟网络类型    和vmware类型，kvm也支持多种类型的网络，主要分为三种。</description>
-    </item>
-    
-    <item>
-      <title>使用libvirt-java采集KVM虚拟机状态信息</title>
-      <link>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
-      <pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate>
-      
-      <guid>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
-      <description>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
-CPU使用率    libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
-cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
-// t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率    不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
     </item>
     
   </channel>
