@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+
+    <meta name="author" content="dushixiang">
+    <meta name="description" content="一、镜像扩容    注意：需要先关闭虚拟机才能操作，&#43;号前面有空格，后面没有空格。
+qemu-img resize test.qcow2 &#43;80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
+qemu-img info test.qcow2 输出
+image: test.qcow2 file format: qcow2 virtual size: 100G (107374182400 bytes) disk size: 885M cluster_size: 65536 Format specific information: compat: 1.1 lazy refcounts: false refcount bits: 16 corrupt: false 二、Windows磁盘扩容    Windows磁盘扩容比较方便，进入 计算机管理&gt;磁盘管理 找到新增的分区把它添加到需要的分区即可。
+三、Linux磁盘扩容    启动虚拟机后，进入虚拟机控制台，使用fdisk -l命令查看磁盘信息。
+Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disklabel type: dos Disk identifier: 0xe11f7f01 Device Boot Start End Sectors Size Id Type /dev/vda1 * 2048 2099199 2097152 1G 83 Linux /dev/vda2 2099200 41943039 39843840 19G 8e Linux LVM Disk /dev/mapper/cl-root: 17 GiB, 18249416704 bytes, 35643392 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes 可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="KVM 虚拟机磁盘扩容"/>
+<meta name="twitter:description" content="一、镜像扩容    注意：需要先关闭虚拟机才能操作，&#43;号前面有空格，后面没有空格。
+qemu-img resize test.qcow2 &#43;80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
+qemu-img info test.qcow2 输出
+image: test.qcow2 file format: qcow2 virtual size: 100G (107374182400 bytes) disk size: 885M cluster_size: 65536 Format specific information: compat: 1.1 lazy refcounts: false refcount bits: 16 corrupt: false 二、Windows磁盘扩容    Windows磁盘扩容比较方便，进入 计算机管理&gt;磁盘管理 找到新增的分区把它添加到需要的分区即可。
+三、Linux磁盘扩容    启动虚拟机后，进入虚拟机控制台，使用fdisk -l命令查看磁盘信息。
+Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disklabel type: dos Disk identifier: 0xe11f7f01 Device Boot Start End Sectors Size Id Type /dev/vda1 * 2048 2099199 2097152 1G 83 Linux /dev/vda2 2099200 41943039 39843840 19G 8e Linux LVM Disk /dev/mapper/cl-root: 17 GiB, 18249416704 bytes, 35643392 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes 可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。"/>
+
+    <meta property="og:title" content="KVM 虚拟机磁盘扩容" />
+<meta property="og:description" content="一、镜像扩容    注意：需要先关闭虚拟机才能操作，&#43;号前面有空格，后面没有空格。
+qemu-img resize test.qcow2 &#43;80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
+qemu-img info test.qcow2 输出
+image: test.qcow2 file format: qcow2 virtual size: 100G (107374182400 bytes) disk size: 885M cluster_size: 65536 Format specific information: compat: 1.1 lazy refcounts: false refcount bits: 16 corrupt: false 二、Windows磁盘扩容    Windows磁盘扩容比较方便，进入 计算机管理&gt;磁盘管理 找到新增的分区把它添加到需要的分区即可。
+三、Linux磁盘扩容    启动虚拟机后，进入虚拟机控制台，使用fdisk -l命令查看磁盘信息。
+Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disklabel type: dos Disk identifier: 0xe11f7f01 Device Boot Start End Sectors Size Id Type /dev/vda1 * 2048 2099199 2097152 1G 83 Linux /dev/vda2 2099200 41943039 39843840 19G 8e Linux LVM Disk /dev/mapper/cl-root: 17 GiB, 18249416704 bytes, 35643392 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes 可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://typesafe.cn/posts/kvm-disk-resize/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-31T19:20:00&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-31T19:20:00&#43;08:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
+
+
+
+    <title>
+  KVM 虚拟机磁盘扩容 · 没有理想的人不伤心
+</title>
+
+    
+      <link rel="canonical" href="https://typesafe.cn/posts/kvm-disk-resize/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      没有理想的人不伤心
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/categories/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">标签</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://typesafe.cn/posts/kvm-disk-resize/">
+              KVM 虚拟机磁盘扩容
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2021-05-31T19:20:00&#43;08:00'>
+                May 31, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <a href="/tags/linux/">linux</a>
+      <span class="separator">•</span>
+    <a href="/tags/kvm/">kvm</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <h3 id="一镜像扩容">
+  一、镜像扩容
+  <a class="heading-link" href="#%e4%b8%80%e9%95%9c%e5%83%8f%e6%89%a9%e5%ae%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>注意：需要先关闭虚拟机才能操作，<code>+</code>号前面有空格，后面没有空格。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">qemu-img resize test.qcow2 +80G
+</code></pre></div><p>原镜像磁盘大小20GB，扩容完成后可使用以下命令查看</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">qemu-img info test.qcow2
+</code></pre></div><p>输出</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">image: test.qcow2
+file format: qcow2
+virtual size: 100G (<span style="color:#ff0;font-weight:bold">107374182400</span> bytes)
+disk size: 885M
+cluster_size: <span style="color:#ff0;font-weight:bold">65536</span>
+Format specific information:
+    compat: 1.1
+    lazy refcounts: <span style="color:#fff;font-weight:bold">false</span>
+    refcount bits: <span style="color:#ff0;font-weight:bold">16</span>
+    corrupt: <span style="color:#fff;font-weight:bold">false</span>
+</code></pre></div><h3 id="二windows磁盘扩容">
+  二、Windows磁盘扩容
+  <a class="heading-link" href="#%e4%ba%8cwindows%e7%a3%81%e7%9b%98%e6%89%a9%e5%ae%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>Windows磁盘扩容比较方便，进入 <strong>计算机管理&gt;磁盘管理</strong> 找到新增的分区把它添加到需要的分区即可。</p>
+<h3 id="三linux磁盘扩容">
+  三、Linux磁盘扩容
+  <a class="heading-link" href="#%e4%b8%89linux%e7%a3%81%e7%9b%98%e6%89%a9%e5%ae%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p>启动虚拟机后，进入虚拟机控制台，使用<code>fdisk -l</code>命令查看磁盘信息。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Disk /dev/vda: <span style="color:#ff0;font-weight:bold">100</span> GiB, <span style="color:#ff0;font-weight:bold">107374182400</span> bytes, <span style="color:#ff0;font-weight:bold">209715200</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+Disklabel type: dos
+Disk identifier: 0xe11f7f01
+
+Device     Boot   Start      End  Sectors Size Id Type
+/dev/vda1  *       <span style="color:#ff0;font-weight:bold">2048</span>  <span style="color:#ff0;font-weight:bold">2099199</span>  <span style="color:#ff0;font-weight:bold">2097152</span>   1G <span style="color:#ff0;font-weight:bold">83</span> Linux
+/dev/vda2       <span style="color:#ff0;font-weight:bold">2099200</span> <span style="color:#ff0;font-weight:bold">41943039</span> <span style="color:#ff0;font-weight:bold">39843840</span>  19G 8e Linux LVM
+
+
+Disk /dev/mapper/cl-root: <span style="color:#ff0;font-weight:bold">17</span> GiB, <span style="color:#ff0;font-weight:bold">18249416704</span> bytes, <span style="color:#ff0;font-weight:bold">35643392</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+
+
+Disk /dev/mapper/cl-swap: <span style="color:#ff0;font-weight:bold">2</span> GiB, <span style="color:#ff0;font-weight:bold">2147483648</span> bytes, <span style="color:#ff0;font-weight:bold">4194304</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+</code></pre></div><p>可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。</p>
+<p>使用命令<code>fdisk /dev/vda</code>进行分区管理。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Welcome to fdisk (util-linux 2.32.1).
+Changes will remain in memory only, <span style="color:#fff;font-weight:bold">until</span> you decide to write them.
+Be careful before using the write command.
+Command (m <span style="color:#fff;font-weight:bold">for</span> <span style="color:#fff;font-weight:bold">help</span>): n
+</code></pre></div><p>输入 <code>n</code> 创建一个新分区并回车。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Partition <span style="color:#fff;font-weight:bold">type</span>
+   p   primary (<span style="color:#ff0;font-weight:bold">2</span> primary, <span style="color:#ff0;font-weight:bold">0</span> extended, <span style="color:#ff0;font-weight:bold">2</span> free)
+   e   extended (container <span style="color:#fff;font-weight:bold">for</span> logical partitions)
+Select (default p): p
+</code></pre></div><p>提示选择分区，输入 <code>p</code>  选择主分区并回车。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Partition number (3,4, default 3):
+</code></pre></div><p>提示选择分区编号，直接回车。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">First sector (41943040-209715199, default 41943040): 
+Last sector, +sectors or +size{K,M,G,T,P} (41943040-209715199, default 209715199): 
+Created a new partition <span style="color:#ff0;font-weight:bold">3</span> of <span style="color:#fff;font-weight:bold">type</span> <span style="color:#0ff;font-weight:bold">&#39;Linux&#39;</span> and of size <span style="color:#ff0;font-weight:bold">80</span> GiB.
+Command (m <span style="color:#fff;font-weight:bold">for</span> <span style="color:#fff;font-weight:bold">help</span>): t
+</code></pre></div><p>输入<code>t</code>修改磁盘格式。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Partition number (1-3, default 3): 
+Hex code (type L to list all codes): 8e
+Changed type of partition &#39;Linux&#39; to &#39;Linux LVM&#39;.
+Command (m for help): w
+</code></pre></div><p>提示选择分区直接回车，提示选择十六进制编码，输入<code>8e</code>并回车，最后输入<code>w</code>保存并退出此流程。</p>
+<p>再次输入<code>fdisk -l</code> 查看磁盘信息。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Disk /dev/vda: <span style="color:#ff0;font-weight:bold">100</span> GiB, <span style="color:#ff0;font-weight:bold">107374182400</span> bytes, <span style="color:#ff0;font-weight:bold">209715200</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+Disklabel type: dos
+Disk identifier: 0xe11f7f01
+
+Device     Boot    Start       End   Sectors Size Id Type
+/dev/vda1  *        <span style="color:#ff0;font-weight:bold">2048</span>   <span style="color:#ff0;font-weight:bold">2099199</span>   <span style="color:#ff0;font-weight:bold">2097152</span>   1G <span style="color:#ff0;font-weight:bold">83</span> Linux
+/dev/vda2        <span style="color:#ff0;font-weight:bold">2099200</span>  <span style="color:#ff0;font-weight:bold">41943039</span>  <span style="color:#ff0;font-weight:bold">39843840</span>  19G 8e Linux LVM
+/dev/vda3       <span style="color:#ff0;font-weight:bold">41943040</span> <span style="color:#ff0;font-weight:bold">209715199</span> <span style="color:#ff0;font-weight:bold">167772160</span>  80G 8e Linux LVM
+
+
+Disk /dev/mapper/cl-root: <span style="color:#ff0;font-weight:bold">17</span> GiB, <span style="color:#ff0;font-weight:bold">18249416704</span> bytes, <span style="color:#ff0;font-weight:bold">35643392</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+
+
+Disk /dev/mapper/cl-swap: <span style="color:#ff0;font-weight:bold">2</span> GiB, <span style="color:#ff0;font-weight:bold">2147483648</span> bytes, <span style="color:#ff0;font-weight:bold">4194304</span> sectors
+Units: sectors of <span style="color:#ff0;font-weight:bold">1</span> * 512 = <span style="color:#ff0;font-weight:bold">512</span> bytes
+Sector size (logical/physical): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+I/O size (minimum/optimal): <span style="color:#ff0;font-weight:bold">512</span> bytes / <span style="color:#ff0;font-weight:bold">512</span> bytes
+</code></pre></div><p>可以看到已经多了一个<code>/dev/vda3</code>分区，并且大小为80GB。</p>
+<p>创建一个新的<code>pv</code>并添加到要扩容的<code>vg</code>中。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">[root@localhost ~]# pvcreate /dev/vda3
+  Physical volume &#34;/dev/vda3&#34; successfully created.
+[root@localhost ~]# 
+[root@localhost ~]# vgextend  cl /dev/vda3
+  Volume group &#34;cl&#34; successfully extended
+[root@localhost ~]# 
+</code></pre></div><p>使用<code>vgdisplay</code>可以查看到已经扩容。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">[root@localhost ~]<span style="color:#007f7f"># vgdisplay </span>
+  --- Volume group ---
+  VG Name               cl
+  System ID             
+  Format                lvm2
+  Metadata Areas        <span style="color:#ff0;font-weight:bold">2</span>
+  Metadata Sequence No  <span style="color:#ff0;font-weight:bold">4</span>
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                <span style="color:#ff0;font-weight:bold">0</span>
+  Cur LV                <span style="color:#ff0;font-weight:bold">2</span>
+  Open LV               <span style="color:#ff0;font-weight:bold">2</span>
+  Max PV                <span style="color:#ff0;font-weight:bold">0</span>
+  Cur PV                <span style="color:#ff0;font-weight:bold">2</span>
+  Act PV                <span style="color:#ff0;font-weight:bold">2</span>
+  VG Size               98.99 GiB
+  PE Size               4.00 MiB
+  Total PE              <span style="color:#ff0;font-weight:bold">25342</span>
+  Alloc PE / Size       <span style="color:#ff0;font-weight:bold">4863</span> / &lt;19.00 GiB
+  Free  PE / Size       <span style="color:#ff0;font-weight:bold">20479</span> / &lt;80.00 GiB
+  VG UUID               DHf6m6-x6YZ-S9ZT-VMTw-ylo5-NnLT-ozpnjR
+
+</code></pre></div><p>使用 <code>df -TH</code> 查看文件信息。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">[root@localhost ~]# df -TH
+Filesystem          Type      Size  Used Avail Use% Mounted on
+devtmpfs            devtmpfs   17G     0   17G   0% /dev
+tmpfs               tmpfs      17G     0   17G   0% /dev/shm
+tmpfs               tmpfs      17G  9.1M   17G   1% /run
+tmpfs               tmpfs      17G     0   17G   0% /sys/fs/cgroup
+/dev/mapper/cl-root xfs        19G  2.0G   17G  11% /
+/dev/vda1           ext4      1.1G  135M  818M  15% /boot
+tmpfs               tmpfs     3.4G     0  3.4G   0% /run/user/0
+</code></pre></div><p>可以看出<code>/dev/mapper/cl-root</code> 挂载到了根目录，正是我们需要扩容的磁盘。使用以下命令进行扩容</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">lvresize -L +80G /dev/mapper/cl-root
+</code></pre></div><p>大概率会出现</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">  Insufficient free space: 20480 extents needed, but only 20479 available
+</code></pre></div><p>莫名其妙的被占用了一点点磁盘空间，所以需要修改一下扩容命令。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">lvresize -L +79G /dev/mapper/cl-root
+</code></pre></div><p>根据文件信息可以看出<code>/dev/mapper/cl-root</code> 的类型是 <code>xfs</code>，<code>xfs</code>类型的磁盘使用命令</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">xfs_growfs /dev/mapper/cl-root
+</code></pre></div><p>其他类型使用</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">resize2fs /dev/mapper/cl-root
+</code></pre></div><p>最后使用 <code>df -TH</code> 查看文件信息，可以看到已经扩容到了100GB。</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">[root@localhost ~]# df -TH
+Filesystem          Type      Size  Used Avail Use% Mounted on
+devtmpfs            devtmpfs   17G     0   17G   0% /dev
+tmpfs               tmpfs      17G     0   17G   0% /dev/shm
+tmpfs               tmpfs      17G  9.1M   17G   1% /run
+tmpfs               tmpfs      17G     0   17G   0% /sys/fs/cgroup
+/dev/mapper/cl-root xfs       104G  2.6G  101G   3% /
+/dev/vda1           ext4      1.1G  135M  818M  15% /boot
+tmpfs               tmpfs     3.4G     0  3.4G   0% /run/user/0
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+    repo= "dushixiang/hugo-comment"
+    issue-term="pathname"
+    label="评论"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         dushixiang 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
