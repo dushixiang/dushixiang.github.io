@@ -46,7 +46,7 @@ if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作
       <description>前言    当我们想要在不影响虚拟网络设备数据报文收发的情况下获取对应虚拟网络设备的流量时，端口镜像是一个很好的选择。端口镜像是指将经过指定端口（镜像端口）的报文复制一份到另一个指定端口（观察端口），通过观察端口接收到的数据报文，就可以有效识别虚拟网络的运行情况。
 OVS提供了相关命令来配置或删除端口镜像，下面我们来实验一下。
 如何使用    端口镜像类型    端口镜像分为镜像源和镜像目的两部分。
-镜像源     select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。 select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。 select_src_port：字符串（端口名称）。表示此端口发送的所有流量。 select_vlan：整形（0-4095）。表示携带此VLAN标签的流量。  镜像目的     output_port：字符串（端口名称）。接收流量报文的观察端口。 output_vlan：整形（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。  基础操作命令    新增端口镜像
+镜像源     select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。 select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。 select_src_port：字符串（端口名称）。表示此端口发送的所有流量。 select_vlan：整型（0-4095）。表示携带此VLAN标签的流量。  镜像目的     output_port：字符串（端口名称）。接收流量报文的观察端口。 output_vlan：整型（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。  基础操作命令    新增端口镜像
 ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors=@m \  -- --id=@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; \  -- --id=@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; \  -- --id=@m create Mirror name=&amp;lt;mirror_name&amp;gt; select-dst-port=@&amp;lt;port0&amp;gt; select-src-port=@&amp;lt;port0&amp;gt; output-port=@&amp;lt;port1&amp;gt;  这行命令会输出一个镜像ID</description>
     </item>
     
