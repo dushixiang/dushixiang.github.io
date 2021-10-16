@@ -8,7 +8,7 @@
     <language>zh</language>
     <lastBuildDate>Sat, 16 Oct 2021 22:55:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Java 反序列化漏洞（二）新版本JDK利用方式和Shiro举例</title>
+      <title>Java 反序列化漏洞原理（二）新版本JDK利用方式和Shiro举例</title>
       <link>https://typesafe.cn/posts/java-serialization-vulnerability-2/</link>
       <pubDate>Sat, 16 Oct 2021 22:55:00 +0800</pubDate>
       
@@ -20,7 +20,7 @@ package javax.management; import java.io.IOException; import java.io.ObjectInput
     </item>
     
     <item>
-      <title>Java 反序列化漏洞（一）Serializable</title>
+      <title>Java 反序列化漏洞原理（一）Serializable</title>
       <link>https://typesafe.cn/posts/java-serialization-vulnerability-1/</link>
       <pubDate>Thu, 14 Oct 2021 23:00:00 +0800</pubDate>
       
