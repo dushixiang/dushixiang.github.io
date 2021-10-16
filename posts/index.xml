@@ -6,7 +6,45 @@
     <description>Recent content in Posts on 没有理想的人不伤心</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 12 Jun 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Oct 2021 22:55:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java 反序列化漏洞（二）新版本JDK利用方式和Shiro举例</title>
+      <link>https://typesafe.cn/posts/java-serialization-vulnerability-2/</link>
+      <pubDate>Sat, 16 Oct 2021 22:55:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-2/</guid>
+      <description>声明    本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+新的希望    0x00    在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
+javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
+package javax.management; import java.io.IOException; import java.io.ObjectInputStream; /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query.</description>
+    </item>
+    
+    <item>
+      <title>Java 反序列化漏洞（一）Serializable</title>
+      <link>https://typesafe.cn/posts/java-serialization-vulnerability-1/</link>
+      <pubDate>Thu, 14 Oct 2021 23:00:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-1/</guid>
+      <description>声明    本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+序列化的定义    序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
+Java 中的序列化    Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
+以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。
+import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64; public class Eval0 { public static class Command implements Serializable { private String cmd; public String getCmd() { return cmd; } public void setCmd(String cmd) { this.cmd = cmd; } } public static void main(String[] args) throws Exception { // 定义一个对象  Command command = new Command(); command.</description>
+    </item>
+    
+    <item>
+      <title>分享一款非常好用的kafka可视化web管理工具</title>
+      <link>https://typesafe.cn/posts/share-a-kafka-web-manager/</link>
+      <pubDate>Sun, 13 Jun 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/share-a-kafka-web-manager/</guid>
+      <description>使用过kafka的小伙伴应该都知道kafka本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。
+今天给大家介绍的这款工具叫做kafka-map，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。
+kafka-map 介绍    kafka map是使用Java11和React开发的一款kafka可视化工具。
+目前支持的功能有：
+ 多集群管理 集群状态监控（分区数量、副本数量、存储大小、offset） 主题创建、删除、扩容（删除需配置delete.topic.enable = true） broker状态监控 消费者组查看、删除 重置offset 消息查询（支持String和json方式展示） 发送消息（支持向指定的topic和partition发送字符串消息）  功能截图    添加集群    集群管理    broker    主题管理    消费组    查看消费组已订阅主题    topic详情——分区    topic详情——broker    topic详情——消费组    topic详情——消费组重置offset    topic详情——配置信息    生产消息    消费消息    docker 方式安装    一行命令即可完成安装</description>
+    </item>
+    
     <item>
       <title>openstack victoria版安装</title>
       <link>https://typesafe.cn/posts/install-openstack-victoria/</link>

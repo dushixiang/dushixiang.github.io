@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="zh">
+    <meta name="color-scheme" content="light dark">
+    
+    
+
+    <meta name="author" content="dushixiang">
+    <meta name="description" content="使用过kafka的小伙伴应该都知道kafka本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。
+今天给大家介绍的这款工具叫做kafka-map，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。
+kafka-map 介绍    kafka map是使用Java11和React开发的一款kafka可视化工具。
+目前支持的功能有：
+ 多集群管理 集群状态监控（分区数量、副本数量、存储大小、offset） 主题创建、删除、扩容（删除需配置delete.topic.enable = true） broker状态监控 消费者组查看、删除 重置offset 消息查询（支持String和json方式展示） 发送消息（支持向指定的topic和partition发送字符串消息）  功能截图    添加集群    集群管理    broker    主题管理    消费组    查看消费组已订阅主题    topic详情——分区    topic详情——broker    topic详情——消费组    topic详情——消费组重置offset    topic详情——配置信息    生产消息    消费消息    docker 方式安装    一行命令即可完成安装">
+    <meta name="keywords" content="blog,desenvolvedor,pessoal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分享一款非常好用的kafka可视化web管理工具"/>
+<meta name="twitter:description" content="使用过kafka的小伙伴应该都知道kafka本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。
+今天给大家介绍的这款工具叫做kafka-map，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。
+kafka-map 介绍    kafka map是使用Java11和React开发的一款kafka可视化工具。
+目前支持的功能有：
+ 多集群管理 集群状态监控（分区数量、副本数量、存储大小、offset） 主题创建、删除、扩容（删除需配置delete.topic.enable = true） broker状态监控 消费者组查看、删除 重置offset 消息查询（支持String和json方式展示） 发送消息（支持向指定的topic和partition发送字符串消息）  功能截图    添加集群    集群管理    broker    主题管理    消费组    查看消费组已订阅主题    topic详情——分区    topic详情——broker    topic详情——消费组    topic详情——消费组重置offset    topic详情——配置信息    生产消息    消费消息    docker 方式安装    一行命令即可完成安装"/>
+
+    <meta property="og:title" content="分享一款非常好用的kafka可视化web管理工具" />
+<meta property="og:description" content="使用过kafka的小伙伴应该都知道kafka本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。
+今天给大家介绍的这款工具叫做kafka-map，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。
+kafka-map 介绍    kafka map是使用Java11和React开发的一款kafka可视化工具。
+目前支持的功能有：
+ 多集群管理 集群状态监控（分区数量、副本数量、存储大小、offset） 主题创建、删除、扩容（删除需配置delete.topic.enable = true） broker状态监控 消费者组查看、删除 重置offset 消息查询（支持String和json方式展示） 发送消息（支持向指定的topic和partition发送字符串消息）  功能截图    添加集群    集群管理    broker    主题管理    消费组    查看消费组已订阅主题    topic详情——分区    topic详情——broker    topic详情——消费组    topic详情——消费组重置offset    topic详情——配置信息    生产消息    消费消息    docker 方式安装    一行命令即可完成安装" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://typesafe.cn/posts/share-a-kafka-web-manager/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-06-13T00:00:00&#43;08:00" />
+<meta property="article:modified_time" content="2021-06-13T00:00:00&#43;08:00" /><meta property="og:site_name" content="没有理想的人不伤心" />
+
+
+
+    <title>
+  分享一款非常好用的kafka可视化web管理工具 · 没有理想的人不伤心
+</title>
+
+    
+      <link rel="canonical" href="https://typesafe.cn/posts/share-a-kafka-web-manager/">
+    
+
+    
+    
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.1.7" as="font" type="font/woff2" integrity="sha256-hEIt6X6xzye8ubyk8/uxjz68cRZHsJxoKS9fQ8idUGQ=" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.abe8b6775d85a01169c10329309df501aa8a008ab354002f7858f077cae76020.css" integrity="sha256-q&#43;i2d12FoBFpwQMpMJ31AaqKAIqzVAAveFjwd8rnYCA=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+      
+        
+        
+        <link rel="stylesheet" href="/css/coder-dark.min.89c82b6022b96f77aeb521b240daec4f87ea029d84d1c78b8acd0735b91b3c92.css" integrity="sha256-icgrYCK5b3eutSGyQNrsT4fqAp2E0ceLis0HNbkbPJI=" crossorigin="anonymous" media="screen" />
+      
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+      <script defer src="https://twemoji.maxcdn.com/v/13.0.1/twemoji.min.js"
+        integrity="sha384-5f4X0lBluNY/Ib4VhGx0Pf6iDCF99VGXJIyYy7dDLY5QlEd7Ap0hICSSZA1XYbc4" crossorigin="anonymous"></script>
+    
+
+    <meta name="generator" content="Hugo 0.81.0" />
+  </head>
+
+  
+  
+    
+  
+  <body class="colorscheme-auto"
+        onload=" twemoji.parse(document.body); "
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      没有理想的人不伤心
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">文章</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/categories/">分类</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/tags/">标签</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/about/">关于</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="https://typesafe.cn/posts/share-a-kafka-web-manager/">
+              分享一款非常好用的kafka可视化web管理工具
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2021-06-13T00:00:00&#43;08:00'>
+                June 13, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              
+            </span>
+          </div>
+          
+          <div class="categories">
+  <i class="fa fa-folder" aria-hidden="true"></i>
+    <a href="/categories/kafka/">kafka</a></div>
+
+          <div class="tags">
+  <i class="fa fa-tag" aria-hidden="true"></i>
+    <a href="/tags/kafka/">kafka</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+        <p>使用过<code>kafka</code>的小伙伴应该都知道<code>kafka</code>本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。</p>
+<p>今天给大家介绍的这款工具叫做<code>kafka-map</code>，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。</p>
+<h2 id="kafka-map-介绍">
+  kafka-map 介绍
+  <a class="heading-link" href="#kafka-map-%e4%bb%8b%e7%bb%8d">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p><code>kafka map</code>是使用<code>Java11</code>和<code>React</code>开发的一款<code>kafka</code>可视化工具。</p>
+<p>目前支持的功能有：</p>
+<ul>
+<li>多集群管理</li>
+<li>集群状态监控（分区数量、副本数量、存储大小、offset）</li>
+<li>主题创建、删除、扩容（删除需配置delete.topic.enable = true）</li>
+<li>broker状态监控</li>
+<li>消费者组查看、删除</li>
+<li>重置offset</li>
+<li>消息查询（支持String和json方式展示）</li>
+<li>发送消息（支持向指定的topic和partition发送字符串消息）</li>
+</ul>
+<h2 id="功能截图">
+  功能截图
+  <a class="heading-link" href="#%e5%8a%9f%e8%83%bd%e6%88%aa%e5%9b%be">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<h3 id="添加集群">
+  添加集群
+  <a class="heading-link" href="#%e6%b7%bb%e5%8a%a0%e9%9b%86%e7%be%a4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/import-cluster.png" alt="添加集群"></p>
+<h3 id="集群管理">
+  集群管理
+  <a class="heading-link" href="#%e9%9b%86%e7%be%a4%e7%ae%a1%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/clusters.png" alt="集群管理"></p>
+<h3 id="broker">
+  broker
+  <a class="heading-link" href="#broker">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/brokers.png" alt="broker"></p>
+<h3 id="主题管理">
+  主题管理
+  <a class="heading-link" href="#%e4%b8%bb%e9%a2%98%e7%ae%a1%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topics.png" alt="主题管理"></p>
+<h3 id="消费组">
+  消费组
+  <a class="heading-link" href="#%e6%b6%88%e8%b4%b9%e7%bb%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumers.png" alt="消费组"></p>
+<h3 id="查看消费组已订阅主题">
+  查看消费组已订阅主题
+  <a class="heading-link" href="#%e6%9f%a5%e7%9c%8b%e6%b6%88%e8%b4%b9%e7%bb%84%e5%b7%b2%e8%ae%a2%e9%98%85%e4%b8%bb%e9%a2%98">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumer-subscription.png" alt="消费组详情"></p>
+<h3 id="topic详情分区">
+  topic详情——分区
+  <a class="heading-link" href="#topic%e8%af%a6%e6%83%85%e5%88%86%e5%8c%ba">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-partition.png" alt="topic详情——分区"></p>
+<h3 id="topic详情broker">
+  topic详情——broker
+  <a class="heading-link" href="#topic%e8%af%a6%e6%83%85broker">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-broker.png" alt="topic详情——broker"></p>
+<h3 id="topic详情消费组">
+  topic详情——消费组
+  <a class="heading-link" href="#topic%e8%af%a6%e6%83%85%e6%b6%88%e8%b4%b9%e7%bb%84">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-consumer.png" alt="topic详情——消费组"></p>
+<h3 id="topic详情消费组重置offset">
+  topic详情——消费组重置offset
+  <a class="heading-link" href="#topic%e8%af%a6%e6%83%85%e6%b6%88%e8%b4%b9%e7%bb%84%e9%87%8d%e7%bd%aeoffset">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-consumer-reset-offset.png" alt="topic详情——消费组重置offset"></p>
+<h3 id="topic详情配置信息">
+  topic详情——配置信息
+  <a class="heading-link" href="#topic%e8%af%a6%e6%83%85%e9%85%8d%e7%bd%ae%e4%bf%a1%e6%81%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-config.png" alt="topic详情——配置信息"></p>
+<h3 id="生产消息">
+  生产消息
+  <a class="heading-link" href="#%e7%94%9f%e4%ba%a7%e6%b6%88%e6%81%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/producer-message.png" alt="消费消息"></p>
+<h3 id="消费消息">
+  消费消息
+  <a class="heading-link" href="#%e6%b6%88%e8%b4%b9%e6%b6%88%e6%81%af">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
+<p><img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumer-message.png" alt="消费消息"></p>
+<h2 id="docker-方式安装">
+  docker 方式安装
+  <a class="heading-link" href="#docker-%e6%96%b9%e5%bc%8f%e5%ae%89%e8%a3%85">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<p>一行命令即可完成安装</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">docker run -d <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>    -p 8080:8080 <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>    -v /opt/kafka-map/data:/usr/local/kafka-map/data <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>    -e DEFAULT_USERNAME=admin
+    -e DEFAULT_PASSWORD=admin
+    --name kafka-map <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>    --restart always dushixiang/kafka-map:latest
+</code></pre></div><p>更多安装方式以及相信信息可查看: <a href="https://github.com/dushixiang/kafka-map">https://github.com/dushixiang/kafka-map</a></p>
+<p>欢迎star和分享给其他小伙伴。</p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        <script src="https://utteranc.es/client.js"
+    repo= "dushixiang/hugo-comment"
+    issue-term="pathname"
+    label="评论"
+    theme="github-light"
+    crossorigin="anonymous"
+    async>
+  </script>
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p><a href='https://beian.miit.gov.cn/'>豫ICP备16012145号-3</a></p>
+      
+      
+        ©
+        
+          2020 -
+        
+        2021
+         dushixiang 
+      
+      
+         · 
+         <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+        
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js" integrity="sha256-runIpGTrezU0xxEPfF4WnnA54v2ScQ4GJtRR1nJa8Tc="></script>
+      
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
