@@ -1,2 +1,3 @@
-# dushixiang.github.io
-this is my blog.
+# 我的博客
+
+https://typesafe.cn
