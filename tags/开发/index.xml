@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>开发 on 没有理想的人不伤心</title>
+    <link>https://typesafe.cn/tags/%E5%BC%80%E5%8F%91/</link>
+    <description>Recent content in 开发 on 没有理想的人不伤心</description>
+    <image>
+      <url>https://typesafe.cn/papermod-cover.png</url>
+      <link>https://typesafe.cn/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 13 Mar 2021 13:49:38 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java的奇技淫巧</title>
+      <link>https://typesafe.cn/posts/java-unexpected-features/</link>
+      <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/java-unexpected-features/</guid>
+      <description>Java是一种广泛使用的计算机编程语言、面向对象、泛型编程的特性，广泛应用于企业级Web应用开发和移动应用开发。
+1995年3月23日Sun公司发布了Java，至今已有近26年，可以说是一门十分成熟的开发语言了，但在某些不为人知的地方存在着一些意料之外的特性。
+Java的保留关键字 goto和const 在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。
+int goto = 0; int const = 0; 上面这两行代码的写法存在问题，无法正常编译通过。
+Java标签Label 上面说了在Java里面没有goto这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。
+outerLoop: while (true) { System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); int i = 0; while (true) { System.out.println(&amp;#34;I am the inner loop&amp;#34;); i++; if (i &amp;gt;= 3) { break outerLoop; } } } System.out.println(&amp;#34;Complete the loop&amp;#34;); // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { System.</description>
+    </item>
+    
+  </channel>
+</rss>

