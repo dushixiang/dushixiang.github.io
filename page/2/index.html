@@ -69,6 +69,21 @@
 <main class=main>
 <article class=post-entry>
 <header class=entry-header>
+<h2>Java 反序列化漏洞原理（一）Serializable
+</h2>
+</header>
+<section class=entry-content>
+<p>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
+序列化的定义 序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
+Java 中的序列化 Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
+以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。
+import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64; public class Eval0 { public static class Command implements Serializable { private String cmd; public String getCmd() { return cmd; } public void setCmd(String cmd) { this.cmd = cmd; } } public static void main(String[] args) throws Exception { // 定义一个对象 Command command = new Command(); command.setCmd("calc"); System.out.println("序列化前: " + command....</p>
+</section>
+<footer class=entry-footer><span title="2021-10-14 23:00:00 +0800 +0800">October 14, 2021</span>&nbsp;·&nbsp;7 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Java 反序列化漏洞原理（一）Serializable" href=https://typesafe.cn/posts/java-serialization-vulnerability-1/></a>
+</article>
+<article class=post-entry>
+<header class=entry-header>
 <h2>分享一款非常好用的kafka可视化web管理工具
 </h2>
 </header>
@@ -140,20 +155,6 @@ NAT模式 虚拟机需要把流量发送到宿主机，宿主机器转换网络�
 </section>
 <footer class=entry-footer><span title="2021-05-29 17:07:00 +0800 +0800">May 29, 2021</span>&nbsp;·&nbsp;2 分钟&nbsp;·&nbsp;dushixiang</footer>
 <a class=entry-link aria-label="post link to Linux虚拟化技术KVM" href=https://typesafe.cn/posts/linux-kvm/></a>
-</article>
-<article class=post-entry>
-<header class=entry-header>
-<h2>容器网络——如何为docker添加网卡？
-</h2>
-</header>
-<section class=entry-content>
-<p>之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
-启动一个无网络的容器 首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
-docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
-[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos "/bin/bash" 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &lt;LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。...</p>
-</section>
-<footer class=entry-footer><span title="2021-05-23 13:37:00 +0800 +0800">May 23, 2021</span>&nbsp;·&nbsp;2 分钟&nbsp;·&nbsp;dushixiang</footer>
-<a class=entry-link aria-label="post link to 容器网络——如何为docker添加网卡？" href=https://typesafe.cn/posts/how-to-add-port-for-docker/></a>
 </article>
 <footer class=page-footer>
 <nav class=pagination>

@@ -72,6 +72,17 @@
 </header>
 <article class=post-entry>
 <header class=entry-header>
+<h2>Linux 修改最大文件描述符
+</h2>
+</header>
+<section class=entry-content>
+<p>echo "fs.file-max=655350" >>/etc/sysctl.conf echo "* soft nofile 655350" >> /etc/security/limits.conf echo "* hard nofile 655350" >> /etc/security/limits.conf ulimit -n 655350 </p>
+</section>
+<footer class=entry-footer><span title="2021-01-11 15:40:41 +0000 UTC">January 11, 2021</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Linux 修改最大文件描述符" href=https://typesafe.cn/posts/linux-limit/></a>
+</article>
+<article class=post-entry>
+<header class=entry-header>
 <h2>压缩qcow2 镜像文件
 </h2>
 </header>
@@ -139,20 +150,6 @@ ovs-vsctl remove Bridge &lt;bridge-name> mirrors &lt;mirror-id> 在原端口镜�
 </section>
 <footer class=entry-footer><span title="2020-12-28 19:23:00 +0000 UTC">December 28, 2020</span>&nbsp;·&nbsp;3 分钟&nbsp;·&nbsp;dushixiang</footer>
 <a class=entry-link aria-label="post link to Open vSwitch 入门实践（4）使用OVS配置端口镜像" href=https://typesafe.cn/posts/ovs-learn-4/></a>
-</article>
-<article class=post-entry>
-<header class=entry-header>
-<h2>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络
-</h2>
-</header>
-<section class=entry-content>
-<p>使用OVS构建分布式隔离网络 前言 上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
-实验1：分布式无隔离网络 网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
-管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。 需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
-配置 配置环境 主机A ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1 # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10....</p>
-</section>
-<footer class=entry-footer><span title="2020-12-27 11:38:00 +0000 UTC">December 27, 2020</span>&nbsp;·&nbsp;2 分钟&nbsp;·&nbsp;dushixiang</footer>
-<a class=entry-link aria-label="post link to Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络" href=https://typesafe.cn/posts/ovs-learn-3/></a>
 </article>
 <footer class=page-footer>
 <nav class=pagination>
