@@ -7,7 +7,7 @@
 <meta name=description content="Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod">
 <meta name=author content="dushixiang">
 <link rel=canonical href=https://typesafe.cn/>
-<link crossorigin=anonymous href=/assets/css/stylesheet.min.6f60056d44d3f7eb69a4bc6c332b59960f3a995802bded244750232f33713c49.css integrity="sha256-b2AFbUTT9+tppLxsMytZlg86mVgCve0kR1AjLzNxPEk=" rel="preload stylesheet" as=style>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
 <link rel=icon href=https://typesafe.cn/favicon.ico>
 <link rel=icon type=image/png sizes=16x16 href=https://typesafe.cn/favicon-16x16.png>
 <link rel=icon type=image/png sizes=32x32 href=https://typesafe.cn/favicon-32x32.png>
@@ -15,7 +15,7 @@
 <link rel=mask-icon href=https://typesafe.cn/safari-pinned-tab.svg>
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
-<meta name=generator content="Hugo 0.89.0">
+<meta name=generator content="Hugo 0.91.0">
 <link rel=alternate type=application/rss+xml href=https://typesafe.cn/index.xml>
 <link rel=alternate type=application/json href=https://typesafe.cn/index.json>
 <noscript>
@@ -67,6 +67,24 @@
 </nav>
 </header>
 <main class=main>
+<article class=post-entry>
+<header class=entry-header>
+<h2>Open vSwitch 入门实践（4）使用OVS配置端口镜像
+</h2>
+</header>
+<section class=entry-content>
+<p>前言 当我们想要在不影响虚拟网络设备数据报文收发的情况下获取对应虚拟网络设备的流量时，端口镜像是一个很好的选择。端口镜像是指将经过指定端口（镜像端口）的报文复制一份到另一个指定端口（观察端口），通过观察端口接收到的数据报文，就可以有效识别虚拟网络的运行情况。
+OVS提供了相关命令来配置或删除端口镜像，下面我们来实验一下。
+如何使用 端口镜像类型 端口镜像分为镜像源和镜像目的两部分。
+镜像源 select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。 select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。 select_src_port：字符串（端口名称）。表示此端口发送的所有流量。 select_vlan：整型（0-4095）。表示携带此VLAN标签的流量。 镜像目的 output_port：字符串（端口名称）。接收流量报文的观察端口。 output_vlan：整型（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。 基础操作命令 新增端口镜像
+ovs-vsctl -- set Bridge &lt;bridge_name> mirrors=@m \ -- --id=@&lt;port0> get Port &lt;port0> \ -- --id=@&lt;port1> get Port &lt;port1> \ -- --id=@m create Mirror name=&lt;mirror_name> select-dst-port=@&lt;port0> select-src-port=@&lt;port0> output-port=@&lt;port1> 这行命令会输出一个镜像ID
+删除端口镜像
+ovs-vsctl remove Bridge &lt;bridge-name> mirrors &lt;mirror-id> 在原端口镜像的基础上增加一个镜像源
+# 获取端口的ID ovs-vsctl get port &lt;port_name> _uuid # 在原端口镜像的基础上增加镜像源 ovs-vsctl add Mirror &lt;mirror-name> select_src_port &lt;port-id> ovs-vsctl add Mirror &lt;mirror-name> select_dst_port &lt;port-id> 在原端口镜像的基础上删除一个镜像源...</p>
+</section>
+<footer class=entry-footer><span title="2020-12-28 19:23:00 +0000 UTC">December 28, 2020</span>&nbsp;·&nbsp;3 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to Open vSwitch 入门实践（4）使用OVS配置端口镜像" href=https://typesafe.cn/posts/ovs-learn-4/></a>
+</article>
 <article class=post-entry>
 <header class=entry-header>
 <h2>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络
@@ -138,25 +156,6 @@ http代理 ./4dnat -proxy http 1080 https代理 ./4dnat -proxy https 1080 server
 </section>
 <footer class=entry-footer><span title="2020-11-19 22:33:00 +0000 UTC">November 19, 2020</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;dushixiang</footer>
 <a class=entry-link aria-label="post link to 服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。" href=https://typesafe.cn/posts/4dnat/></a>
-</article>
-<article class=post-entry>
-<header class=entry-header>
-<h2>Docker？Vmware？小孩子才做选择，打工人我全都要。
-</h2>
-</header>
-<section class=entry-content>
-<p>前言 作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
-先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。 对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
-直到我发现了vctl这个好东西。
-vctl 是什么？ vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。
-简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把docker &lt;cmd>换成vctl &lt;cmd>就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。
-在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。
-vctl system start 当需要关闭守护进程时执行
-vctl system stop 接下来就是和普通的docker命令一样了。
-# 拉取镜像 vctl pull nginx # 查看镜像 vctl images # 启动容器 vctl --name some-nginx -d -p 8080:80 nginx # 查看容器 vctl ps # 进入容器 vctl exec -it &lt;cid> bash 更多使用信息可参考Vmware的官方文档 使用vctl命令管理容器</p>
-</section>
-<footer class=entry-footer><span title="2020-11-17 15:39:00 +0000 UTC">November 17, 2020</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;dushixiang</footer>
-<a class=entry-link aria-label="post link to Docker？Vmware？小孩子才做选择，打工人我全都要。" href=https://typesafe.cn/posts/vctl/></a>
 </article>
 <footer class=page-footer>
 <nav class=pagination>

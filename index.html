@@ -7,7 +7,7 @@
 <meta name=description content="Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod">
 <meta name=author content="dushixiang">
 <link rel=canonical href=https://typesafe.cn/>
-<link crossorigin=anonymous href=/assets/css/stylesheet.min.6f60056d44d3f7eb69a4bc6c332b59960f3a995802bded244750232f33713c49.css integrity="sha256-b2AFbUTT9+tppLxsMytZlg86mVgCve0kR1AjLzNxPEk=" rel="preload stylesheet" as=style>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
 <link rel=icon href=https://typesafe.cn/favicon.ico>
 <link rel=icon type=image/png sizes=16x16 href=https://typesafe.cn/favicon-16x16.png>
 <link rel=icon type=image/png sizes=32x32 href=https://typesafe.cn/favicon-32x32.png>
@@ -15,7 +15,7 @@
 <link rel=mask-icon href=https://typesafe.cn/safari-pinned-tab.svg>
 <meta name=theme-color content="#2e2e33">
 <meta name=msapplication-TileColor content="#2e2e33">
-<meta name=generator content="Hugo 0.89.0">
+<meta name=generator content="Hugo 0.91.0">
 <link rel=alternate type=application/rss+xml href=https://typesafe.cn/index.xml>
 <link rel=alternate type=application/json href=https://typesafe.cn/index.json>
 <noscript>
@@ -91,6 +91,22 @@
 </article>
 <article class=post-entry>
 <header class=entry-header>
+<h2>在银河麒麟高级服务器操作系统 V10上安装docker
+</h2>
+</header>
+<section class=entry-content>
+<p>银河麒麟高级服务器操作系统 V10 是针对企业级关键业务，适应虚拟化、 云计算、大数据、工业互联网时代对主机系统可靠性、安全性、性能、扩展性和 实时性的需求，依据 CMMI 5 级标准研制的提供内生安全、云原生支持、国产 平台深入优化、高性能、易管理的新一代自主服务器操作系统；同源支持飞腾、 龙芯、申威、兆芯、海光、鲲鹏等自主平台；可支撑构建大型数据中心服务器高 可用集群、负载均衡集群、分布式集群文件系统、虚拟化应用和容器云平台等， 可部署在物理服务器和虚拟化环境、私有云、公有云和混合云环境；应用于政府、 国防、金融、教育、财税、公安、审计、交通、医疗、制造等领域。
+公司有个项目需要将系统部署在 kylinos上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。
+配置阿里云Centos8镜像源 之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo 配置阿里云 docker 镜像源 yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo sed -i 's+download.docker.com+mirrors.aliyun.com/docker-ce+' /etc/yum.repos.d/docker-ce.repo 定义 yum 变量&修改 repo 修改 centos 和 docker repo文件中的 $releasever 为 centos_version ，原因是在麒麟服务器操作系统V10中 $releasever被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。
+echo "8" > /etc/yum/vars/centos_version sed -i 's/$releasever/$centos_version/g' /etc/yum.repos.d/docker-ce.repo sed -i 's/$releasever/$centos_version/g' /etc/yum.repos.d/CentOS-Base.repo 建立yum缓存 没啥可说的
+yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort -r docker-ce....</p>
+</section>
+<footer class=entry-footer><span title="2021-12-21 23:39:00 +0800 +0800">December 21, 2021</span>&nbsp;·&nbsp;2 分钟&nbsp;·&nbsp;dushixiang</footer>
+<a class=entry-link aria-label="post link to 在银河麒麟高级服务器操作系统 V10上安装docker" href=https://typesafe.cn/posts/install-docker-on-kylinos/></a>
+</article>
+<article class=post-entry>
+<header class=entry-header>
 <h2>Java 反序列化漏洞原理（六）fastjson 1.2.68 绕过原理
 </h2>
 </header>
@@ -159,20 +175,6 @@ Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017
 </section>
 <footer class=entry-footer><span title="2021-10-21 22:56:00 +0800 +0800">October 21, 2021</span>&nbsp;·&nbsp;5 分钟&nbsp;·&nbsp;dushixiang</footer>
 <a class=entry-link aria-label="post link to Java 反序列化漏洞原理（三）fastjson 1.2.24 Templateslmpl 利用原理" href=https://typesafe.cn/posts/java-serialization-vulnerability-3/></a>
-</article>
-<article class=post-entry>
-<header class=entry-header>
-<h2>Java 反序列化漏洞原理（二）新版本JDK利用方式和Shiro举例
-</h2>
-</header>
-<section class=entry-content>
-<p>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
-新的希望 0x00 在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
-javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
-package javax.management; import java.io.IOException; import java.io.ObjectInputStream; /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it....</p>
-</section>
-<footer class=entry-footer><span title="2021-10-16 22:55:00 +0800 +0800">October 16, 2021</span>&nbsp;·&nbsp;7 分钟&nbsp;·&nbsp;dushixiang</footer>
-<a class=entry-link aria-label="post link to Java 反序列化漏洞原理（二）新版本JDK利用方式和Shiro举例" href=https://typesafe.cn/posts/java-serialization-vulnerability-2/></a>
 </article>
 <footer class=page-footer>
 <nav class=pagination>
