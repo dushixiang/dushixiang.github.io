@@ -1,5 +1,5 @@
 ---
-title: "在银河麒麟高级服务器操作系统 V10上安装docker"
+title: "在银河麒麟高级服务器操作系统V10上安装docker"
 categories: [ "docker" ]
 tags: [ "docker", "kylinos" ]
 draft: false
