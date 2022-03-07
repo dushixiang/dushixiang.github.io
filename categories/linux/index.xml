@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Linux on 没有理想的人不伤心</title>
+    <title>linux on 没有理想的人不伤心</title>
     <link>https://typesafe.cn/categories/linux/</link>
-    <description>Recent content in Linux on 没有理想的人不伤心</description>
+    <description>Recent content in linux on 没有理想的人不伤心</description>
     <image>
       <url>https://typesafe.cn/papermod-cover.png</url>
       <link>https://typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="https://typesafe.cn/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux 杀毒软件 ClamAV 安装</title>
+      <link>https://typesafe.cn/posts/clamav-install/</link>
+      <pubDate>Mon, 07 Mar 2022 21:52:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/clamav-install/</guid>
+      <description>Clam AntiVirus（ClamAV）是免费而且开放源代码的杀毒软件，软件与病毒码的更新皆由社群免费发布。Github 地址：https://github.com/Cisco-Talos/clamav
+安装 ClamAV yum install -y clamav* 配置 ClamAV cat &amp;gt; /etc/freshclam.conf &amp;lt;&amp;lt;EOF # 数据库配置文件夹 DatabaseDirectory /var/lib/clamav # 更新日志文件夹 UpdateLogFile /var/log/freshclam.log # 日志大小 LogFileMaxSize 2M # 日志记录时间 LogTime yes # 所属用户 DatabaseOwner root # 同步病毒库的地址 DatabaseMirror database.clamav.net EOF 更新病毒库 大概需要几分钟时间
+freshclam 进行病毒扫描测试 clamscan -ri &amp;lt;/path1/to/scan&amp;gt; &amp;lt;/path2/to/scan&amp;gt; 常用配置说明
+--recursive[=yes/no(*)] -r 递归查找 --infected -I 只打印受影响的文件信息 --remove[=yes/no(*)] 删除受影响的文件。(不建议使用,根据扫描结果进行手动删除,避免误删。) 配置邮箱 如果不需要邮件通知的可以忽略此步骤。
+安装邮件服务 yum install -y mailx 修改配置 修改大写字母为你的邮箱配置
+cat &amp;gt; /etc/mail.rc &amp;lt;&amp;lt;EOF set from=USERNAME@YOURDOMAIN.</description>
+    </item>
+    
     <item>
       <title>Linux 修改最大文件描述符</title>
       <link>https://typesafe.cn/posts/linux-limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
       <guid>https://typesafe.cn/posts/linux-limit/</guid>
-      <description>echo &amp;quot;fs.file-max=655350&amp;quot; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;quot;* soft nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;quot;* hard nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
+      <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     
   </channel>

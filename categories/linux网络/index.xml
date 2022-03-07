@@ -35,7 +35,7 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？ 操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
 # centos yum install -y bridge-utils # ubuntu apt-get install -y bridge-utils 使用brctl help查看使用帮助
-never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;bridge&amp;gt;	add bridge delbr &amp;lt;bridge&amp;gt;	delete bridge addif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge delif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge hairpin &amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; {on|off}	turn hairpin on/off setageing &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set ageing time setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;	set bridge priority setfd &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set bridge forward delay sethello &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set hello time setmaxage &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set max message age setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority show [ &amp;lt;bridge&amp;gt; ]	show a list of bridges showmacs &amp;lt;bridge&amp;gt;	show a list of mac addrs showstp &amp;lt;bridge&amp;gt;	show bridge stp info stp &amp;lt;bridge&amp;gt; {on|off}	turn stp on/off 常用命令如</description>
+never heard of command [help] Usage: brctl [commands] commands: 	addbr &amp;lt;bridge&amp;gt;	add bridge 	delbr &amp;lt;bridge&amp;gt;	delete bridge 	addif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge 	delif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge 	hairpin &amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; {on|off}	turn hairpin on/off 	setageing &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set ageing time 	setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;	set bridge priority 	setfd &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set bridge forward delay 	sethello &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set hello time 	setmaxage &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set max message age 	setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost 	setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority 	show [ &amp;lt;bridge&amp;gt; ]	show a list of bridges 	showmacs &amp;lt;bridge&amp;gt;	show a list of mac addrs 	showstp &amp;lt;bridge&amp;gt;	show bridge stp info 	stp &amp;lt;bridge&amp;gt; {on|off}	turn stp on/off 常用命令如</description>
     </item>
     
     <item>
@@ -60,7 +60,7 @@ ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;
       <guid>https://typesafe.cn/posts/linux-netns/</guid>
       <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
 使用方式 使用ip netns help查看使用帮助
-Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验 我们将要构建如下图的网络
+Usage: ip netns list  ip netns add NAME  ip netns set NAME NETNSID  ip [-all] netns delete [NAME]  ip netns identify [PID]  ip netns pids NAME  ip [-all] netns exec [NAME] cmd ...  ip netns monitor  ip netns list-id 开始实验 我们将要构建如下图的网络
 首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
 # 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10.</description>
     </item>
@@ -84,7 +84,7 @@ tun是三层网络设备，收发的是IP层数据包，无法处理以太网数
 tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。
 使用方式 Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。
 使用ip tuntap help查看使用帮助
-Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] [ mode { tun | tap } ] [ user USER ] [ group GROUP ] [ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ] Where:	USER := { STRING | NUMBER } GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
+Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] 	[ mode { tun | tap } ] [ user USER ] [ group GROUP ] 	[ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ]  Where:	USER := { STRING | NUMBER } 	GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun  # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
     </item>
     
   </channel>

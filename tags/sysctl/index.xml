@@ -16,7 +16,7 @@
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
       <guid>https://typesafe.cn/posts/linux-limit/</guid>
-      <description>echo &amp;quot;fs.file-max=655350&amp;quot; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;quot;* soft nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;quot;* hard nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
+      <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     
   </channel>

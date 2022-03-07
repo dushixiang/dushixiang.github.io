@@ -28,7 +28,7 @@ tun是三层网络设备，收发的是IP层数据包，无法处理以太网数
 tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。
 使用方式 Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。
 使用ip tuntap help查看使用帮助
-Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] [ mode { tun | tap } ] [ user USER ] [ group GROUP ] [ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ] Where:	USER := { STRING | NUMBER } GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
+Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] 	[ mode { tun | tap } ] [ user USER ] [ group GROUP ] 	[ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ]  Where:	USER := { STRING | NUMBER } 	GROUP := { STRING | NUMBER } 示例 # 创建 tap  ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun  # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
     </item>
     
   </channel>
