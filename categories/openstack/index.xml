@@ -18,12 +18,15 @@
       <guid>https://typesafe.cn/posts/install-openstack-victoria/</guid>
       <description>近期公司业务需求，需要安装一套Openstack环境学习，看了一下现在已经出了wallaby版了，我果断选择了上一个版本victoria。因为没有足够多的物理服务器了，只好找了一台64核256G内存6T硬盘的机器来创建几台虚拟机来搭环境了。
 实验环境 此次实验使用到了三台虚拟机，都是使用centos8系统，一台机器当作控制和网络节点，另外两台当作计算节点，使用OVS+VLAN的网络模式，eth0作为管理网络，eth1互相连接到OVS网桥上模拟trunk网卡，controller多增加一个eth2用于访问外部网络。
-   节点 作用 eth0 eth1 eth2     controller 控制节点、网络节点 172.16.10.100 无IP 桥接，无IP   compute-101 计算节点 172.16.10.101 无IP ❌   compute-102 计算节点 172.16.10.102 无IP ❌    安装虚拟机 安装依赖 安装KVM和Linux网桥
-yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts  dejavu-lgc-sans-fonts用于解决 virt-manaer 乱码
- 启动
+节点 作用 eth0 eth1 eth2 controller 控制节点、网络节点 172.16.10.100 无IP 桥接，无IP compute-101 计算节点 172.16.10.101 无IP ❌ compute-102 计算节点 172.16.10.102 无IP ❌ 安装虚拟机 安装依赖 安装KVM和Linux网桥
+yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts dejavu-lgc-sans-fonts用于解决 virt-manaer 乱码
+启动
 systemctl enable libvirtd &amp;amp;&amp;amp; systemctl start libvirtd 安装OVS
 yum install openvswitch 启动OVS
-systemctl enable openvswitch &amp;amp;&amp;amp; systemctl start openvswitch 创建虚拟机 使用 virt-manager 创建三台虚拟机</description>
+systemctl enable openvswitch &amp;amp;&amp;amp; systemctl start openvswitch 创建虚拟机 使用 virt-manager 创建三台虚拟机
+配置网络 配置管理网卡 给虚拟机配置桥接网络，参考Linux虚拟化技术KVM，效果如图
+配置trunk网卡 使用ovs创建一个虚拟网桥。
+ovs-vsctl add-br br-vlan 此时网桥br-vlan上是没有任何虚拟网卡的，然后关闭虚拟机，在virt-manager上添加一个网络设备</description>
     </item>
     
   </channel>

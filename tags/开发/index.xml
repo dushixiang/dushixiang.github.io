@@ -21,7 +21,7 @@
 Java的保留关键字 goto和const 在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。
 int goto = 0; int const = 0; 上面这两行代码的写法存在问题，无法正常编译通过。
 Java标签Label 上面说了在Java里面没有goto这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。
-outerLoop: while (true) { 	System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); 	int i = 0; 	while (true) { 	System.out.println(&amp;#34;I am the inner loop&amp;#34;); 	i++; 	if (i &amp;gt;= 3) { 	break outerLoop; 	} 	} } System.out.println(&amp;#34;Complete the loop&amp;#34;);  // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { 	System.</description>
+outerLoop: while (true) { System.out.println(&amp;#34;I&amp;#39;m the outer loop&amp;#34;); int i = 0; while (true) { System.out.println(&amp;#34;I am the inner loop&amp;#34;); i++; if (i &amp;gt;= 3) { break outerLoop; } } } System.out.println(&amp;#34;Complete the loop&amp;#34;); // 输出 I&amp;#39;m the outer loop I am the inner loop I am the inner loop I am the inner loop Complete the loop test: { System.</description>
     </item>
     
   </channel>

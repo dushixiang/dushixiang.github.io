@@ -17,11 +17,11 @@
       
       <guid>https://typesafe.cn/posts/install-docker-on-kylinos/</guid>
       <description>银河麒麟高级服务器操作系统 V10 是针对企业级关键业务，适应虚拟化、 云计算、大数据、工业互联网时代对主机系统可靠性、安全性、性能、扩展性和 实时性的需求，依据 CMMI 5 级标准研制的提供内生安全、云原生支持、国产 平台深入优化、高性能、易管理的新一代自主服务器操作系统；同源支持飞腾、 龙芯、申威、兆芯、海光、鲲鹏等自主平台；可支撑构建大型数据中心服务器高 可用集群、负载均衡集群、分布式集群文件系统、虚拟化应用和容器云平台等， 可部署在物理服务器和虚拟化环境、私有云、公有云和混合云环境；应用于政府、 国防、金融、教育、财税、公安、审计、交通、医疗、制造等领域。
- 公司有个项目需要将系统部署在 kylinos上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。
+公司有个项目需要将系统部署在 kylinos上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。
 配置阿里云Centos8镜像源 之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo 配置阿里云 docker 镜像源 yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo sed -i &amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39; /etc/yum.repos.d/docker-ce.repo 定义 yum 变量&amp;amp;修改 repo 修改 centos 和 docker repo文件中的 $releasever 为 centos_version ，原因是在麒麟服务器操作系统V10中 $releasever被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。
 echo &amp;#34;8&amp;#34; &amp;gt; /etc/yum/vars/centos_version sed -i &amp;#39;s/$releasever/$centos_version/g&amp;#39; /etc/yum.repos.d/docker-ce.repo sed -i &amp;#39;s/$releasever/$centos_version/g&amp;#39; /etc/yum.repos.d/CentOS-Base.repo 建立yum缓存 没啥可说的
-yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort -r  docker-ce.</description>
+yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort -r docker-ce.</description>
     </item>
     
     <item>
@@ -33,7 +33,7 @@ yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort 
       <description>之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器 首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
-[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &amp;#34;/bin/bash&amp;#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000  link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00  inet 127.0.0.1/8 scope host lo  valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。</description>
+[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &amp;#34;/bin/bash&amp;#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。</description>
     </item>
     
     <item>
@@ -43,10 +43,10 @@ docker run -itd --name centos-test --net=none centos 启动成功之后我们进
       
       <guid>https://typesafe.cn/posts/vctl/</guid>
       <description>前言 作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
- 先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。  对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
+先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。 对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。
-vctl 是什么？  vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。
- 简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把docker &amp;lt;cmd&amp;gt;换成vctl &amp;lt;cmd&amp;gt;就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。
+vctl 是什么？ vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。
+简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把docker &amp;lt;cmd&amp;gt;换成vctl &amp;lt;cmd&amp;gt;就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。
 在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。
 vctl system start 当需要关闭守护进程时执行
 vctl system stop 接下来就是和普通的docker命令一样了。

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>SpringBoot on 没有理想的人不伤心</title>
+    <link>https://typesafe.cn/tags/springboot/</link>
+    <description>Recent content in SpringBoot on 没有理想的人不伤心</description>
+    <image>
+      <url>https://typesafe.cn/papermod-cover.png</url>
+      <link>https://typesafe.cn/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/springboot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SpringBoot 3.0.0尝鲜与Java打包原生二进制【一】</title>
+      <link>https://typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link>
+      <pubDate>Sat, 26 Nov 2022 23:44:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</guid>
+      <description>2022年11月24日 SpringBoot 正式发布了 3.0 版本，带来许多新的特性，但我最关心的还是Java打包成原生二进制，运行时不再依赖jre环境，运行Java程序将和Go程序一样方便。
+升级至 SpringBoot 3.0.0 说是尝鲜，但是我不想再试着搞 hello world 那种啥都没有的东西了，找到我之前写的一个Java开源项目 kafka-map 拿他开刀。
+kafka-map 本身是基于 SpringBoot 2.4.x 开发的，sqlite 存储数据，且很久没有大的更新了，想要直接升级到 SpringBoot 3.0.0 是不可能的，我按照官方文档 Spring Boot 3.0 迁移指南 首先升级到最新2.7.x版本，然后就发现 service 依赖循环了，这个时候有两种选择，一是在配置文件中允许依赖循环 spring.main.allow-circular-references: true，二是梳理业务逻辑解决依赖循环的问题。作为一个合格的开发，我选择了解决依赖循环的问题，过程不表。
+SpringBoot 3.0.0 升级了很多组件，其中 Jpa 依赖的 Hibernate 升级到了 6.x，我启动时又遇到了 sqlite 方言插件不可用的问题，还好 Hibernate 6.x 已经支持了 sqlite方言，切换到官方插件就好了。配置文件如下：
+spring: datasource: url: jdbc:sqlite:data/kafka-map.db driver-class-name: org.sqlite.JDBC jpa: hibernate: ddl-auto: update show-sql: true properties: hibernate: dialect: org.hibernate.community.dialect.SQLiteDialect 原生二进制打包 打包原生二进制还是最折腾的，刚开始参考GraalVM Native Image Support 把打包 springboot:build-image 当成了打包原生二进制了，而且打包的过程中还遇到了 UnsupportedFeatureException: No instances of ch.</description>
+    </item>
+    
+  </channel>
+</rss>
