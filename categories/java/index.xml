@@ -10,7 +10,23 @@
       <link>https://typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在 Java 如何让方法只执行一次？</title>
+      <link>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
+      <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
+      <description>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。
+正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 Once 功能。
+sync.Once 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。
+sync.Once 类型有一个 Do 方法，该方法接收一个函数作为参数，并确保这个函数只会被执行一次，无论有多少个 goroutine 同时调用它。具体来说，第一个调用 Do 方法的 goroutine 会执行这个函数，而其他 goroutine 则会等待它完成，然后返回相同的结果。
+sync.Once 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。
+&amp;ndash; 来自 ChatGPT
+其实和单例模式差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。
+package cn.typesafe.sync; import lombok.SneakyThrows; import java.util.concurrent.Callable; public class Once&amp;lt;T&amp;gt; { private volatile T t = null; @SneakyThrows public T doOnce(Callable&amp;lt;T&amp;gt; action) { if (t == null) { synchronized (this) { if (t == null) { t = action.</description>
+    </item>
+    
     <item>
       <title>SpringBoot 3.0.0尝鲜与Java打包原生二进制【一】</title>
       <link>https://typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link>

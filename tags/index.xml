@@ -10,7 +10,25 @@
       <link>https://typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java</title>
+      <link>https://typesafe.cn/tags/java/</link>
+      <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/tags/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>并发</title>
+      <link>https://typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</link>
+      <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
+      
+      <guid>https://typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>graalvm</title>
       <link>https://typesafe.cn/tags/graalvm/</link>
@@ -80,15 +98,6 @@
       <pubDate>Sat, 06 Nov 2021 17:16:00 +0800</pubDate>
       
       <guid>https://typesafe.cn/tags/fastjson/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Java</title>
-      <link>https://typesafe.cn/tags/java/</link>
-      <pubDate>Sat, 06 Nov 2021 17:16:00 +0800</pubDate>
-      
-      <guid>https://typesafe.cn/tags/java/</guid>
       <description></description>
     </item>
     
