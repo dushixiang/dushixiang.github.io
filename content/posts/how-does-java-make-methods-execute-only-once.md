@@ -4,7 +4,7 @@ categories: [ "Java" ]
 tags: ["Java","并发"]
 draft: false
 slug: "how-does-java-make-methods-execute-only-once"
-date: "2023-04-02 12:48:00"
+date: "2023-04-02T13:18:00+08:00"
 ---
 
 最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。
