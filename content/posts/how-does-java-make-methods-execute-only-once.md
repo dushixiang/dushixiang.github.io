@@ -1,5 +1,5 @@
 ---
-title: "在 Java 如何让方法只执行一次？"
+title: "在 Java 里如何让方法只执行一次？"
 categories: [ "Java" ]
 tags: ["Java","并发"]
 draft: false
