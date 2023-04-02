@@ -12,7 +12,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>在 Java 如何让方法只执行一次？</title>
+      <title>在 Java 里如何让方法只执行一次？</title>
       <link>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
       <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
       
