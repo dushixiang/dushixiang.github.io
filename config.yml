@@ -1,7 +1,7 @@
 baseURL: "https://typesafe.cn"
 title: 没有理想的人不伤心
 paginate: 5
-theme: hugo-PaperMod
+theme: hugo-PaperMod-d
 defaultContentLanguage: zh
 
 enableInlineShortcodes: true
