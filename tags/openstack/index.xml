@@ -1,34 +1,83 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>openstack on 没有理想的人不伤心</title>
+    <title>Openstack on 没有理想的人不伤心</title>
     <link>https://www.typesafe.cn/tags/openstack/</link>
-    <description>Recent content in openstack on 没有理想的人不伤心</description>
+    <description>Recent content in Openstack on 没有理想的人不伤心</description>
     <image>
+      <title>没有理想的人不伤心</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.147.9</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 12 Jun 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/openstack/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 12 Jun 2021 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://www.typesafe.cn/tags/openstack/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>openstack victoria版安装</title>
       <link>https://www.typesafe.cn/posts/install-openstack-victoria/</link>
       <pubDate>Sat, 12 Jun 2021 00:00:00 +0800</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/install-openstack-victoria/</guid>
-      <description>近期公司业务需求，需要安装一套Openstack环境学习，看了一下现在已经出了wallaby版了，我果断选择了上一个版本victoria。因为没有足够多的物理服务器了，只好找了一台64核256G内存6T硬盘的机器来创建几台虚拟机来搭环境了。
-实验环境 此次实验使用到了三台虚拟机，都是使用centos8系统，一台机器当作控制和网络节点，另外两台当作计算节点，使用OVS+VLAN的网络模式，eth0作为管理网络，eth1互相连接到OVS网桥上模拟trunk网卡，controller多增加一个eth2用于访问外部网络。
-节点 作用 eth0 eth1 eth2 controller 控制节点、网络节点 172.16.10.100 无IP 桥接，无IP compute-101 计算节点 172.16.10.101 无IP ❌ compute-102 计算节点 172.16.10.102 无IP ❌ 安装虚拟机 安装依赖 安装KVM和Linux网桥
-yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts dejavu-lgc-sans-fonts用于解决 virt-manaer 乱码
-启动
-systemctl enable libvirtd &amp;amp;&amp;amp; systemctl start libvirtd 安装OVS
-yum install openvswitch 启动OVS
-systemctl enable openvswitch &amp;amp;&amp;amp; systemctl start openvswitch 创建虚拟机 使用 virt-manager 创建三台虚拟机
-配置网络 配置管理网卡 给虚拟机配置桥接网络，参考Linux虚拟化技术KVM，效果如图
-配置trunk网卡 使用ovs创建一个虚拟网桥。
-ovs-vsctl add-br br-vlan 此时网桥br-vlan上是没有任何虚拟网卡的，然后关闭虚拟机，在virt-manager上添加一个网络设备</description>
+      <description>&lt;p&gt;近期公司业务需求，需要安装一套Openstack环境学习，看了一下现在已经出了&lt;code&gt;wallaby&lt;/code&gt;版了，我果断选择了上一个版本&lt;code&gt;victoria&lt;/code&gt;。因为没有足够多的物理服务器了，只好找了一台64核256G内存6T硬盘的机器来创建几台虚拟机来搭环境了。&lt;/p&gt;
+&lt;h1 id=&#34;实验环境&#34;&gt;实验环境&lt;/h1&gt;
+&lt;p&gt;此次实验使用到了三台虚拟机，都是使用centos8系统，一台机器当作控制和网络节点，另外两台当作计算节点，使用OVS+VLAN的网络模式，eth0作为管理网络，eth1互相连接到OVS网桥上模拟trunk网卡，controller多增加一个eth2用于访问外部网络。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;节点&lt;/th&gt;
+          &lt;th&gt;作用&lt;/th&gt;
+          &lt;th&gt;eth0&lt;/th&gt;
+          &lt;th&gt;eth1&lt;/th&gt;
+          &lt;th&gt;eth2&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;controller&lt;/td&gt;
+          &lt;td&gt;控制节点、网络节点&lt;/td&gt;
+          &lt;td&gt;172.16.10.100&lt;/td&gt;
+          &lt;td&gt;无IP&lt;/td&gt;
+          &lt;td&gt;桥接，无IP&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;compute-101&lt;/td&gt;
+          &lt;td&gt;计算节点&lt;/td&gt;
+          &lt;td&gt;172.16.10.101&lt;/td&gt;
+          &lt;td&gt;无IP&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;compute-102&lt;/td&gt;
+          &lt;td&gt;计算节点&lt;/td&gt;
+          &lt;td&gt;172.16.10.102&lt;/td&gt;
+          &lt;td&gt;无IP&lt;/td&gt;
+          &lt;td&gt;❌&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h1 id=&#34;安装虚拟机&#34;&gt;安装虚拟机&lt;/h1&gt;
+&lt;h2 id=&#34;安装依赖&#34;&gt;安装依赖&lt;/h2&gt;
+&lt;p&gt;安装KVM和Linux网桥&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;dejavu-lgc-sans-fonts&lt;/code&gt;用于解决 &lt;code&gt;virt-manaer&lt;/code&gt; 乱码&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;启动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl enable libvirtd &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; systemctl start libvirtd
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;安装OVS&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install openvswitch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启动OVS&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl enable openvswitch &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; systemctl start openvswitch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;创建虚拟机&#34;&gt;创建虚拟机&lt;/h3&gt;
+&lt;p&gt;使用 virt-manager 创建三台虚拟机&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;image-20210604140054913&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vm-nodes.png&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;配置网络&#34;&gt;配置网络&lt;/h3&gt;
+&lt;h4 id=&#34;配置管理网卡&#34;&gt;配置管理网卡&lt;/h4&gt;
+&lt;p&gt;给虚拟机配置桥接网络，参考&lt;a href=&#34;https://typesafe.cn/posts/linux-kvm/&#34;&gt;Linux虚拟化技术KVM&lt;/a&gt;，效果如图&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vm-manage-port-config.png&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;配置trunk网卡&#34;&gt;配置trunk网卡&lt;/h4&gt;
+&lt;p&gt;使用ovs创建一个虚拟网桥。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-br br-vlan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;此时网桥&lt;code&gt;br-vlan&lt;/code&gt;上是没有任何虚拟网卡的，然后关闭虚拟机，在&lt;code&gt;virt-manager&lt;/code&gt;上添加一个网络设备&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

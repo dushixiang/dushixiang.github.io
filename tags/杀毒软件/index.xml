@@ -5,25 +5,64 @@
     <link>https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/</link>
     <description>Recent content in 杀毒软件 on 没有理想的人不伤心</description>
     <image>
+      <title>没有理想的人不伤心</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.147.9</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate>
+    <atom:link href="https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 杀毒软件 ClamAV 安装</title>
       <link>https://www.typesafe.cn/posts/clamav-install/</link>
       <pubDate>Mon, 07 Mar 2022 21:52:00 +0800</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/clamav-install/</guid>
-      <description>Clam AntiVirus（ClamAV）是免费而且开放源代码的杀毒软件，软件与病毒码的更新皆由社群免费发布。Github 地址：https://github.com/Cisco-Talos/clamav
-安装 ClamAV yum install -y clamav* 配置 ClamAV cat &amp;gt; /etc/freshclam.conf &amp;lt;&amp;lt;EOF # 数据库配置文件夹 DatabaseDirectory /var/lib/clamav # 更新日志文件夹 UpdateLogFile /var/log/freshclam.log # 日志大小 LogFileMaxSize 2M # 日志记录时间 LogTime yes # 所属用户 DatabaseOwner root # 同步病毒库的地址 DatabaseMirror database.clamav.net EOF 更新病毒库 大概需要几分钟时间
-freshclam 进行病毒扫描测试 clamscan -ri &amp;lt;/path1/to/scan&amp;gt; &amp;lt;/path2/to/scan&amp;gt; 常用配置说明
---recursive[=yes/no(*)] -r 递归查找 --infected -I 只打印受影响的文件信息 --remove[=yes/no(*)] 删除受影响的文件。(不建议使用,根据扫描结果进行手动删除,避免误删。) 配置邮箱 如果不需要邮件通知的可以忽略此步骤。
-安装邮件服务 yum install -y mailx 修改配置 修改大写字母为你的邮箱配置
-cat &amp;gt; /etc/mail.rc &amp;lt;&amp;lt;EOF set from=USERNAME@YOURDOMAIN.</description>
+      <description>&lt;p&gt;&lt;strong&gt;Clam AntiVirus&lt;/strong&gt;（&lt;strong&gt;ClamAV&lt;/strong&gt;）是免费而且开放源代码的杀毒软件，软件与病毒码的更新皆由社群免费发布。Github 地址：https://github.com/Cisco-Talos/clamav&lt;/p&gt;
+&lt;h3 id=&#34;安装-clamav&#34;&gt;安装 ClamAV&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install -y clamav*
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;配置-clamav&#34;&gt;配置 ClamAV&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cat &amp;gt; /etc/freshclam.conf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 数据库配置文件夹
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;DatabaseDirectory /var/lib/clamav
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 更新日志文件夹
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;UpdateLogFile /var/log/freshclam.log
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 日志大小
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;LogFileMaxSize 2M
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 日志记录时间
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;LogTime yes
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 所属用户
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;DatabaseOwner root
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;# 同步病毒库的地址
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;DatabaseMirror database.clamav.net
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;更新病毒库&#34;&gt;更新病毒库&lt;/h3&gt;
+&lt;p&gt;大概需要几分钟时间&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;freshclam
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;进行病毒扫描测试&#34;&gt;进行病毒扫描测试&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;clamscan -ri &amp;lt;/path1/to/scan&amp;gt; &amp;lt;/path2/to/scan&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;常用配置说明&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;--recursive[=yes/no(*)]     -r      递归查找
+--infected                  -I      只打印受影响的文件信息
+--remove[=yes/no(*)]                删除受影响的文件。(不建议使用,根据扫描结果进行手动删除,避免误删。)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;配置邮箱&#34;&gt;配置邮箱&lt;/h3&gt;
+&lt;p&gt;如果不需要邮件通知的可以忽略此步骤。&lt;/p&gt;
+&lt;h4 id=&#34;安装邮件服务&#34;&gt;安装邮件服务&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install -y mailx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;修改配置&#34;&gt;修改配置&lt;/h4&gt;
+&lt;p&gt;修改大写字母为你的邮箱配置&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cat &amp;gt; /etc/mail.rc &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set from=USERNAME@YOURDOMAIN.COM
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set smtp=smtps://smtp.exmail.qq.com:465
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set smtp-auth=login
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set smtp-auth-user=USERNAME@YOURDOMAIN.COM
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set smtp-auth-password=YOURPASSWORD
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set ssl-verify=ignore
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;set nss-config-dir=/etc/pki/nssdb/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;发送邮件进行测试&#34;&gt;发送邮件进行测试&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Your message&amp;#34;&lt;/span&gt; | mail -v -s &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Message Subject&amp;#34;&lt;/span&gt; email@address
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果出现 “Error in certificate: Peer&amp;rsquo;s certificate issuer is not recognized” 属于正常。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

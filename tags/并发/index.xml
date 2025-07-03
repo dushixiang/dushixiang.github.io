@@ -5,27 +5,48 @@
     <link>https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</link>
     <description>Recent content in 并发 on 没有理想的人不伤心</description>
     <image>
+      <title>没有理想的人不伤心</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.147.9</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate>
+    <atom:link href="https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 Java 里如何让方法只执行一次？</title>
       <link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
       <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
-      <description>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。
-正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 Once 功能。
-sync.Once 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。
-sync.Once 类型有一个 Do 方法，该方法接收一个函数作为参数，并确保这个函数只会被执行一次，无论有多少个 goroutine 同时调用它。具体来说，第一个调用 Do 方法的 goroutine 会执行这个函数，而其他 goroutine 则会等待它完成，然后返回相同的结果。
-sync.Once 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。
-&amp;ndash; 来自 ChatGPT
-其实和单例模式差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。
-package cn.typesafe.sync; import lombok.SneakyThrows; import java.util.concurrent.Callable; public class Once&amp;lt;T&amp;gt; { private volatile T t = null; @SneakyThrows public T doOnce(Callable&amp;lt;T&amp;gt; action) { if (t == null) { synchronized (this) { if (t == null) { t = action.</description>
+      <description>&lt;p&gt;最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。&lt;/p&gt;
+&lt;p&gt;正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 &lt;code&gt;Once&lt;/code&gt; 功能。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;sync.Once&lt;/code&gt; 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sync.Once&lt;/code&gt; 类型有一个 &lt;code&gt;Do&lt;/code&gt; 方法，该方法接收一个函数作为参数，并确保这个函数只会被执行一次，无论有多少个 goroutine 同时调用它。具体来说，第一个调用 Do 方法的 goroutine 会执行这个函数，而其他 goroutine 则会等待它完成，然后返回相同的结果。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sync.Once&lt;/code&gt; 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。&lt;/p&gt;
+&lt;p&gt;&amp;ndash; 来自 ChatGPT&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;其实和&lt;code&gt;单例模式&lt;/code&gt;差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;package&lt;/span&gt; cn.typesafe.sync;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; lombok.SneakyThrows;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.util.concurrent.Callable;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Once&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;private&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;volatile&lt;/span&gt; T t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;@SneakyThrows&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; T &lt;span style=&#34;color:#a6e22e&#34;&gt;doOnce&lt;/span&gt;(Callable&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;T&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; action) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (t &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			&lt;span style=&#34;color:#66d9ef&#34;&gt;synchronized&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;				&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (t &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;					t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; action.&lt;span style=&#34;color:#a6e22e&#34;&gt;call&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;				}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;			}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; t;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;单元测试&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

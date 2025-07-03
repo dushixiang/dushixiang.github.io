@@ -5,10 +5,12 @@
     <link>https://www.typesafe.cn/series/</link>
     <description>Recent content in Series on 没有理想的人不伤心</description>
     <image>
+      <title>没有理想的人不伤心</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language><atom:link href="https://www.typesafe.cn/series/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo -- 0.147.9</generator>
+    <language>zh</language>
+    <atom:link href="https://www.typesafe.cn/series/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

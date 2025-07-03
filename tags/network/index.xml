@@ -1,104 +1,202 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>network on 没有理想的人不伤心</title>
+    <title>Network on 没有理想的人不伤心</title>
     <link>https://www.typesafe.cn/tags/network/</link>
-    <description>Recent content in network on 没有理想的人不伤心</description>
+    <description>Recent content in Network on 没有理想的人不伤心</description>
     <image>
+      <title>没有理想的人不伤心</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.147.9</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 23 May 2021 13:37:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 23 May 2021 13:37:00 +0800</lastBuildDate>
+    <atom:link href="https://www.typesafe.cn/tags/network/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>容器网络——如何为docker添加网卡？</title>
       <link>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</link>
       <pubDate>Sun, 23 May 2021 13:37:00 +0800</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</guid>
-      <description>之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
-启动一个无网络的容器 首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
-docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
-[root@localhost ~]# docker ps CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES 28dc2e8853df centos &amp;#34;/bin/bash&amp;#34; 24 seconds ago Up 23 seconds centos-test [root@localhost ~]# docker exec -it 28dc2e8853df bash [root@28dc2e8853df /]# ip a 1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000 link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00 inet 127.0.0.1/8 scope host lo valid_lft forever preferred_lft forever 可以看到确实只有一个本地环回网卡。</description>
+      <description>&lt;p&gt;之前我们介绍&lt;code&gt;Network Namespace&lt;/code&gt;（以下简称&lt;code&gt;netns&lt;/code&gt;）和&lt;code&gt;veth pair&lt;/code&gt;时说过&lt;code&gt;docker&lt;/code&gt;是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下&lt;code&gt;docker&lt;/code&gt;到底是如何做到的。&lt;/p&gt;
+&lt;h3 id=&#34;启动一个无网络的容器&#34;&gt;启动一个无网络的容器&lt;/h3&gt;
+&lt;p&gt;首先我们使用 &lt;code&gt;--net=none&lt;/code&gt; 参数启动一个无网络的容器，为了方便调试，这里我们使用了&lt;code&gt;centos&lt;/code&gt;镜像。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run -itd --name centos-test --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;none centos
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启动成功之后我们进入容器内部确认一下是否无网卡。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# docker ps&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          PORTS     NAMES
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;28dc2e8853df   centos         &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt; seconds ago   Up &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt; seconds             centos-test
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# docker exec -it 28dc2e8853df bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@28dc2e8853df /&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# ip a&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN group default qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 127.0.0.1/8 scope host lo
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       valid_lft forever preferred_lft forever
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以看到确实只有一个本地环回网卡。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Linux 环回网络接口</title>
       <link>https://www.typesafe.cn/posts/linux-loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/linux-loopback/</guid>
-      <description>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
-Linux是如何访问本机IP的？ 大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
-环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
-那环回网络接口是如何判断目的IP是否为本机地址的呢？
-答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：
-ip route show table local 输出内容如下：
-broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 local 127.0.0.1 dev lo proto kernel scope host src 127.</description>
+      <description>&lt;p&gt;在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动&lt;code&gt;nginx&lt;/code&gt;之后，在浏览器输入&lt;code&gt;lcoalhost&lt;/code&gt;或者&lt;code&gt;127.0.0.1&lt;/code&gt;就可以访问到本机上面的&lt;code&gt;http&lt;/code&gt;服务。&lt;/p&gt;
+&lt;h2 id=&#34;linux是如何访问本机ip的&#34;&gt;Linux是如何访问本机IP的？&lt;/h2&gt;
+&lt;p&gt;大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过&lt;code&gt;TCP/IP&lt;/code&gt;与同一台主机上的其他服务进行通信，以&lt;code&gt;127&lt;/code&gt;开头的&lt;code&gt;IPv4&lt;/code&gt;地址就是为它保留的，主流&lt;code&gt;Linux&lt;/code&gt;操作系统为环回网卡分配的地址都是&lt;code&gt;127.0.0.1&lt;/code&gt;，主机名是&lt;code&gt;localhost&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。&lt;/p&gt;
+&lt;p&gt;那环回网络接口是如何判断目的IP是否为本机地址的呢？&lt;/p&gt;
+&lt;p&gt;答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip route show table local
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出内容如下：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 127.0.0.1 dev lo proto kernel scope host src 127.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中&lt;code&gt;local&lt;/code&gt;开头的便是本地IP，&lt;code&gt;dev&lt;/code&gt;后面是网卡名称。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Linux Bridge 详解</title>
       <link>https://www.typesafe.cn/posts/linux-bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/linux-bridge/</guid>
-      <description>Linux Bridge 详解 Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。
-Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
-如何使用Linux Bridge？ 操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
-# centos yum install -y bridge-utils # ubuntu apt-get install -y bridge-utils 使用brctl help查看使用帮助
-never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;bridge&amp;gt;	add bridge delbr &amp;lt;bridge&amp;gt;	delete bridge addif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge delif &amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge hairpin &amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; {on|off}	turn hairpin on/off setageing &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set ageing time setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;	set bridge priority setfd &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set bridge forward delay sethello &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set hello time setmaxage &amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;	set max message age setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority show [ &amp;lt;bridge&amp;gt; ]	show a list of bridges showmacs &amp;lt;bridge&amp;gt;	show a list of mac addrs showstp &amp;lt;bridge&amp;gt;	show bridge stp info stp &amp;lt;bridge&amp;gt; {on|off}	turn stp on/off 常用命令如</description>
+      <description>&lt;h1 id=&#34;linux-bridge-详解&#34;&gt;Linux Bridge 详解&lt;/h1&gt;
+&lt;p&gt;Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。&lt;/p&gt;
+&lt;p&gt;Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。&lt;/p&gt;
+&lt;h2 id=&#34;如何使用linux-bridge&#34;&gt;如何使用Linux Bridge？&lt;/h2&gt;
+&lt;p&gt;操作网桥有多种方式，在这里我们介绍一下通过&lt;strong&gt;bridge-utils&lt;/strong&gt;来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# centos&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install -y bridge-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# ubuntu&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;apt-get install -y bridge-utils
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;使用&lt;code&gt;brctl help&lt;/code&gt;查看使用帮助&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;never heard of command &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;help&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Usage: brctl &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;commands&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;commands:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	addbr     	&amp;lt;bridge&amp;gt;		add bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	delbr     	&amp;lt;bridge&amp;gt;		delete bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	addif     	&amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	delif     	&amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	hairpin   	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;on|off&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;	turn hairpin on/off
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setageing 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set ageing time
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;		set bridge priority
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setfd     	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set bridge forward delay
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	sethello  	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set hello time
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setmaxage 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set max message age
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	show      	&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; &amp;lt;bridge&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;		show a list of bridges
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	showmacs  	&amp;lt;bridge&amp;gt;		show a list of mac addrs
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	showstp   	&amp;lt;bridge&amp;gt;		show bridge stp info
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	stp       	&amp;lt;bridge&amp;gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;on|off&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;	turn stp on/off
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;常用命令如&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Linux veth pair 详解</title>
       <link>https://www.typesafe.cn/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/linux-veth-pair/</guid>
-      <description>Linux veth pair 详解 veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
-由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
-如何使用？ 创建一对veth
-ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;gt; 实验 我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：
-我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。
-# 创建一对veth ip link add veth0 type veth peer name veth1 # 将veth移动到netns中 ip link set veth0 netns ns0 ip link set veth1 netns ns1 # 启动 ip netns exec ns0 ip link set veth0 up ip netns exec ns1 ip link set veth1 up 接下来我们测试一下。</description>
+      <description>&lt;h1 id=&#34;linux-veth-pair-详解&#34;&gt;Linux veth pair 详解&lt;/h1&gt;
+&lt;p&gt;veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;virtual-device-veth-1&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/virtual-device-veth-1.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。&lt;/p&gt;
+&lt;h2 id=&#34;如何使用&#34;&gt;如何使用？&lt;/h2&gt;
+&lt;p&gt;创建一对veth&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;实验&#34;&gt;实验&lt;/h2&gt;
+&lt;p&gt;我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;https://oss.typesafe.cn/vethpair.png&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vethpair.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建一对veth&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link add veth0 type veth peer name veth1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 将veth移动到netns中&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set veth0 netns ns0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set veth1 netns ns1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set veth0 up
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set veth1 up
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下来我们测试一下。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Linux Network Namespace (netns) 详解</title>
       <link>https://www.typesafe.cn/posts/linux-netns/</link>
       <pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/linux-netns/</guid>
-      <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
-使用方式 使用ip netns help查看使用帮助
-Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验 我们将要构建如下图的网络
-首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
-# 添加并启动虚拟网卡tap设备 ip tuntap add dev tap0 mode tap ip tuntap add dev tap1 mode tap ip link set tap0 up ip link set tap1 up # 配置IP ip addr add 10.</description>
+      <description>&lt;p&gt;Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。&lt;/p&gt;
+&lt;h3 id=&#34;使用方式&#34;&gt;使用方式&lt;/h3&gt;
+&lt;p&gt;使用&lt;code&gt;ip netns help&lt;/code&gt;查看使用帮助&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Usage: ip netns list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns add NAME
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns set NAME NETNSID
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;-all&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; netns delete &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;NAME&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns identify &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;PID&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns pids NAME
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;-all&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; netns exec &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;NAME&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; cmd ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns monitor
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       ip netns list-id
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;开始实验&#34;&gt;开始实验&lt;/h3&gt;
+&lt;p&gt;我们将要构建如下图的网络&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;https://oss.typesafe.cn/netns.png&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/netns.png?t=2&#34;&gt;&lt;/p&gt;
+&lt;p&gt;首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加并启动虚拟网卡tap设备&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap add dev tap0 mode tap 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap add dev tap1 mode tap 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set tap0 up
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set tap1 up
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 配置IP&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip addr add 10.0.0.1/24 dev tap0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip addr add 10.0.0.2/24 dev tap1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加netns&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 将虚拟网卡tap0，tap1分别移动到ns0和ns1中&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set tap0 netns ns0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set tap1 netns ns1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在宿主机器上使用&lt;code&gt;ping 10.0.0.1&lt;/code&gt;测试与tap0的网络连通性&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Linux tun/tap 详解</title>
       <link>https://www.typesafe.cn/posts/linux-tun-tap/</link>
       <pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate>
-      
       <guid>https://www.typesafe.cn/posts/linux-tun-tap/</guid>
-      <description>在计算机网络中，tun与tap是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。
-tun/tap是什么？ tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。
-tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。
-如何操作tun/tap？ Linux tun/tap可以通过网络接口和字符设备两种方式进行操作。
-当应用程序使用标准网络接口socket API操作tun/tap设备时，和操作一个真实网卡无异。
-当应用程序使用字符设备操作tun/tap设备时，字符设备即充当了用户空间和内核空间的桥梁直接读写二层或三层的数据报文。在 Linux 内核 2.6.x 之后的版本中，tun/tap 对应的字符设备文件分别为：
-tun：/dev/net/tun tap：/dev/tap0 当应用程序打开字符设备时，系统会自动创建对应的虚拟设备接口，一般以tunX和tapX方式命名，虚拟设备接口创建成功后，可以为其配置IP、MAC地址、路由等。当一切配置完毕，应用程序通过此字符文件设备写入IP封包或以太网数据帧，tun/tap的驱动程序会将数据报文直接发送到内核空间，内核空间收到数据后再交给系统的网络协议栈进行处理，最后网络协议栈选择合适的物理网卡将其发出，到此发送流程完成。而物理网卡收到数据报文时会交给网络协议栈进行处理，网络协议栈匹配判断之后通过tun/tap的驱动程序将数据报文原封不动的写入到字符设备上，应用程序从字符设备上读取到IP封包或以太网数据帧，最后进行相应的处理，收取流程完成。
-注意：当应用程序关闭字符设备时，系统也会自动删除对应的虚拟设备接口，并且会删除掉创建的路由等信息。
-tun/tap的区别 tun/tap 虽然工作原理一致，但是工作的层次不一样。
-tun是三层网络设备，收发的是IP层数据包，无法处理以太网数据帧，例如OpenVPN的路由模式就是使用了tun网络设备，OpenVPN Server重新规划了一个网段，所有的客户端都会获取到该网段下的一个IP，并且会添加对应的路由规则，而客户端与目标机器产生的数据报文都要经过OpenVPN网关才能转发。
-tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。
-使用方式 Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。
-使用ip tuntap help查看使用帮助
-Usage: ip tuntap { add | del | show | list | lst | help } [ dev PHYS_DEV ] [ mode { tun | tap } ] [ user USER ] [ group GROUP ] [ one_queue ] [ pi ] [ vnet_hdr ] [ multi_queue ] [ name NAME ] Where:	USER := { STRING | NUMBER } GROUP := { STRING | NUMBER } 示例 # 创建 tap ip tuntap add dev tap0 mode tap # 创建 tun ip tuntap add dev tun0 mode tun # 删除 tap ip tuntap del dev tap0 mode tap # 删除 tun ip tuntap del dev tun0 mode tun tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过ip link命令来操作它。</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;在计算机网络中，&lt;strong&gt;tun&lt;/strong&gt;与&lt;strong&gt;tap&lt;/strong&gt;是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;tuntap是什么&#34;&gt;tun/tap是什么？&lt;/h3&gt;
+&lt;p&gt;tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。&lt;/p&gt;
+&lt;p&gt;tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。&lt;/p&gt;
+&lt;h3 id=&#34;如何操作tuntap&#34;&gt;如何操作tun/tap？&lt;/h3&gt;
+&lt;p&gt;Linux tun/tap可以通过网络接口和字符设备两种方式进行操作。&lt;/p&gt;
+&lt;p&gt;当应用程序使用标准网络接口socket API操作tun/tap设备时，和操作一个真实网卡无异。&lt;/p&gt;
+&lt;p&gt;当应用程序使用字符设备操作tun/tap设备时，字符设备即充当了用户空间和内核空间的桥梁直接读写二层或三层的数据报文。在 Linux 内核 2.6.x 之后的版本中，tun/tap 对应的字符设备文件分别为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tun：/dev/net/tun
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tap：/dev/tap0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;当应用程序打开字符设备时，系统会自动创建对应的虚拟设备接口，一般以tunX和tapX方式命名，虚拟设备接口创建成功后，可以为其配置IP、MAC地址、路由等。当一切配置完毕，应用程序通过此字符文件设备写入IP封包或以太网数据帧，tun/tap的驱动程序会将数据报文直接发送到内核空间，内核空间收到数据后再交给系统的网络协议栈进行处理，最后网络协议栈选择合适的物理网卡将其发出，到此发送流程完成。而物理网卡收到数据报文时会交给网络协议栈进行处理，网络协议栈匹配判断之后通过tun/tap的驱动程序将数据报文原封不动的写入到字符设备上，应用程序从字符设备上读取到IP封包或以太网数据帧，最后进行相应的处理，收取流程完成。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：当应用程序关闭字符设备时，系统也会自动删除对应的虚拟设备接口，并且会删除掉创建的路由等信息。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;tuntap的区别&#34;&gt;tun/tap的区别&lt;/h3&gt;
+&lt;p&gt;tun/tap 虽然工作原理一致，但是工作的层次不一样。&lt;/p&gt;
+&lt;p&gt;tun是三层网络设备，收发的是IP层数据包，无法处理以太网数据帧，例如OpenVPN的路由模式就是使用了tun网络设备，OpenVPN Server重新规划了一个网段，所有的客户端都会获取到该网段下的一个IP，并且会添加对应的路由规则，而客户端与目标机器产生的数据报文都要经过OpenVPN网关才能转发。&lt;/p&gt;
+&lt;p&gt;tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。&lt;/p&gt;
+&lt;h3 id=&#34;使用方式&#34;&gt;使用方式&lt;/h3&gt;
+&lt;p&gt;Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;ip tuntap help&lt;/code&gt;查看使用帮助&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Usage: ip tuntap &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; add | del | show | list | lst | help &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; dev PHYS_DEV &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; mode &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; tun | tap &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; user USER &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; group GROUP &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; one_queue &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; pi &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; vnet_hdr &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; multi_queue &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; name NAME &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Where:	USER  :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; STRING | NUMBER &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	GROUP :&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt; STRING | NUMBER &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;示例&#34;&gt;示例&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建 tap &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap add dev tap0 mode tap 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 创建 tun&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap add dev tun0 mode tun 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除 tap&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap del dev tap0 mode tap
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除 tun&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip tuntap del dev tun0 mode tun 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过&lt;code&gt;ip link&lt;/code&gt;命令来操作它。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

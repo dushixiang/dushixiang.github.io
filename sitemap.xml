@@ -5,10 +5,10 @@
     <loc>https://www.typesafe.cn/categories/</loc>
     <lastmod>2023-04-02T13:18:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/tags/java/</loc>
+    <loc>https://www.typesafe.cn/categories/java/</loc>
     <lastmod>2023-04-02T13:18:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/categories/java/</loc>
+    <loc>https://www.typesafe.cn/tags/java/</loc>
     <lastmod>2023-04-02T13:18:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/posts/</loc>
@@ -50,10 +50,10 @@
     <loc>https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/</loc>
     <lastmod>2022-03-07T21:52:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/tags/docker/</loc>
+    <loc>https://www.typesafe.cn/categories/docker/</loc>
     <lastmod>2021-12-21T23:39:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/categories/docker/</loc>
+    <loc>https://www.typesafe.cn/tags/docker/</loc>
     <lastmod>2021-12-21T23:39:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/tags/kylinos/</loc>
@@ -86,19 +86,19 @@
     <loc>https://www.typesafe.cn/posts/java-serialization-vulnerability-1/</loc>
     <lastmod>2021-10-14T23:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/tags/kafka/</loc>
+    <loc>https://www.typesafe.cn/categories/kafka/</loc>
     <lastmod>2021-06-13T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/categories/kafka/</loc>
+    <loc>https://www.typesafe.cn/tags/kafka/</loc>
     <lastmod>2021-06-13T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/posts/share-a-kafka-web-manager/</loc>
     <lastmod>2021-06-13T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/tags/openstack/</loc>
+    <loc>https://www.typesafe.cn/categories/openstack/</loc>
     <lastmod>2021-06-12T00:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/categories/openstack/</loc>
+    <loc>https://www.typesafe.cn/tags/openstack/</loc>
     <lastmod>2021-06-12T00:00:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/posts/install-openstack-victoria/</loc>
@@ -239,6 +239,9 @@
     <loc>https://www.typesafe.cn/posts/linux-tun-tap/</loc>
     <lastmod>2020-11-08T22:11:00+00:00</lastmod>
   </url><url>
+    <loc>https://www.typesafe.cn/tags/tun/tap/</loc>
+    <lastmod>2020-11-08T22:11:00+00:00</lastmod>
+  </url><url>
     <loc>https://www.typesafe.cn/tags/dsniff/</loc>
     <lastmod>2020-10-31T00:00:00+00:00</lastmod>
   </url><url>
@@ -263,7 +266,5 @@
     <loc>https://www.typesafe.cn/search.fr/</loc>
   </url><url>
     <loc>https://www.typesafe.cn/series/</loc>
-  </url><url>
-    <loc>https://www.typesafe.cn/tags/tun/tap/</loc>
   </url>
 </urlset>
