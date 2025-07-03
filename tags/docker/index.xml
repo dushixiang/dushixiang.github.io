@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>docker on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/docker/</link>
+    <link>https://www.typesafe.cn/tags/docker/</link>
     <description>Recent content in docker on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 21 Dec 2021 23:39:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Tue, 21 Dec 2021 23:39:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在银河麒麟高级服务器操作系统V10上安装docker</title>
-      <link>https://typesafe.cn/posts/install-docker-on-kylinos/</link>
+      <link>https://www.typesafe.cn/posts/install-docker-on-kylinos/</link>
       <pubDate>Tue, 21 Dec 2021 23:39:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/install-docker-on-kylinos/</guid>
+      <guid>https://www.typesafe.cn/posts/install-docker-on-kylinos/</guid>
       <description>银河麒麟高级服务器操作系统 V10 是针对企业级关键业务，适应虚拟化、 云计算、大数据、工业互联网时代对主机系统可靠性、安全性、性能、扩展性和 实时性的需求，依据 CMMI 5 级标准研制的提供内生安全、云原生支持、国产 平台深入优化、高性能、易管理的新一代自主服务器操作系统；同源支持飞腾、 龙芯、申威、兆芯、海光、鲲鹏等自主平台；可支撑构建大型数据中心服务器高 可用集群、负载均衡集群、分布式集群文件系统、虚拟化应用和容器云平台等， 可部署在物理服务器和虚拟化环境、私有云、公有云和混合云环境；应用于政府、 国防、金融、教育、财税、公安、审计、交通、医疗、制造等领域。
 公司有个项目需要将系统部署在 kylinos上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。
 配置阿里云Centos8镜像源 之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。
@@ -26,10 +27,10 @@ yum makecache 查看docker-ce 版本 yum list docker-ce --showduplicates | sort 
     
     <item>
       <title>容器网络——如何为docker添加网卡？</title>
-      <link>https://typesafe.cn/posts/how-to-add-port-for-docker/</link>
+      <link>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</link>
       <pubDate>Sun, 23 May 2021 13:37:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/how-to-add-port-for-docker/</guid>
+      <guid>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</guid>
       <description>之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
 启动一个无网络的容器 首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
 docker run -itd --name centos-test --net=none centos 启动成功之后我们进入容器内部确认一下是否无网卡。
@@ -38,10 +39,10 @@ docker run -itd --name centos-test --net=none centos 启动成功之后我们进
     
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>https://typesafe.cn/posts/vctl/</link>
+      <link>https://www.typesafe.cn/posts/vctl/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/vctl/</guid>
+      <guid>https://www.typesafe.cn/posts/vctl/</guid>
       <description>前言 作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种
 先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。 配置Vmware作为Docker for Windows的运行平台。 使用微软的Hyper-v来创建虚拟机。 对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。
 直到我发现了vctl这个好东西。

@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>linux on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/linux/</link>
+    <link>https://www.typesafe.cn/tags/linux/</link>
     <description>Recent content in linux on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>KVM 虚拟机磁盘扩容</title>
-      <link>https://typesafe.cn/posts/kvm-disk-resize/</link>
+      <link>https://www.typesafe.cn/posts/kvm-disk-resize/</link>
       <pubDate>Mon, 31 May 2021 19:20:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/kvm-disk-resize/</guid>
+      <guid>https://www.typesafe.cn/posts/kvm-disk-resize/</guid>
       <description>一、镜像扩容 注意：需要先关闭虚拟机才能操作，+号前面有空格，后面没有空格。
 qemu-img resize test.qcow2 +80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
 qemu-img info test.qcow2 输出
@@ -26,10 +27,10 @@ Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 
     
     <item>
       <title>Linux虚拟化技术KVM</title>
-      <link>https://typesafe.cn/posts/linux-kvm/</link>
+      <link>https://www.typesafe.cn/posts/linux-kvm/</link>
       <pubDate>Sat, 29 May 2021 17:07:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-kvm/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-kvm/</guid>
       <description>在Windows平台上我们习惯于使用VmWare或者virtual box来实现虚拟化，虽然它们拥有Linux版本，但大多数企业都选择了使用KVM来做Linux平台的虚拟化，因此学习掌握KVM是一项必不可少的技能。
 安装KVM 以centos为例，下面是安装KVM虚拟化的命令。
 yum install -y qemu-kvm libvirt virt-install bridge-utils 这么多软件都是什么作用？
@@ -53,10 +54,10 @@ NAT模式和主机模式都无需单独配置，接下来我们看下如何配�
     
     <item>
       <title>Linux 环回网络接口</title>
-      <link>https://typesafe.cn/posts/linux-loopback/</link>
+      <link>https://www.typesafe.cn/posts/linux-loopback/</link>
       <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-loopback/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-loopback/</guid>
       <description>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动nginx之后，在浏览器输入lcoalhost或者127.0.0.1就可以访问到本机上面的http服务。
 Linux是如何访问本机IP的？ 大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过TCP/IP与同一台主机上的其他服务进行通信，以127开头的IPv4地址就是为它保留的，主流Linux操作系统为环回网卡分配的地址都是127.0.0.1，主机名是localhost。
 环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。
@@ -68,19 +69,19 @@ broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 local
     
     <item>
       <title>Linux 修改最大文件描述符</title>
-      <link>https://typesafe.cn/posts/linux-limit/</link>
+      <link>https://www.typesafe.cn/posts/linux-limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-limit/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-limit/</guid>
       <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     
     <item>
       <title>服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。</title>
-      <link>https://typesafe.cn/posts/4dnat/</link>
+      <link>https://www.typesafe.cn/posts/4dnat/</link>
       <pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/4dnat/</guid>
+      <guid>https://www.typesafe.cn/posts/4dnat/</guid>
       <description>前言 你是否遇到过这样的场景，服务器不能上网，但是又需要安装某个软件，面对如蛛网般杂乱的rpm包依赖关系，放弃或许是最好的选择，这样你就不必再为无法完成工作而痛苦又懊恼。
 但是今天，你有了一个更好的选择。
 4DNAT 4DNAT取名源自4和DNAT。这个工具工作在OSI模型的第四层传输层，同时4和for谐音，意为专门为目标地址转换而服务的工具。4DNAT使用go语言开发，具有天然的跨平台性，并且完全使用go标准库开发，没有任何的第三方依赖，编译之后只有一个二进制可执行文件。它有4种工作模式：
@@ -96,10 +97,10 @@ http代理 ./4dnat -proxy http 1080 https代理 ./4dnat -proxy https 1080 server
     
     <item>
       <title>Linux Bridge 详解</title>
-      <link>https://typesafe.cn/posts/linux-bridge/</link>
+      <link>https://www.typesafe.cn/posts/linux-bridge/</link>
       <pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-bridge/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-bridge/</guid>
       <description>Linux Bridge 详解 Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。
 Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。
 如何使用Linux Bridge？ 操作网桥有多种方式，在这里我们介绍一下通过bridge-utils来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。
@@ -109,10 +110,10 @@ never heard of command [help] Usage: brctl [commands] commands: addbr &amp;lt;br
     
     <item>
       <title>Linux veth pair 详解</title>
-      <link>https://typesafe.cn/posts/linux-veth-pair/</link>
+      <link>https://www.typesafe.cn/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-veth-pair/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-veth-pair/</guid>
       <description>Linux veth pair 详解 veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
 如何使用？ 创建一对veth
@@ -123,10 +124,10 @@ ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;
     
     <item>
       <title>Linux Network Namespace (netns) 详解</title>
-      <link>https://typesafe.cn/posts/linux-netns/</link>
+      <link>https://www.typesafe.cn/posts/linux-netns/</link>
       <pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-netns/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-netns/</guid>
       <description>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。
 使用方式 使用ip netns help查看使用帮助
 Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns delete [NAME] ip netns identify [PID] ip netns pids NAME ip [-all] netns exec [NAME] cmd ... ip netns monitor ip netns list-id 开始实验 我们将要构建如下图的网络
@@ -136,10 +137,10 @@ Usage: ip netns list ip netns add NAME ip netns set NAME NETNSID ip [-all] netns
     
     <item>
       <title>Linux tun/tap 详解</title>
-      <link>https://typesafe.cn/posts/linux-tun-tap/</link>
+      <link>https://www.typesafe.cn/posts/linux-tun-tap/</link>
       <pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-tun-tap/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-tun-tap/</guid>
       <description>在计算机网络中，tun与tap是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。
 tun/tap是什么？ tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。
 tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。

@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>fastjson on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/fastjson/</link>
+    <link>https://www.typesafe.cn/tags/fastjson/</link>
     <description>Recent content in fastjson on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 06 Nov 2021 17:16:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/fastjson/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Sat, 06 Nov 2021 17:16:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/fastjson/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Java 反序列化漏洞原理（六）fastjson 1.2.68 绕过原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-6/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</link>
       <pubDate>Sat, 06 Nov 2021 17:16:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-6/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.68 expectClass 绕过原理 当 fastjson 更新到 1.2.68 之后，大部分安全漏洞都已经封堵住了，但不排除还有人手里握着一些 0day 没有放出来。
 fastjson 1.2.68 在进行反序列化的时候，会进入 ObjectDeserializer 的 deserialze 方法，而 安全人员发现 当 @type 为 java.lang.AutoCloseable 的时候会找到实现类 JavaBeanDeserializer 调用 deserialze，而 JavaBeanDeserializer 的 deserialze 方法还会继续解析得到第二个 @type 对应的值进行反序列化，并且 expectClass 则不再是 null 值，而是 java.lang.AutoCloseable。
@@ -25,10 +26,10 @@ if (lexer.token() == JSONToken.LITERAL_STRING) { // 第二个 @type 的值 Strin
     
     <item>
       <title>Java 反序列化漏洞原理（五）fastjson 1.2.47 绕过原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-5/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-5/</link>
       <pubDate>Sun, 31 Oct 2021 21:31:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-5/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-5/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
 我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
@@ -40,10 +41,10 @@ import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(S
     
     <item>
       <title>Java 反序列化漏洞原理（四）JNDI &#43; RMI/LDAP 在fastjson中的利用原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-4/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-4/</link>
       <pubDate>Sat, 30 Oct 2021 13:43:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-4/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-4/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface，缩写JNDI），是Java的一个目录服务应用程序接口（API），它提供一个目录系统，并将服务名称与对象关联起来，从而使得开发人员在开发过程中可以使用名称来访问对象。
 JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
@@ -57,10 +58,10 @@ Registry : 提供服务注册和服务获取，服务端将类名称，存放地
     
     <item>
       <title>Java 反序列化漏洞原理（三）fastjson 1.2.24 Templateslmpl 利用原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-3/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-3/</link>
       <pubDate>Thu, 21 Oct 2021 22:56:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-3/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-3/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson 是什么 fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
 fastjson相对其他JSON库的特点是快。fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。

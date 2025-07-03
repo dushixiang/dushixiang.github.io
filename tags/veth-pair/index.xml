@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>veth pair on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/veth-pair/</link>
+    <link>https://www.typesafe.cn/tags/veth-pair/</link>
     <description>Recent content in veth pair on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 09 Nov 2020 22:45:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/veth-pair/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Mon, 09 Nov 2020 22:45:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/veth-pair/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux veth pair 详解</title>
-      <link>https://typesafe.cn/posts/linux-veth-pair/</link>
+      <link>https://www.typesafe.cn/posts/linux-veth-pair/</link>
       <pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-veth-pair/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-veth-pair/</guid>
       <description>Linux veth pair 详解 veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
 如何使用？ 创建一对veth

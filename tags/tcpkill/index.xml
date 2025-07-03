@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>tcpkill on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/tcpkill/</link>
+    <link>https://www.typesafe.cn/tags/tcpkill/</link>
     <description>Recent content in tcpkill on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 31 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/tcpkill/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Sat, 31 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/tcpkill/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>tcpkill在go语言下的实现和增强</title>
-      <link>https://typesafe.cn/posts/tcpwall/</link>
+      <link>https://www.typesafe.cn/posts/tcpwall/</link>
       <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/tcpwall/</guid>
+      <guid>https://www.typesafe.cn/posts/tcpwall/</guid>
       <description>tcpwall 当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
 我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
 通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl+C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。

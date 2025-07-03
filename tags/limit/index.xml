@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>limit on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/limit/</link>
+    <link>https://www.typesafe.cn/tags/limit/</link>
     <description>Recent content in limit on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="https://typesafe.cn/tags/limit/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/limit/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 修改最大文件描述符</title>
-      <link>https://typesafe.cn/posts/linux-limit/</link>
+      <link>https://www.typesafe.cn/posts/linux-limit/</link>
       <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-limit/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-limit/</guid>
       <description>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf ulimit -n 655350 </description>
     </item>
     

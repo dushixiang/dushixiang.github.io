@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Java on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/java/</link>
+    <link>https://www.typesafe.cn/tags/java/</link>
     <description>Recent content in Java on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 Java 里如何让方法只执行一次？</title>
-      <link>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
+      <link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
       <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
+      <guid>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
       <description>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。
 正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 Once 功能。
 sync.Once 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。
@@ -28,10 +29,10 @@ package cn.typesafe.sync; import lombok.SneakyThrows; import java.util.concurren
     
     <item>
       <title>Java 反序列化漏洞原理（六）fastjson 1.2.68 绕过原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-6/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</link>
       <pubDate>Sat, 06 Nov 2021 17:16:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-6/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.68 expectClass 绕过原理 当 fastjson 更新到 1.2.68 之后，大部分安全漏洞都已经封堵住了，但不排除还有人手里握着一些 0day 没有放出来。
 fastjson 1.2.68 在进行反序列化的时候，会进入 ObjectDeserializer 的 deserialze 方法，而 安全人员发现 当 @type 为 java.lang.AutoCloseable 的时候会找到实现类 JavaBeanDeserializer 调用 deserialze，而 JavaBeanDeserializer 的 deserialze 方法还会继续解析得到第二个 @type 对应的值进行反序列化，并且 expectClass 则不再是 null 值，而是 java.lang.AutoCloseable。
@@ -41,10 +42,10 @@ if (lexer.token() == JSONToken.LITERAL_STRING) { // 第二个 @type 的值 Strin
     
     <item>
       <title>Java 反序列化漏洞原理（五）fastjson 1.2.47 绕过原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-5/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-5/</link>
       <pubDate>Sun, 31 Oct 2021 21:31:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-5/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-5/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson &amp;lt;= 1.2.47 POC 随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。
 我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。
@@ -56,10 +57,10 @@ import com.alibaba.fastjson.JSON; public class Eval5 { public static void main(S
     
     <item>
       <title>Java 反序列化漏洞原理（四）JNDI &#43; RMI/LDAP 在fastjson中的利用原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-4/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-4/</link>
       <pubDate>Sat, 30 Oct 2021 13:43:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-4/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-4/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 JNDI 是什么 Java命名和目录接口（Java Naming and Directory Interface，缩写JNDI），是Java的一个目录服务应用程序接口（API），它提供一个目录系统，并将服务名称与对象关联起来，从而使得开发人员在开发过程中可以使用名称来访问对象。
 JNDI 包含在Java SE中，不需要引用第三方jar即可使用。要使用 JNDI 必须要有一个或多个服务提供者。JDK 本身已经包括了下面几种服务提供者。
@@ -73,10 +74,10 @@ Registry : 提供服务注册和服务获取，服务端将类名称，存放地
     
     <item>
       <title>Java 反序列化漏洞原理（三）fastjson 1.2.24 Templateslmpl 利用原理</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-3/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-3/</link>
       <pubDate>Thu, 21 Oct 2021 22:56:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-3/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-3/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 Fastjson 是什么 fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean。
 fastjson相对其他JSON库的特点是快。fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。
@@ -92,10 +93,10 @@ Fastjson 漏洞产生原因 Fastjson 第一次被爆出有漏洞是官方在2017
     
     <item>
       <title>Java 反序列化漏洞原理（二）新版本JDK利用方式和Shiro举例</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-2/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-2/</link>
       <pubDate>Sat, 16 Oct 2021 22:55:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-2/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-2/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 新的希望 0x00 在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 commons-collections 3.1 搭配 sun.reflect.annotation.AnnotationInvocationHandler 实现远程命令执行的方式。但sun.reflect.annotation.AnnotationInvocationHandler 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 javax.management.BadAttributeValueExpException 出现在了安全人员的视野。
 javax.management.BadAttributeValueExpException 继承自 java.lang.Exception，java.lang.Exception 继承自 java.lang.Throwable，而 java.lang.Throwable 实现了 java.io.Serializable。因此 javax.management.BadAttributeValueExpException 符合了 可序列化 这个要求，同样的它也增加了 readObject 方法，这个类的完整代码如下：
@@ -104,10 +105,10 @@ package javax.management; import java.io.IOException; import java.io.ObjectInput
     
     <item>
       <title>Java 反序列化漏洞原理（一）Serializable</title>
-      <link>https://typesafe.cn/posts/java-serialization-vulnerability-1/</link>
+      <link>https://www.typesafe.cn/posts/java-serialization-vulnerability-1/</link>
       <pubDate>Thu, 14 Oct 2021 23:00:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-serialization-vulnerability-1/</guid>
+      <guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-1/</guid>
       <description>声明 本文章中所有内容仅供学习交流，严禁用于非法用途，否则由此产生的一切后果均与作者无关。
 序列化的定义 序列化是指将数据结构或对象状态转换成可取用格式，以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。依照序列化格式重新获取字节的结果时，可以利用它来产生与原始对象相同语义的副本。
 Java 中的序列化 Java 自身提供了序列化的功能，需要实现 java.io.Serializable 接口，标明该对象是可序列化的。 java.io.Serializable 是一个空接口，不需要对象实现方法。
@@ -117,10 +118,10 @@ import java.io.*; import java.nio.charset.StandardCharsets; import java.util.Bas
     
     <item>
       <title>使用libvirt-java采集KVM虚拟机状态信息</title>
-      <link>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
+      <link>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
       <pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
+      <guid>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
       <description>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率 libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
 cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下
@@ -129,10 +130,10 @@ cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Ja
     
     <item>
       <title>Java的奇技淫巧</title>
-      <link>https://typesafe.cn/posts/java-unexpected-features/</link>
+      <link>https://www.typesafe.cn/posts/java-unexpected-features/</link>
       <pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/java-unexpected-features/</guid>
+      <guid>https://www.typesafe.cn/posts/java-unexpected-features/</guid>
       <description>Java是一种广泛使用的计算机编程语言、面向对象、泛型编程的特性，广泛应用于企业级Web应用开发和移动应用开发。
 1995年3月23日Sun公司发布了Java，至今已有近26年，可以说是一门十分成熟的开发语言了，但在某些不为人知的地方存在着一些意料之外的特性。
 Java的保留关键字 goto和const 在Java里面没有goto这个功能，但它作为保留字是无法当做变量来使用的，const也是同样。

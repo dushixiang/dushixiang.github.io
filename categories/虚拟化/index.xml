@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>虚拟化 on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
+    <link>https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
     <description>Recent content in 虚拟化 on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>KVM 虚拟机磁盘扩容</title>
-      <link>https://typesafe.cn/posts/kvm-disk-resize/</link>
+      <link>https://www.typesafe.cn/posts/kvm-disk-resize/</link>
       <pubDate>Mon, 31 May 2021 19:20:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/kvm-disk-resize/</guid>
+      <guid>https://www.typesafe.cn/posts/kvm-disk-resize/</guid>
       <description>一、镜像扩容 注意：需要先关闭虚拟机才能操作，+号前面有空格，后面没有空格。
 qemu-img resize test.qcow2 +80G 原镜像磁盘大小20GB，扩容完成后可使用以下命令查看
 qemu-img info test.qcow2 输出
@@ -26,10 +27,10 @@ Disk /dev/vda: 100 GiB, 107374182400 bytes, 209715200 sectors Units: sectors of 
     
     <item>
       <title>Linux虚拟化技术KVM</title>
-      <link>https://typesafe.cn/posts/linux-kvm/</link>
+      <link>https://www.typesafe.cn/posts/linux-kvm/</link>
       <pubDate>Sat, 29 May 2021 17:07:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/linux-kvm/</guid>
+      <guid>https://www.typesafe.cn/posts/linux-kvm/</guid>
       <description>在Windows平台上我们习惯于使用VmWare或者virtual box来实现虚拟化，虽然它们拥有Linux版本，但大多数企业都选择了使用KVM来做Linux平台的虚拟化，因此学习掌握KVM是一项必不可少的技能。
 安装KVM 以centos为例，下面是安装KVM虚拟化的命令。
 yum install -y qemu-kvm libvirt virt-install bridge-utils 这么多软件都是什么作用？
@@ -53,10 +54,10 @@ NAT模式和主机模式都无需单独配置，接下来我们看下如何配�
     
     <item>
       <title>使用libvirt-java采集KVM虚拟机状态信息</title>
-      <link>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
+      <link>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
       <pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
+      <guid>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
       <description>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 libvirt-java 来采集KVM虚拟机的资源使用信息。
 CPU使用率 libvirt并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。
 cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9) Java代码如下

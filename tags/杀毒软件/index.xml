@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>杀毒软件 on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/</link>
+    <link>https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/</link>
     <description>Recent content in 杀毒软件 on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Mon, 07 Mar 2022 21:52:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/%E6%9D%80%E6%AF%92%E8%BD%AF%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux 杀毒软件 ClamAV 安装</title>
-      <link>https://typesafe.cn/posts/clamav-install/</link>
+      <link>https://www.typesafe.cn/posts/clamav-install/</link>
       <pubDate>Mon, 07 Mar 2022 21:52:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/clamav-install/</guid>
+      <guid>https://www.typesafe.cn/posts/clamav-install/</guid>
       <description>Clam AntiVirus（ClamAV）是免费而且开放源代码的杀毒软件，软件与病毒码的更新皆由社群免费发布。Github 地址：https://github.com/Cisco-Talos/clamav
 安装 ClamAV yum install -y clamav* 配置 ClamAV cat &amp;gt; /etc/freshclam.conf &amp;lt;&amp;lt;EOF # 数据库配置文件夹 DatabaseDirectory /var/lib/clamav # 更新日志文件夹 UpdateLogFile /var/log/freshclam.log # 日志大小 LogFileMaxSize 2M # 日志记录时间 LogTime yes # 所属用户 DatabaseOwner root # 同步病毒库的地址 DatabaseMirror database.clamav.net EOF 更新病毒库 大概需要几分钟时间
 freshclam 进行病毒扫描测试 clamscan -ri &amp;lt;/path1/to/scan&amp;gt; &amp;lt;/path2/to/scan&amp;gt; 常用配置说明

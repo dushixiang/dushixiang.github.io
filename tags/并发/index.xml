@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>并发 on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</link>
+    <link>https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</link>
     <description>Recent content in 并发 on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Sun, 02 Apr 2023 13:18:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>在 Java 里如何让方法只执行一次？</title>
-      <link>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
+      <link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
       <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
+      <guid>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid>
       <description>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。
 正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 Once 功能。
 sync.Once 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。

@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>graalvm on 没有理想的人不伤心</title>
-    <link>https://typesafe.cn/tags/graalvm/</link>
+    <link>https://www.typesafe.cn/tags/graalvm/</link>
     <description>Recent content in graalvm on 没有理想的人不伤心</description>
     <image>
-      <url>https://typesafe.cn/papermod-cover.png</url>
-      <link>https://typesafe.cn/papermod-cover.png</link>
+      <url>https://www.typesafe.cn/papermod-cover.png</url>
+      <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://typesafe.cn/tags/graalvm/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh</language>
+    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/graalvm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>SpringBoot 3.0.0尝鲜与Java打包原生二进制【一】</title>
-      <link>https://typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link>
+      <link>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link>
       <pubDate>Sat, 26 Nov 2022 23:44:00 +0800</pubDate>
       
-      <guid>https://typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</guid>
+      <guid>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</guid>
       <description>2022年11月24日 SpringBoot 正式发布了 3.0 版本，带来许多新的特性，但我最关心的还是Java打包成原生二进制，运行时不再依赖jre环境，运行Java程序将和Go程序一样方便。
 升级至 SpringBoot 3.0.0 说是尝鲜，但是我不想再试着搞 hello world 那种啥都没有的东西了，找到我之前写的一个Java开源项目 kafka-map 拿他开刀。
 kafka-map 本身是基于 SpringBoot 2.4.x 开发的，sqlite 存储数据，且很久没有大的更新了，想要直接升级到 SpringBoot 3.0.0 是不可能的，我按照官方文档 Spring Boot 3.0 迁移指南 首先升级到最新2.7.x版本，然后就发现 service 依赖循环了，这个时候有两种选择，一是在配置文件中允许依赖循环 spring.main.allow-circular-references: true，二是梳理业务逻辑解决依赖循环的问题。作为一个合格的开发，我选择了解决依赖循环的问题，过程不表。
