@@ -1,4 +1,4 @@
-baseURL: "https://typesafe.cn"
+baseURL: "https://www.typesafe.cn"
 title: 没有理想的人不伤心
 paginate: 5
 theme: hugo-PaperMod-d
@@ -80,7 +80,7 @@ params:
 
             - 以下是我开源的几个项目：
 
-            - **[next-terminal](https://github.com/dushixiang/next-terminal)** 是一个轻量级堡垒机系统，易安装，易使用，支持RDP、SSH、VNC、Telnet、Kubernetes协议。
+            - **[Next Terminal](https://github.com/dushixiang/next-terminal)** 是一个简洁、安全、易用的运维审计系统，支持多种远程访问协议，包括 RDP、SSH、VNC、Telnet、HTTP 等，适用于企业级运维场景。它可以记录和回放会话，协助安全审计与合规追踪。
             
             - **[kafka-map](https://github.com/dushixiang/kafka-map)** 是一个美观简洁且强大的kafka web管理工具。
 
