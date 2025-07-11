@@ -15,9 +15,9 @@
     <atom:link href="https://www.typesafe.cn/tags/vmware/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>https://www.typesafe.cn/posts/vctl/</link>
+      <link>https://www.typesafe.cn/posts/docker-on-vmware/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/vctl/</guid>
+      <guid>https://www.typesafe.cn/posts/docker-on-vmware/</guid>
       <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
 &lt;p&gt;作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种&lt;/p&gt;
 &lt;ol&gt;

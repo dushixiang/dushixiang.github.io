@@ -20,7 +20,7 @@ vctl 是什么？ vctl 是一款捆绑在Vmware Workstation Pro 应用程序中�
 vctl system start 当需要关闭守护进程时执行
 vctl system stop 接下来就是和普通的docker命令一样了。
 # 拉取镜像 vctl pull nginx # 查看镜像 vctl images # 启动容器 vctl --name some-nginx -d -p 8080:80 nginx # 查看容器 vctl ps # 进入容器 vctl exec -it &lt;cid> bash 更多使用信息可参考Vmware的官方文档 使用vctl命令管理容器
-...</p></div><footer class=entry-footer><span title='2020-11-17 15:39:00 +0000 UTC'>十一月 17, 2020</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;dushixiang</footer><a class=entry-link aria-label="post link to Docker？Vmware？小孩子才做选择，打工人我全都要。" href=https://www.typesafe.cn/posts/vctl/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>tcpkill在go语言下的实现和增强</h2></header><div class=entry-content><p>tcpwall 当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
+...</p></div><footer class=entry-footer><span title='2020-11-17 15:39:00 +0000 UTC'>十一月 17, 2020</span>&nbsp;·&nbsp;1 分钟&nbsp;·&nbsp;dushixiang</footer><a class=entry-link aria-label="post link to Docker？Vmware？小孩子才做选择，打工人我全都要。" href=https://www.typesafe.cn/posts/docker-on-vmware/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>tcpkill在go语言下的实现和增强</h2></header><div class=entry-content><p>tcpwall 当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案iptables，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。
 我在互联网上检索的时候发现了tcpkill这个工具，tcpkill是一个网络分析工具集dsniff中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。
 通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过Ctrl+C来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。
 如何阻断一个已经建立的tcp连接？ 阻断一个已经建立的tcp连接通常有这几种方案：

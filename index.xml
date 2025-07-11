@@ -35,6 +35,23 @@
 &lt;/ul&gt;</description>
     </item>
     <item>
+      <title>使用 EdgeOne Pages 托管Hugo博客</title>
+      <link>https://www.typesafe.cn/posts/hugo-on-edgeone-pages/</link>
+      <pubDate>Fri, 11 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>https://www.typesafe.cn/posts/hugo-on-edgeone-pages/</guid>
+      <description>&lt;p&gt;自从腾讯云客服给我打电话说我的备案域名解析到了境外IP上让我整改，已经过去了两年。&lt;/p&gt;
+&lt;p&gt;当时我把解析到 Github Pages 的域名更改到了轻量云，并且把 Github Pages 打包下来使用 Caddy 搭建了静态网站，由于更新不便，我再也没有更新过博客。&lt;/p&gt;
+&lt;p&gt;前段时间白嫖了 EdgeOne 免费 CDN 测试加速 Github Pages，说实话并不好用。&lt;/p&gt;
+&lt;p&gt;首先第一次请求回源到 Github 特别慢，大概率是用了国内的节点去请求；其次 CDN 的缓存加速功能，我更新了博客的内容就需要手动把 CDN 的缓存全部清空才行，不缓存的话又起不到加速的作用。&lt;/p&gt;
+&lt;p&gt;今天忙里偷闲，测试一个EdgeOne Pages 托管Hugo博客，EdgeOne Pages 是支持 Node.js 相关的框架预设，我以为托管 Hugo 博客会很麻烦，结果发现真的很简单。&lt;/p&gt;
+&lt;p&gt;首先，你要先把 Hugo 托管到 Github Pages 上，这步教程很多，我就不再赘述。&lt;/p&gt;
+&lt;p&gt;然后，你要在 EdgeOne 上创建一个 Pages 项目，选择你的 Github Pages 仓库，记得分支选择编译后文件所在的 &lt;code&gt;gh-pages&lt;/code&gt; 然后选择 Other 预设，其他不需要改变。&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://www.typesafe.cn/images/edgeone-pages-deploy.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最后点击开始部署，等待部署完成即可。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;每次提交后，Github Action 自动编译发布在 &lt;code&gt;gh-pages&lt;/code&gt; 上， EdgeOne 会自动检测到仓库 &lt;code&gt;gh-pages&lt;/code&gt; 分支的变化，最后更新到 EdgeOne Pages 上。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>在 Java 里如何让方法只执行一次？</title>
       <link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link>
       <pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate>
@@ -1533,9 +1550,9 @@ if (流表匹配条件){
     </item>
     <item>
       <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>https://www.typesafe.cn/posts/vctl/</link>
+      <link>https://www.typesafe.cn/posts/docker-on-vmware/</link>
       <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/vctl/</guid>
+      <guid>https://www.typesafe.cn/posts/docker-on-vmware/</guid>
       <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
 &lt;p&gt;作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种&lt;/p&gt;
 &lt;ol&gt;

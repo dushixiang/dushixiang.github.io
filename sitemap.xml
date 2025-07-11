@@ -9,18 +9,27 @@
     <lastmod>2025-07-11T13:26:16+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/categories/</loc>
-    <lastmod>2023-04-02T13:18:00+08:00</lastmod>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://www.typesafe.cn/categories/cdn/</loc>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://www.typesafe.cn/tags/edgeone/</loc>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://www.typesafe.cn/posts/</loc>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://www.typesafe.cn/tags/</loc>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://www.typesafe.cn/posts/hugo-on-edgeone-pages/</loc>
+    <lastmod>2025-07-11T12:30:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/categories/java/</loc>
     <lastmod>2023-04-02T13:18:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/tags/java/</loc>
-    <lastmod>2023-04-02T13:18:00+08:00</lastmod>
-  </url><url>
-    <loc>https://www.typesafe.cn/posts/</loc>
-    <lastmod>2023-04-02T13:18:00+08:00</lastmod>
-  </url><url>
-    <loc>https://www.typesafe.cn/tags/</loc>
     <lastmod>2023-04-02T13:18:00+08:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/tags/%E5%B9%B6%E5%8F%91/</loc>
@@ -215,7 +224,7 @@
     <loc>https://www.typesafe.cn/posts/4dnat/</loc>
     <lastmod>2020-11-19T22:33:00+00:00</lastmod>
   </url><url>
-    <loc>https://www.typesafe.cn/posts/vctl/</loc>
+    <loc>https://www.typesafe.cn/posts/docker-on-vmware/</loc>
     <lastmod>2020-11-17T15:39:00+00:00</lastmod>
   </url><url>
     <loc>https://www.typesafe.cn/tags/vmware/</loc>
