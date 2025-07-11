@@ -1,3 +1,3 @@
 # 我的博客
 
-https://typesafe.cn
+https://www.typesafe.cn
