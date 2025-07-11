@@ -15,7 +15,7 @@ date: "2025-07-11T12:30:00+08:00"
 
 首先第一次请求回源到 Github 特别慢，大概率是用了国内的节点去请求；其次 CDN 的缓存加速功能，我更新了博客的内容就需要手动把 CDN 的缓存全部清空才行，不缓存的话又起不到加速的作用。
 
-今天忙里偷闲，测试一个EdgeOne Pages 托管Hugo博客，EdgeOne Pages 是支持 Node.js 相关的框架预设，我以为托管 Hugo 博客会很麻烦，结果发现真的很简单。
+今天忙里偷闲，测试一下EdgeOne Pages 托管Hugo博客，EdgeOne Pages 是支持 Node.js 相关的框架预设，我以为托管 Hugo 博客会很麻烦，结果发现真的很简单。
 
 首先，你要先把 Hugo 托管到 Github Pages 上，这步教程很多，我就不再赘述。
 
@@ -27,4 +27,4 @@ date: "2025-07-11T12:30:00+08:00"
 
 ----
 
-每次提交后，Github Action 自动编译发布在 `gh-pages` 上， EdgeOne 会自动检测到仓库 `gh-pages` 分支的变化，最后更新到 EdgeOne Pages 上。
+每次提交后，Github Action 自动编译发布在分支 `gh-pages` 上， EdgeOne 会自动检测到仓库 `gh-pages` 分支的变化，最后更新到 EdgeOne Pages 上。
