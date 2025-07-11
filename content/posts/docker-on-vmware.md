@@ -3,7 +3,7 @@ title: "Docker？Vmware？小孩子才做选择，打工人我全都要。"
 categories: [ "tool" ]
 tags: [ "docker","vmware" ]
 draft: false
-slug: "vctl"
+slug: "docker-on-vmware"
 date: "2020-11-17 15:39:00"
 ---
 
