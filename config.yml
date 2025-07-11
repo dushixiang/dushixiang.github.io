@@ -2,7 +2,7 @@ baseURL: "https://www.typesafe.cn"
 title: 整点Bug
 pagination:
     pageSize: 5
-theme: PaperMod-Beian
+theme: PaperMod
 defaultContentLanguage: zh
 
 enableInlineShortcodes: true
