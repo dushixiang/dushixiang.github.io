@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Openstack on 没有理想的人不伤心</title>
+    <title>Openstack on 整点Bug</title>
     <link>https://www.typesafe.cn/tags/openstack/</link>
-    <description>Recent content in Openstack on 没有理想的人不伤心</description>
+    <description>Recent content in Openstack on 整点Bug</description>
     <image>
-      <title>没有理想的人不伤心</title>
+      <title>整点Bug</title>
       <url>https://www.typesafe.cn/papermod-cover.png</url>
       <link>https://www.typesafe.cn/papermod-cover.png</link>
     </image>
-    <generator>Hugo -- 0.147.9</generator>
+    <generator>Hugo -- 0.148.0</generator>
     <language>zh</language>
     <lastBuildDate>Sat, 12 Jun 2021 00:00:00 +0800</lastBuildDate>
     <atom:link href="https://www.typesafe.cn/tags/openstack/index.xml" rel="self" type="application/rss+xml" />
