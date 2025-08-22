@@ -5,7 +5,11 @@ draft: false
 ---
 今天看到 GitHub 高级工程师写的一篇文章《Everything I know about good system design》，写的很好。
 
-总结一下
+链接地址：
+
+https://www.seangoedecke.com/good-system-design/
+
+总结一下。
 
 > **真正优秀的系统设计是“不起眼的”（underwhelming）和简单的**。它追求的是长期稳定运行，而不是使用各种时髦、复杂的技术。一个看起来令人印象深刻的复杂系统，往往掩盖了糟糕的底层决策。
 
