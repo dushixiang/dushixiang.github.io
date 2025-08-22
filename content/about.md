@@ -17,7 +17,7 @@ draft: false
 
 ----
 
-以下是我开源的几个项目：
+以下是我开源的其他几个项目：
 
 - **[kafka-map](https://github.com/dushixiang/kafka-map)** 一个美观简洁且强大的kafka web管理工具。
 - **[4dnat](https://github.com/dushixiang/4dnat)** 一个专门为目的地址转发而服务的工具。
