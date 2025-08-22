@@ -115,7 +115,7 @@
 &lt;hr>
 &lt;p>我开发了 &lt;a href="https://github.com/dushixiang/next-terminal">Next Terminal&lt;/a> ，一个简洁、安全、易用的运维审计系统，支持多种远程访问协议，包括 RDP、SSH、VNC、Telnet、HTTP 等，适用于企业级运维场景。&lt;/p>
 &lt;hr>
-&lt;p>以下是我开源的几个项目：&lt;/p>
+&lt;p>以下是我开源的其他几个项目：&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a>&lt;/strong> 一个美观简洁且强大的kafka web管理工具。&lt;/li>
 &lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/4dnat">4dnat&lt;/a>&lt;/strong> 一个专门为目的地址转发而服务的工具。&lt;/li>
