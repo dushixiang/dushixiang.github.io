@@ -1,0 +1,4 @@
+baseURL = 'https://www.typesafe.cn'
+languageCode = 'en-us'
+title = '整点Bug'
+theme = 'nostyleplease'
