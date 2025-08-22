@@ -1,108 +1,74 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Docker on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/docker/</link>
-    <description>Recent content in Docker on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Tue, 21 Dec 2021 23:39:00 +0800</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/docker/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>在银河麒麟高级服务器操作系统V10上安装docker</title>
-      <link>https://www.typesafe.cn/posts/install-docker-on-kylinos/</link>
-      <pubDate>Tue, 21 Dec 2021 23:39:00 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/install-docker-on-kylinos/</guid>
-      <description>&lt;blockquote&gt;
-&lt;p&gt;银河麒麟高级服务器操作系统 V10 是针对企业级关键业务，适应虚拟化、 云计算、大数据、工业互联网时代对主机系统可靠性、安全性、性能、扩展性和 实时性的需求，依据 CMMI 5 级标准研制的提供内生安全、云原生支持、国产 平台深入优化、高性能、易管理的新一代自主服务器操作系统；同源支持飞腾、 龙芯、申威、兆芯、海光、鲲鹏等自主平台；可支撑构建大型数据中心服务器高 可用集群、负载均衡集群、分布式集群文件系统、虚拟化应用和容器云平台等， 可部署在物理服务器和虚拟化环境、私有云、公有云和混合云环境；应用于政府、 国防、金融、教育、财税、公安、审计、交通、医疗、制造等领域。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;公司有个项目需要将系统部署在 &lt;strong&gt;kylinos&lt;/strong&gt;上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。&lt;/p&gt;
-&lt;h3 id=&#34;配置阿里云centos8镜像源&#34;&gt;配置阿里云Centos8镜像源&lt;/h3&gt;
-&lt;p&gt;之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;配置阿里云-docker-镜像源&#34;&gt;配置阿里云 docker 镜像源&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sed -i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39;&lt;/span&gt; /etc/yum.repos.d/docker-ce.repo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;定义-yum-变量修改-repo&#34;&gt;定义 yum 变量&amp;amp;修改 repo&lt;/h3&gt;
-&lt;p&gt;修改 centos 和 docker &lt;code&gt;repo&lt;/code&gt;文件中的 &lt;code&gt;$releasever&lt;/code&gt; 为 &lt;code&gt;centos_version&lt;/code&gt; ，原因是在麒麟服务器操作系统V10中 &lt;code&gt;$releasever&lt;/code&gt;被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;8&amp;#34;&lt;/span&gt; &amp;gt; /etc/yum/vars/centos_version
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sed -i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span&gt; /etc/yum.repos.d/docker-ce.repo
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sed -i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span&gt; /etc/yum.repos.d/CentOS-Base.repo
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;建立yum缓存&#34;&gt;建立yum缓存&lt;/h3&gt;
-&lt;p&gt;没啥可说的&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum makecache
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看docker-ce-版本&#34;&gt;查看docker-ce 版本&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum list docker-ce --showduplicates | sort -r
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.9-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.8-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.7-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.6-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.5-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.4-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.3-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.2-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.1-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.12-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.11-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.10-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:20.10.0-3.el8                 docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:19.03.15-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:19.03.15-3.el8                @docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:19.03.14-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker-ce.x86_64               3:19.03.13-3.el8                docker-ce-stable
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装docker&#34;&gt;安装docker&lt;/h3&gt;
-&lt;p&gt;这里要安装 docker-ce 19.03 版本，因为我在使用最新版 20.10 启动容器时出现了未知的权限问题，而麒麟服务器操作系统资料相对较少，我未能找到相应的解决方案，只好退而求其次，换到上一个稳定版本。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>容器网络——如何为docker添加网卡？</title>
-      <link>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</link>
-      <pubDate>Sun, 23 May 2021 13:37:00 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</guid>
-      <description>&lt;p&gt;之前我们介绍&lt;code&gt;Network Namespace&lt;/code&gt;（以下简称&lt;code&gt;netns&lt;/code&gt;）和&lt;code&gt;veth pair&lt;/code&gt;时说过&lt;code&gt;docker&lt;/code&gt;是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下&lt;code&gt;docker&lt;/code&gt;到底是如何做到的。&lt;/p&gt;
-&lt;h3 id=&#34;启动一个无网络的容器&#34;&gt;启动一个无网络的容器&lt;/h3&gt;
-&lt;p&gt;首先我们使用 &lt;code&gt;--net=none&lt;/code&gt; 参数启动一个无网络的容器，为了方便调试，这里我们使用了&lt;code&gt;centos&lt;/code&gt;镜像。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;docker run -itd --name centos-test --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;none centos
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;启动成功之后我们进入容器内部确认一下是否无网卡。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# docker ps&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          PORTS     NAMES
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;28dc2e8853df   centos         &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt; seconds ago   Up &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt; seconds             centos-test
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@localhost ~&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# docker exec -it 28dc2e8853df bash&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;root@28dc2e8853df /&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# ip a&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt; qdisc noqueue state UNKNOWN group default qlen &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    inet 127.0.0.1/8 scope host lo
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;       valid_lft forever preferred_lft forever
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以看到确实只有一个本地环回网卡。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title>
-      <link>https://www.typesafe.cn/posts/docker-on-vmware/</link>
-      <pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/docker-on-vmware/</guid>
-      <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
-&lt;p&gt;作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。&lt;/li&gt;
-&lt;li&gt;配置Vmware作为Docker for Windows的运行平台。&lt;/li&gt;
-&lt;li&gt;使用微软的Hyper-v来创建虚拟机。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。&lt;/p&gt;
-&lt;p&gt;直到我发现了vctl这个好东西。&lt;/p&gt;
-&lt;h1 id=&#34;vctl-是什么&#34;&gt;vctl 是什么？&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把&lt;code&gt;docker &amp;lt;cmd&amp;gt;&lt;/code&gt;换成&lt;code&gt;vctl &amp;lt;cmd&amp;gt;&lt;/code&gt;就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。&lt;/p&gt;
-&lt;p&gt;在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vctl system start
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;当需要关闭守护进程时执行&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;vctl system stop
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下来就是和普通的docker命令一样了。&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 拉取镜像
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 整点Bug</title><link>https://www.typesafe.cn/tags/docker/</link><description>Recent content in Docker on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 21 Dec 2021 23:39:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>在银河麒麟高级服务器操作系统V10上安装docker</title><link>https://www.typesafe.cn/posts/install-docker-on-kylinos/</link><pubDate>Tue, 21 Dec 2021 23:39:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/install-docker-on-kylinos/</guid><description>&lt;blockquote>
+&lt;p>银河麒麟高级服务器操作系统 V10 是针对企业级关键业务，适应虚拟化、 云计算、大数据、工业互联网时代对主机系统可靠性、安全性、性能、扩展性和 实时性的需求，依据 CMMI 5 级标准研制的提供内生安全、云原生支持、国产 平台深入优化、高性能、易管理的新一代自主服务器操作系统；同源支持飞腾、 龙芯、申威、兆芯、海光、鲲鹏等自主平台；可支撑构建大型数据中心服务器高 可用集群、负载均衡集群、分布式集群文件系统、虚拟化应用和容器云平台等， 可部署在物理服务器和虚拟化环境、私有云、公有云和混合云环境；应用于政府、 国防、金融、教育、财税、公安、审计、交通、医疗、制造等领域。&lt;/p>&lt;/blockquote>
+&lt;p>公司有个项目需要将系统部署在 &lt;strong>kylinos&lt;/strong>上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。&lt;/p>
+&lt;h3 id="配置阿里云centos8镜像源">配置阿里云Centos8镜像源&lt;/h3>
+&lt;p>之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置阿里云-docker-镜像源">配置阿里云 docker 镜像源&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="定义-yum-变量修改-repo">定义 yum 变量&amp;amp;修改 repo&lt;/h3>
+&lt;p>修改 centos 和 docker &lt;code>repo&lt;/code>文件中的 &lt;code>$releasever&lt;/code> 为 &lt;code>centos_version&lt;/code> ，原因是在麒麟服务器操作系统V10中 &lt;code>$releasever&lt;/code>被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;8&amp;#34;&lt;/span> &amp;gt; /etc/yum/vars/centos_version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/CentOS-Base.repo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="建立yum缓存">建立yum缓存&lt;/h3>
+&lt;p>没啥可说的&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum makecache
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看docker-ce-版本">查看docker-ce 版本&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum list docker-ce --showduplicates | sort -r
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.9-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.8-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.7-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.6-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.5-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.4-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.3-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.2-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.1-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.12-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.11-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.10-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.0-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:19.03.15-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:19.03.15-3.el8 @docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:19.03.14-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:19.03.13-3.el8 docker-ce-stable
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="安装docker">安装docker&lt;/h3>
+&lt;p>这里要安装 docker-ce 19.03 版本，因为我在使用最新版 20.10 启动容器时出现了未知的权限问题，而麒麟服务器操作系统资料相对较少，我未能找到相应的解决方案，只好退而求其次，换到上一个稳定版本。&lt;/p></description></item><item><title>容器网络——如何为docker添加网卡？</title><link>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</link><pubDate>Sun, 23 May 2021 13:37:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/how-to-add-port-for-docker/</guid><description>&lt;p>之前我们介绍&lt;code>Network Namespace&lt;/code>（以下简称&lt;code>netns&lt;/code>）和&lt;code>veth pair&lt;/code>时说过&lt;code>docker&lt;/code>是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下&lt;code>docker&lt;/code>到底是如何做到的。&lt;/p>
+&lt;h3 id="启动一个无网络的容器">启动一个无网络的容器&lt;/h3>
+&lt;p>首先我们使用 &lt;code>--net=none&lt;/code> 参数启动一个无网络的容器，为了方便调试，这里我们使用了&lt;code>centos&lt;/code>镜像。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run -itd --name centos-test --net&lt;span style="color:#f92672">=&lt;/span>none centos
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动成功之后我们进入容器内部确认一下是否无网卡。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>root@localhost ~&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#75715e"># docker ps&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>28dc2e8853df centos &lt;span style="color:#e6db74">&amp;#34;/bin/bash&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span> seconds ago Up &lt;span style="color:#ae81ff">23&lt;/span> seconds centos-test
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>root@localhost ~&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#75715e"># docker exec -it 28dc2e8853df bash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>root@28dc2e8853df /&lt;span style="color:#f92672">]&lt;/span>&lt;span style="color:#75715e"># ip a&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu &lt;span style="color:#ae81ff">65536&lt;/span> qdisc noqueue state UNKNOWN group default qlen &lt;span style="color:#ae81ff">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> inet 127.0.0.1/8 scope host lo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> valid_lft forever preferred_lft forever
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到确实只有一个本地环回网卡。&lt;/p></description></item><item><title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title><link>https://www.typesafe.cn/posts/docker-on-vmware/</link><pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/docker-on-vmware/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种&lt;/p>
+&lt;ol>
+&lt;li>先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。&lt;/li>
+&lt;li>配置Vmware作为Docker for Windows的运行平台。&lt;/li>
+&lt;li>使用微软的Hyper-v来创建虚拟机。&lt;/li>
+&lt;/ol>
+&lt;p>对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。&lt;/p>
+&lt;p>直到我发现了vctl这个好东西。&lt;/p>
+&lt;h1 id="vctl-是什么">vctl 是什么？&lt;/h1>
+&lt;blockquote>
+&lt;p>vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。&lt;/p>&lt;/blockquote>
+&lt;p>简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把&lt;code>docker &amp;lt;cmd&amp;gt;&lt;/code>换成&lt;code>vctl &amp;lt;cmd&amp;gt;&lt;/code>就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。&lt;/p>
+&lt;p>在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。&lt;/p>
+&lt;pre tabindex="0">&lt;code>vctl system start
+&lt;/code>&lt;/pre>&lt;p>当需要关闭守护进程时执行&lt;/p>
+&lt;pre tabindex="0">&lt;code>vctl system stop
+&lt;/code>&lt;/pre>&lt;p>接下来就是和普通的docker命令一样了。&lt;/p>
+&lt;pre tabindex="0">&lt;code># 拉取镜像
 vctl pull nginx
 
 # 查看镜像
@@ -116,7 +82,4 @@ vctl ps
 
 # 进入容器
 vctl exec -it &amp;lt;cid&amp;gt; bash 
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;更多使用信息可参考Vmware的官方文档 &lt;a href=&#34;https://docs.vmware.com/cn/VMware-Fusion/11/com.vmware.fusion.using.doc/GUID-78E7339F-7294-4F3E-9AD0-1E14C201FA40.html&#34;&gt;使用vctl命令管理容器&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;p>更多使用信息可参考Vmware的官方文档 &lt;a href="https://docs.vmware.com/cn/VMware-Fusion/11/com.vmware.fusion.using.doc/GUID-78E7339F-7294-4F3E-9AD0-1E14C201FA40.html">使用vctl命令管理容器&lt;/a>&lt;/p></description></item></channel></rss>

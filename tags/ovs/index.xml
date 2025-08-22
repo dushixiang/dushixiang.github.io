@@ -1,45 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Ovs on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/ovs/</link>
-    <description>Recent content in Ovs on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Wed, 30 Dec 2020 19:14:00 +0000</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/ovs/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Open vSwitch 入门实践（6）VXLAN实验</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-6/</link>
-      <pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-6/</guid>
-      <description>&lt;h1 id=&#34;什么是vxlan&#34;&gt;什么是VXLAN？&lt;/h1&gt;
-&lt;p&gt;VXLAN是一种隧道封装协议，在三层网络上封装二层网络数据报文。简单来说就是可以在已经规划好网络拓扑的设备上封装出一个新的二层网络，因此VXLAN这类网络又被称之为overylay网络，底下承载VXLAN网络的就被称之为underlay网络。&lt;/p&gt;
-&lt;h1 id=&#34;vxlan解决了什么问题&#34;&gt;VXLAN解决了什么问题？&lt;/h1&gt;
-&lt;p&gt;最近几年，阿里云，腾讯云，京东云，华为云等等厂商每到节日都会打折出售大量云服务器，1核1G内存50G磁盘的服务器几十块就能买到一年的使用权，作为一个专业的羊毛党，哪个手里没有几台小破水管机器？但是这么多的云服务器是厂商如何做隔离的呢？了解过网络的同学或许会说VLAN。但是VLAN这种只能隔离4094个虚拟网络的技术别说满足不了羊毛党了，就连正常的用户估计都撑不住。那不隔离能行吗，厂商规划一个特别大的网段，让大家都在这里面耍，正常用户还好，万一这个时候进来一个大黑客，估计就会全部GG。&lt;/p&gt;
-&lt;p&gt;因此，隔离是必不可少的，其中关键的技术就是overlay网络。&lt;/p&gt;
-&lt;p&gt;那VXLAN具体解决了哪些问题呢？&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;突破了VLAN技术4094个隔离网络的限制，在一个管理域中创建多达1600万个VXLAN网络。&lt;/li&gt;
-&lt;li&gt;VXLAN提供了云服务厂商所需的规模的网络分段，以支持大量租户。&lt;/li&gt;
-&lt;li&gt;突破了物理网络边界的限制，传统虚拟二层网络（VLAN）是需要和物理网络做大量适配工作才能保证环境的迁移不会导致虚拟网络异常，overlay网络则不必关心底层物理网络是如何搭建的，只要能保证VXLAN端点相互之间可以联通即可。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;vxlan网络如何工作&#34;&gt;VXLAN网络如何工作？&lt;/h1&gt;
-&lt;p&gt;VXLAN隧道协议将二层以太网帧封装在三层UDP数据包中，使用户能够创建跨物理三层网络的虚拟化二层子网或网段。每个二层子网使用VXLAN网络标识符（VNI）作为唯一标识。报文格式如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;VXLAN报文格式&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vxlan_packet_header.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;执行数据包封装和解封装的实体称为VXLAN隧道终结点（VTEP）。VTEP主要分为两类：硬件VTEP和软件VTEP。硬件VTEP我接触较少，这里就不再介绍了。&lt;/p&gt;
-&lt;p&gt;软件VTEP如下图所示：VTEP在数据包到达虚拟机之前进行了封装和解封装，使得虚拟机完全不需要知道VXLAN隧道以及它们之间的三层网络。&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;vxlan网络&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vxlan01.png&#34;&gt;&lt;/p&gt;
-&lt;h1 id=&#34;简单vxlan实验&#34;&gt;简单VXLAN实验&lt;/h1&gt;
-&lt;p&gt;我们参照下图完成实验。&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;VXLAN实验&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/vxlan_topo.png&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;主机a&#34;&gt;主机A&lt;/h3&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 创建隧道网桥
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ovs on 整点Bug</title><link>https://www.typesafe.cn/tags/ovs/</link><description>Recent content in Ovs on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Wed, 30 Dec 2020 19:14:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/ovs/index.xml" rel="self" type="application/rss+xml"/><item><title>Open vSwitch 入门实践（6）VXLAN实验</title><link>https://www.typesafe.cn/posts/ovs-learn-6/</link><pubDate>Wed, 30 Dec 2020 19:14:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-6/</guid><description>&lt;h1 id="什么是vxlan">什么是VXLAN？&lt;/h1>
+&lt;p>VXLAN是一种隧道封装协议，在三层网络上封装二层网络数据报文。简单来说就是可以在已经规划好网络拓扑的设备上封装出一个新的二层网络，因此VXLAN这类网络又被称之为overylay网络，底下承载VXLAN网络的就被称之为underlay网络。&lt;/p>
+&lt;h1 id="vxlan解决了什么问题">VXLAN解决了什么问题？&lt;/h1>
+&lt;p>最近几年，阿里云，腾讯云，京东云，华为云等等厂商每到节日都会打折出售大量云服务器，1核1G内存50G磁盘的服务器几十块就能买到一年的使用权，作为一个专业的羊毛党，哪个手里没有几台小破水管机器？但是这么多的云服务器是厂商如何做隔离的呢？了解过网络的同学或许会说VLAN。但是VLAN这种只能隔离4094个虚拟网络的技术别说满足不了羊毛党了，就连正常的用户估计都撑不住。那不隔离能行吗，厂商规划一个特别大的网段，让大家都在这里面耍，正常用户还好，万一这个时候进来一个大黑客，估计就会全部GG。&lt;/p>
+&lt;p>因此，隔离是必不可少的，其中关键的技术就是overlay网络。&lt;/p>
+&lt;p>那VXLAN具体解决了哪些问题呢？&lt;/p>
+&lt;ul>
+&lt;li>突破了VLAN技术4094个隔离网络的限制，在一个管理域中创建多达1600万个VXLAN网络。&lt;/li>
+&lt;li>VXLAN提供了云服务厂商所需的规模的网络分段，以支持大量租户。&lt;/li>
+&lt;li>突破了物理网络边界的限制，传统虚拟二层网络（VLAN）是需要和物理网络做大量适配工作才能保证环境的迁移不会导致虚拟网络异常，overlay网络则不必关心底层物理网络是如何搭建的，只要能保证VXLAN端点相互之间可以联通即可。&lt;/li>
+&lt;/ul>
+&lt;h1 id="vxlan网络如何工作">VXLAN网络如何工作？&lt;/h1>
+&lt;p>VXLAN隧道协议将二层以太网帧封装在三层UDP数据包中，使用户能够创建跨物理三层网络的虚拟化二层子网或网段。每个二层子网使用VXLAN网络标识符（VNI）作为唯一标识。报文格式如下图：&lt;/p>
+&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan_packet_header.png" alt="VXLAN报文格式">&lt;/p>
+&lt;p>执行数据包封装和解封装的实体称为VXLAN隧道终结点（VTEP）。VTEP主要分为两类：硬件VTEP和软件VTEP。硬件VTEP我接触较少，这里就不再介绍了。&lt;/p>
+&lt;p>软件VTEP如下图所示：VTEP在数据包到达虚拟机之前进行了封装和解封装，使得虚拟机完全不需要知道VXLAN隧道以及它们之间的三层网络。&lt;/p>
+&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan01.png" alt="vxlan网络">&lt;/p>
+&lt;h1 id="简单vxlan实验">简单VXLAN实验&lt;/h1>
+&lt;p>我们参照下图完成实验。&lt;/p>
+&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan_topo.png" alt="VXLAN实验">&lt;/p>
+&lt;h3 id="主机a">主机A&lt;/h3>
+&lt;pre tabindex="0">&lt;code># 创建隧道网桥
 ovs-vsctl add-br br-tun
 # 创建隧道端口并指定远端IP和VXLAN ID
 ovs-vsctl add-port br-tun vx01 -- set Interface vx01 type=vxlan options:remote_ip=192.168.123.232 options:key=1111
@@ -54,8 +34,8 @@ ip netns exec ns0 ip link set lo up
 ip netns exec ns0 ip link set vnet0 up
 # 配置IP
 ip netns exec ns0 ip addr add 192.168.0.1/24 dev vnet0
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;主机b&#34;&gt;主机B&lt;/h3&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 创建隧道网桥
+&lt;/code>&lt;/pre>&lt;h3 id="主机b">主机B&lt;/h3>
+&lt;pre tabindex="0">&lt;code># 创建隧道网桥
 ovs-vsctl add-br br-tun
 # 创建隧道端口并指定远端IP和VXLAN ID
 ovs-vsctl add-port br-tun vx01 -- set Interface vx01 type=vxlan options:remote_ip=192.168.123.231 options:key=1111
@@ -70,26 +50,19 @@ ip netns exec ns0 ip link set lo up
 ip netns exec ns0 ip link set vnet0 up
 # 配置IP
 ip netns exec ns0 ip addr add 192.168.0.2/24 dev vnet0
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;测试&#34;&gt;测试&lt;/h2&gt;
-&lt;p&gt;在&lt;code&gt;主机A&lt;/code&gt;上测试网络连通性 &lt;code&gt;ip netns exec ns0 ping 192.168.0.2&lt;/code&gt;&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Open vSwitch 入门实践（5）OVS Flow Table 流表规则</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-5/</link>
-      <pubDate>Tue, 29 Dec 2020 18:38:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-5/</guid>
-      <description>&lt;h1 id=&#34;openvswitch-flow-table-流表&#34;&gt;OpenvSwitch flow table 流表&lt;/h1&gt;
-&lt;blockquote&gt;
-&lt;p&gt;OpenFlow（OF）被认为是第一个&lt;a href=&#34;https://zh.wikipedia.org/wiki/%E8%BB%9F%E4%BB%B6%E5%AE%9A%E7%BE%A9%E7%B6%B2%E7%B5%A1&#34;&gt;软件定义网络&lt;/a&gt;（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。&lt;/p&gt;
-&lt;h1 id=&#34;操作命令&#34;&gt;操作命令&lt;/h1&gt;
-&lt;h3 id=&#34;查看流表规则&#34;&gt;查看流表规则&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看br-tun上的全部流表规则&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-ofctl dump-flows br-tun
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;添加或修改流表规则&#34;&gt;添加或修改流表规则&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions&lt;span style=&#34;color:#f92672&#34;&gt;=[&lt;/span&gt;动作1&lt;span style=&#34;color:#f92672&#34;&gt;][&lt;/span&gt;,动作2…&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;”
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你有过编程的经验，流表规则其实就是一个个简单的&lt;code&gt;if&lt;/code&gt;语句，伪代码如下。&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;if (流表匹配条件){
+&lt;/code>&lt;/pre>&lt;h2 id="测试">测试&lt;/h2>
+&lt;p>在&lt;code>主机A&lt;/code>上测试网络连通性 &lt;code>ip netns exec ns0 ping 192.168.0.2&lt;/code>&lt;/p></description></item><item><title>Open vSwitch 入门实践（5）OVS Flow Table 流表规则</title><link>https://www.typesafe.cn/posts/ovs-learn-5/</link><pubDate>Tue, 29 Dec 2020 18:38:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-5/</guid><description>&lt;h1 id="openvswitch-flow-table-流表">OpenvSwitch flow table 流表&lt;/h1>
+&lt;blockquote>
+&lt;p>OpenFlow（OF）被认为是第一个&lt;a href="https://zh.wikipedia.org/wiki/%E8%BB%9F%E4%BB%B6%E5%AE%9A%E7%BE%A9%E7%B6%B2%E7%B5%A1">软件定义网络&lt;/a>（SDN）标准之一。它最初在SDN环境中定义了通信协议，使SDN控制器能够与物理和虚拟的交换机和路由器等网络设备的转发平面直接进行交互，从而更好地适应不断变化的业务需求。&lt;/p>&lt;/blockquote>
+&lt;p>如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。&lt;/p>
+&lt;h1 id="操作命令">操作命令&lt;/h1>
+&lt;h3 id="查看流表规则">查看流表规则&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 查看br-tun上的全部流表规则&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl dump-flows br-tun
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加或修改流表规则">添加或修改流表规则&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions&lt;span style="color:#f92672">=[&lt;/span>动作1&lt;span style="color:#f92672">][&lt;/span>,动作2…&lt;span style="color:#f92672">]&lt;/span>”
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果你有过编程的经验，流表规则其实就是一个个简单的&lt;code>if&lt;/code>语句，伪代码如下。&lt;/p>
+&lt;pre tabindex="0">&lt;code>if (流表匹配条件){
 	动作1，
 	动作2...
 }
@@ -98,309 +71,278 @@ if (流表匹配条件){
 	动作1，
 	动作2...
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;删除流表规则&#34;&gt;删除流表规则&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除br-tun上的全部流表规则&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-ofctl del-flows br-tun
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 删除br-tun上匹配xx的全部流表规则&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-ofctl del-flows br-tun xx  
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;流表匹配条件&#34;&gt;流表匹配条件&lt;/h1&gt;
-&lt;p&gt;OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;OVS匹配条件&lt;/li&gt;
-&lt;li&gt;OSI模型第二层【数据链路层】&lt;/li&gt;
-&lt;li&gt;OSI模型第三层【网络层】&lt;/li&gt;
-&lt;li&gt;OSI模型第四层【传输层】&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;ovs匹配条件&#34;&gt;OVS匹配条件&lt;/h2&gt;
-&lt;h3 id=&#34;in_portport&#34;&gt;in_port=port&lt;/h3&gt;
-&lt;p&gt;流量进入的端口编号或者名称，示例 &lt;code&gt;in_port=br-int&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;tablenumber&#34;&gt;table=number&lt;/h3&gt;
-&lt;p&gt;规则保存的流表编号，范围是 0-254，默认值：0。&lt;/p&gt;
-&lt;h2 id=&#34;osi模型第二层数据链路层&#34;&gt;OSI模型第二层【数据链路层】&lt;/h2&gt;
-&lt;p&gt;&lt;em&gt;&lt;code&gt;dl&lt;/code&gt; 即是 &lt;code&gt;data link&lt;/code&gt; 的缩写。&lt;/em&gt;&lt;/p&gt;
-&lt;h3 id=&#34;dl_typeethertype&#34;&gt;dl_type=ethertype&lt;/h3&gt;
-&lt;p&gt;匹配以太网协议类型以太类型，以10到65535之间的整数（包括0和65535）指定，以十进制或以0x前缀的十六进制数表示，示例如下。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;dl_type=0x0800&lt;/code&gt; 匹配IPv4数据包，等同于&lt;code&gt;dl_type=ip&lt;/code&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;dl_type=0x086dd&lt;/code&gt; 匹配IPv6数据包，等同于&lt;code&gt;dl_type=ipv6&lt;/code&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;dl_type=0x0806&lt;/code&gt; 匹配ARP数据包，等同于&lt;code&gt;dl_type=arp&lt;/code&gt; 。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;dl_type=0x8035&lt;/code&gt; 匹配RARP数据包，等同于 &lt;code&gt;dl_type=rarp&lt;/code&gt;。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Open vSwitch 入门实践（4）使用OVS配置端口镜像</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-4/</link>
-      <pubDate>Mon, 28 Dec 2020 19:23:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-4/</guid>
-      <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
-&lt;p&gt;当我们想要在不影响虚拟网络设备数据报文收发的情况下获取对应虚拟网络设备的流量时，端口镜像是一个很好的选择。端口镜像是指将经过指定端口（镜像端口）的报文复制一份到另一个指定端口（观察端口），通过观察端口接收到的数据报文，就可以有效识别虚拟网络的运行情况。&lt;/p&gt;
-&lt;p&gt;OVS提供了相关命令来配置或删除端口镜像，下面我们来实验一下。&lt;/p&gt;
-&lt;h1 id=&#34;如何使用&#34;&gt;如何使用&lt;/h1&gt;
-&lt;h3 id=&#34;端口镜像类型&#34;&gt;端口镜像类型&lt;/h3&gt;
-&lt;p&gt;端口镜像分为镜像源和镜像目的两部分。&lt;/p&gt;
-&lt;h4 id=&#34;镜像源&#34;&gt;镜像源&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。&lt;/li&gt;
-&lt;li&gt;select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。&lt;/li&gt;
-&lt;li&gt;select_src_port：字符串（端口名称）。表示此端口发送的所有流量。&lt;/li&gt;
-&lt;li&gt;select_vlan：整型（0-4095）。表示携带此VLAN标签的流量。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;镜像目的&#34;&gt;镜像目的&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;output_port：字符串（端口名称）。接收流量报文的观察端口。&lt;/li&gt;
-&lt;li&gt;output_vlan：整型（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;基础操作命令&#34;&gt;基础操作命令&lt;/h3&gt;
-&lt;p&gt;新增端口镜像&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@m &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt; -- --id&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt; -- --id&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt; -- --id&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@m create Mirror name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&amp;lt;mirror_name&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt;-dst-port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@&amp;lt;port0&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;select&lt;/span&gt;-src-port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@&amp;lt;port0&amp;gt; output-port&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;@&amp;lt;port1&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
-&lt;p&gt;这行命令会输出一个镜像ID&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;删除端口镜像&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在原端口镜像的基础上增加一个镜像源&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 获取端口的ID&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl get port &amp;lt;port_name&amp;gt; _uuid
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 在原端口镜像的基础上增加镜像源&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_src_port &amp;lt;port-id&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_dst_port &amp;lt;port-id&amp;gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在原端口镜像的基础上删除一个镜像源&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-3/</link>
-      <pubDate>Sun, 27 Dec 2020 11:38:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-3/</guid>
-      <description>&lt;h1 id=&#34;使用ovs构建分布式隔离网络&#34;&gt;使用OVS构建分布式隔离网络&lt;/h1&gt;
-&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
-&lt;p&gt;上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。&lt;/p&gt;
-&lt;h2 id=&#34;实验1分布式无隔离网络&#34;&gt;实验1：分布式无隔离网络&lt;/h2&gt;
-&lt;p&gt;网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。&lt;/li&gt;
-&lt;li&gt;我们要将业务网卡绑定到OVS网桥上，也就是&lt;code&gt;Normal&lt;/code&gt;类型的&lt;code&gt;Port&lt;/code&gt;。这种方式添加的&lt;code&gt;Port&lt;/code&gt;不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;blockquote&gt;
-&lt;p&gt;需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为&lt;code&gt;trunk&lt;/code&gt;模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为&lt;code&gt;仅主机模式&lt;/code&gt;。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;img alt=&#34;分布式无隔离网络&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/ovs-di-network0.png?t=2&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;配置&#34;&gt;配置&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;配置环境 &lt;code&gt;主机A&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-br br-int
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 请修改eth1为当前实验环境的业务网卡名称&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int eth1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加两个内部端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加两个netns&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 将内部端口分别移动到netns中&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet0 netns ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet1 netns ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 启动端口并配置IP&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set vnet0 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set vnet1 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;配置环境 &lt;code&gt;主机B&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-br br-int
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 请修改eth1为当前实验环境的业务网卡名称&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int eth1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加两个内部端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加两个netns&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 将内部端口分别移动到netns中&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet0 netns ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet1 netns ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 启动端口并配置IP&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set vnet0 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip addr add 10.0.0.3/24 dev vnet0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set vnet1 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip addr add 10.0.0.4/24 dev vnet1
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;测试&#34;&gt;测试&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;测试 &lt;code&gt;主机A&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ping 10.0.0.3
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ping 10.0.0.4
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ping 10.0.0.3
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ping 10.0.0.4
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;测试 &lt;code&gt;主机B&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ping 10.0.0.1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ping 10.0.0.2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ping 10.0.0.1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ping 10.0.0.2
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
-&lt;li&gt;测试结果&lt;/li&gt;
-&lt;/ul&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;主机A&lt;/th&gt;
-          &lt;th&gt;主机B&lt;/th&gt;
-          &lt;th&gt;ping 结果&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;ns0&lt;/td&gt;
-          &lt;td&gt;ns0&lt;/td&gt;
-          &lt;td&gt;可通信 ✅&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;ns0&lt;/td&gt;
-          &lt;td&gt;ns1&lt;/td&gt;
-          &lt;td&gt;可通信 ✅&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;ns1&lt;/td&gt;
-          &lt;td&gt;ns0&lt;/td&gt;
-          &lt;td&gt;可通信 ✅&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;ns1&lt;/td&gt;
-          &lt;td&gt;ns1&lt;/td&gt;
-          &lt;td&gt;可通信 ✅&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Open vSwitch 入门实践（2）使用OVS构建隔离网络</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-2/</link>
-      <pubDate>Thu, 26 Nov 2020 22:55:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-2/</guid>
-      <description>&lt;h1 id=&#34;前言&#34;&gt;前言&lt;/h1&gt;
-&lt;p&gt;在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。&lt;/p&gt;
-&lt;h1 id=&#34;实验&#34;&gt;实验&lt;/h1&gt;
-&lt;p&gt;接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。&lt;/p&gt;
-&lt;h2 id=&#34;实验一单机无隔离网络&#34;&gt;实验一：单机无隔离网络&lt;/h2&gt;
-&lt;p&gt;使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加网桥&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-br br-int
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加三个内部端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;internal
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 添加三个netns&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns add ns2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 将内部端口分别移动到netns中&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet0 netns ns0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet1 netns ns1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip link set vnet2 netns ns2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 启动端口并配置IP&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip link set vnet0 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip link set vnet1 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns2 ip link set lo up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns2 ip link set vnet2 up
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip netns exec ns2 ip addr add 10.0.0.3/24 dev vnet2
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;测试&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Open vSwitch 入门实践（1）Open vSwitch 是什么</title>
-      <link>https://www.typesafe.cn/posts/ovs-learn-1/</link>
-      <pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/ovs-learn-1/</guid>
-      <description>&lt;h1 id=&#34;ovs简介&#34;&gt;OVS简介&lt;/h1&gt;
-&lt;h3 id=&#34;open-vswitch-是什么&#34;&gt;Open vSwitch 是什么？&lt;/h3&gt;
-&lt;p&gt;Open vSwitch(以下简称OVS)是一个用C语言开发的多层虚拟交换机，使用Apcahe 2开源许可证，现如今基本上已经成为了开源SDN（软件定义网络）基础设施层的事实标准。&lt;/p&gt;
-&lt;h3 id=&#34;ovs支持哪些功能&#34;&gt;OVS支持哪些&lt;a href=&#34;http://www.openvswitch.org//features/&#34;&gt;功能&lt;/a&gt;？&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;支持NetFlow、sFlow(R)、IPFIX、SPAN、RSPAN和GRE隧道镜像等多种流量监控协议&lt;/li&gt;
-&lt;li&gt;支持LACP (IEEE 802.1AX-2008)&lt;/li&gt;
-&lt;li&gt;支持标准802.1Q VLAN协议，允许端口配置trunk模式&lt;/li&gt;
-&lt;li&gt;支持组播&lt;/li&gt;
-&lt;li&gt;支持BFD和802.1ag链路监控&lt;/li&gt;
-&lt;li&gt;支持STP（IEEE 802.1D-1998）和RSTP（IEEE 802.1D-2004）&lt;/li&gt;
-&lt;li&gt;支持细粒度的QoS（服务质量）配置&lt;/li&gt;
-&lt;li&gt;支持HFSC qdisc&lt;/li&gt;
-&lt;li&gt;支持接管每一个虚拟机的流量&lt;/li&gt;
-&lt;li&gt;支持基于源MAC的负载均衡、主备模式和L4哈希的端口绑带&lt;/li&gt;
-&lt;li&gt;支持OpenFlow协议（包含了很多对虚拟化的扩展）&lt;/li&gt;
-&lt;li&gt;支持IPv6&lt;/li&gt;
-&lt;li&gt;支持多种隧道协议（GRE、VXLAN、STT、Geneve和IPsec）&lt;/li&gt;
-&lt;li&gt;支持C和Python的远程配置协议&lt;/li&gt;
-&lt;li&gt;支持内核和用户空间的转发引擎选项&lt;/li&gt;
-&lt;li&gt;具有流缓存引擎的多表转发管道&lt;/li&gt;
-&lt;li&gt;转发层抽象以简化向新软件和硬件平台的移植&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;ovs的术语解释&#34;&gt;OVS的术语解释&lt;/h1&gt;
-&lt;h3 id=&#34;bridge&#34;&gt;Bridge&lt;/h3&gt;
-&lt;p&gt;中文名称&lt;strong&gt;网桥&lt;/strong&gt;，一个Bridge代表一个以太网交换机（Switch），一台主机中可以创建一个或多个Bridge，Bridge可以根据一定的规则，把某一个端口接收到的数据报文转发到另一个或多个端口上，也可以修改或者丢弃数据报文。&lt;/p&gt;
-&lt;h3 id=&#34;port&#34;&gt;Port&lt;/h3&gt;
-&lt;p&gt;中文名称&lt;strong&gt;端口&lt;/strong&gt;，需要注意的是它和TCP里面的端口不是同样的概念，它更像是物理交换机上面的插口，可以接水晶头的那种。Port隶属于Bridge，必须先添加了Bridge才能在Bridge上添加Port。Port有以下几种类型：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Normal&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;用户可以把操作系统中已有的网卡添加到Open vSwicth上，Open vSwitct会自动生成一个同名的Port开处理这张网卡进和出的数据报文。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;不过需要注意的是这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。此类型的Port常用于VLAN模式的多台物理主机相连的那个口，交换机一端属于Trunk模式。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Internal&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;当Port的类型是Internal时，OVS会自动创建一个虚拟网卡（Interface），此端口收到的数据报文都会转发给这块网卡，从这块网卡发出的数据报文也会通过Port交给OVS处理。当OVS创建一个新的网桥时，会自动创建一个与网桥同名的Internal Port，同时也会创建一个与网桥同名的Interface，因此可以通过ip命令在操作系统中查看到这张虚拟网卡，但是状态是down的。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Patch&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Patch Port和veth pair功能相同，总是成双成对的出现，在其中一端收到的数据报文会被转发到另一个Patch Port上，就像是一根网线一样。Patch Port常用于连接两个Bridge，这样两个网桥就和一个网桥一样了。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Tunnel&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;OVS 支持 GRE、VXLAN、STT、Geneve和IPsec隧道协议，这些隧道协议就是overlay网络的基础协议，通过对物理网络做的一层封装和扩展，解决了二层网络数量不足的问题，最大限度的减少对底层物理网络拓扑的依赖性，同时也最大限度的增加了对网络的控制。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;interface&#34;&gt;Interface&lt;/h3&gt;
-&lt;p&gt;（iface/接口）接口是OVS与操作系统交换数据报文的组件，一个接口即是操作系统上的一块网卡，这个网卡可能是OVS生成的虚拟网卡，也有可能是挂载在OVS上的物理网卡，操作系统上的虚拟网卡（TUN/TAP）也可以被挂载在OVS上。&lt;/p&gt;
-&lt;h3 id=&#34;controller&#34;&gt;Controller&lt;/h3&gt;
-&lt;p&gt;OpenFlow控制器，OVS可以接收一个或者多个OpenFlow控制器的管理，功能主要是下发流表，控制转发规则。&lt;/p&gt;
-&lt;h3 id=&#34;flow&#34;&gt;Flow&lt;/h3&gt;
-&lt;p&gt;流表是OVS进行数据转发的核心功能，定义了端口之间转发数据报文的规则，一条流表规则主要分为匹配和动作两部分，匹配部分决定哪些数据报文需要被处理，动作决定了匹配到的数据报文该如何处理。&lt;/p&gt;
-&lt;h1 id=&#34;ovs常用操作&#34;&gt;OVS常用操作&lt;/h1&gt;
-&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install openvswitch
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl enable openvswitch
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl start openvswitch
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
-&lt;p&gt;如果当前软件源中没有openvswitch，可以通过&lt;a href=&#34;https://developer.aliyun.com/packageSearch?word=openvswitch&#34;&gt;阿里云官方镜像站&lt;/a&gt;下载和操作系统版本对应的rpm包到本地再安装。 示例命令： &lt;code&gt;yum localinstall openvswitch-2.9.0-3.el7.x86_64.rpm&lt;/code&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;h3 id="删除流表规则">删除流表规则&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 删除br-tun上的全部流表规则&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl del-flows br-tun
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 删除br-tun上匹配xx的全部流表规则&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl del-flows br-tun xx 
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="流表匹配条件">流表匹配条件&lt;/h1>
+&lt;p>OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:&lt;/p>
+&lt;ul>
+&lt;li>OVS匹配条件&lt;/li>
+&lt;li>OSI模型第二层【数据链路层】&lt;/li>
+&lt;li>OSI模型第三层【网络层】&lt;/li>
+&lt;li>OSI模型第四层【传输层】&lt;/li>
+&lt;/ul>
+&lt;h2 id="ovs匹配条件">OVS匹配条件&lt;/h2>
+&lt;h3 id="in_portport">in_port=port&lt;/h3>
+&lt;p>流量进入的端口编号或者名称，示例 &lt;code>in_port=br-int&lt;/code>&lt;/p>
+&lt;h3 id="tablenumber">table=number&lt;/h3>
+&lt;p>规则保存的流表编号，范围是 0-254，默认值：0。&lt;/p>
+&lt;h2 id="osi模型第二层数据链路层">OSI模型第二层【数据链路层】&lt;/h2>
+&lt;p>&lt;em>&lt;code>dl&lt;/code> 即是 &lt;code>data link&lt;/code> 的缩写。&lt;/em>&lt;/p>
+&lt;h3 id="dl_typeethertype">dl_type=ethertype&lt;/h3>
+&lt;p>匹配以太网协议类型以太类型，以10到65535之间的整数（包括0和65535）指定，以十进制或以0x前缀的十六进制数表示，示例如下。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>dl_type=0x0800&lt;/code> 匹配IPv4数据包，等同于&lt;code>dl_type=ip&lt;/code> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>dl_type=0x086dd&lt;/code> 匹配IPv6数据包，等同于&lt;code>dl_type=ipv6&lt;/code> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>dl_type=0x0806&lt;/code> 匹配ARP数据包，等同于&lt;code>dl_type=arp&lt;/code> 。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>dl_type=0x8035&lt;/code> 匹配RARP数据包，等同于 &lt;code>dl_type=rarp&lt;/code>。&lt;/p></description></item><item><title>Open vSwitch 入门实践（4）使用OVS配置端口镜像</title><link>https://www.typesafe.cn/posts/ovs-learn-4/</link><pubDate>Mon, 28 Dec 2020 19:23:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-4/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>当我们想要在不影响虚拟网络设备数据报文收发的情况下获取对应虚拟网络设备的流量时，端口镜像是一个很好的选择。端口镜像是指将经过指定端口（镜像端口）的报文复制一份到另一个指定端口（观察端口），通过观察端口接收到的数据报文，就可以有效识别虚拟网络的运行情况。&lt;/p>
+&lt;p>OVS提供了相关命令来配置或删除端口镜像，下面我们来实验一下。&lt;/p>
+&lt;h1 id="如何使用">如何使用&lt;/h1>
+&lt;h3 id="端口镜像类型">端口镜像类型&lt;/h3>
+&lt;p>端口镜像分为镜像源和镜像目的两部分。&lt;/p>
+&lt;h4 id="镜像源">镜像源&lt;/h4>
+&lt;ul>
+&lt;li>select_all：布尔类型（true，false）。设置为 true 时，表示此网桥上的所有流量。&lt;/li>
+&lt;li>select_dst_port：字符串（端口名称）。表示此端口接收的所有流量。&lt;/li>
+&lt;li>select_src_port：字符串（端口名称）。表示此端口发送的所有流量。&lt;/li>
+&lt;li>select_vlan：整型（0-4095）。表示携带此VLAN标签的流量。&lt;/li>
+&lt;/ul>
+&lt;h4 id="镜像目的">镜像目的&lt;/h4>
+&lt;ul>
+&lt;li>output_port：字符串（端口名称）。接收流量报文的观察端口。&lt;/li>
+&lt;li>output_vlan：整型（0-4095）。表示只修改VLAN标签，原VLAN标签会被剥离。&lt;/li>
+&lt;/ul>
+&lt;h3 id="基础操作命令">基础操作命令&lt;/h3>
+&lt;p>新增端口镜像&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors&lt;span style="color:#f92672">=&lt;/span>@m &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@m create Mirror name&lt;span style="color:#f92672">=&lt;/span>&amp;lt;mirror_name&amp;gt; &lt;span style="color:#66d9ef">select&lt;/span>-dst-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; &lt;span style="color:#66d9ef">select&lt;/span>-src-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; output-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port1&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>这行命令会输出一个镜像ID&lt;/p>&lt;/blockquote>
+&lt;p>删除端口镜像&lt;/p>
+&lt;pre tabindex="0">&lt;code>ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>在原端口镜像的基础上增加一个镜像源&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 获取端口的ID&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl get port &amp;lt;port_name&amp;gt; _uuid
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 在原端口镜像的基础上增加镜像源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_src_port &amp;lt;port-id&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_dst_port &amp;lt;port-id&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在原端口镜像的基础上删除一个镜像源&lt;/p></description></item><item><title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title><link>https://www.typesafe.cn/posts/ovs-learn-3/</link><pubDate>Sun, 27 Dec 2020 11:38:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-3/</guid><description>&lt;h1 id="使用ovs构建分布式隔离网络">使用OVS构建分布式隔离网络&lt;/h1>
+&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。&lt;/p>
+&lt;h2 id="实验1分布式无隔离网络">实验1：分布式无隔离网络&lt;/h2>
+&lt;p>网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：&lt;/p>
+&lt;ol>
+&lt;li>管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。&lt;/li>
+&lt;li>我们要将业务网卡绑定到OVS网桥上，也就是&lt;code>Normal&lt;/code>类型的&lt;code>Port&lt;/code>。这种方式添加的&lt;code>Port&lt;/code>不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为&lt;code>trunk&lt;/code>模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为&lt;code>仅主机模式&lt;/code>。&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://oss.typesafe.cn/ovs-di-network0.png?t=2" alt="分布式无隔离网络">&lt;/p>
+&lt;h3 id="配置">配置&lt;/h3>
+&lt;ul>
+&lt;li>配置环境 &lt;code>主机A&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int eth1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>配置环境 &lt;code>主机B&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int eth1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.3/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.4/24 dev vnet1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
+&lt;ul>
+&lt;li>测试 &lt;code>主机A&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.4
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.4
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>测试 &lt;code>主机B&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>测试结果&lt;/li>
+&lt;/ul>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>主机A&lt;/th>
+ &lt;th>主机B&lt;/th>
+ &lt;th>ping 结果&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>ns0&lt;/td>
+ &lt;td>ns0&lt;/td>
+ &lt;td>可通信 ✅&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>ns0&lt;/td>
+ &lt;td>ns1&lt;/td>
+ &lt;td>可通信 ✅&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>ns1&lt;/td>
+ &lt;td>ns0&lt;/td>
+ &lt;td>可通信 ✅&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>ns1&lt;/td>
+ &lt;td>ns1&lt;/td>
+ &lt;td>可通信 ✅&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;p>根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。&lt;/p></description></item><item><title>Open vSwitch 入门实践（2）使用OVS构建隔离网络</title><link>https://www.typesafe.cn/posts/ovs-learn-2/</link><pubDate>Thu, 26 Nov 2020 22:55:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-2/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
+&lt;p>在前面我们已经使用Linux Bridge完成了多台网络设备的通信，但是它对于网络隔离的支持不是很好，长期以来，在Linux平台上缺少一个功能完备的虚拟交换机，直到OVS的出现。&lt;/p>
+&lt;h1 id="实验">实验&lt;/h1>
+&lt;p>接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。&lt;/p>
+&lt;h2 id="实验一单机无隔离网络">实验一：单机无隔离网络&lt;/h2>
+&lt;p>使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加网桥&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加三个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type&lt;span style="color:#f92672">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加三个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet2 netns ns2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip link set lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip link set vnet2 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip addr add 10.0.0.3/24 dev vnet2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试&lt;/p></description></item><item><title>Open vSwitch 入门实践（1）Open vSwitch 是什么</title><link>https://www.typesafe.cn/posts/ovs-learn-1/</link><pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-1/</guid><description>&lt;h1 id="ovs简介">OVS简介&lt;/h1>
+&lt;h3 id="open-vswitch-是什么">Open vSwitch 是什么？&lt;/h3>
+&lt;p>Open vSwitch(以下简称OVS)是一个用C语言开发的多层虚拟交换机，使用Apcahe 2开源许可证，现如今基本上已经成为了开源SDN（软件定义网络）基础设施层的事实标准。&lt;/p>
+&lt;h3 id="ovs支持哪些功能">OVS支持哪些&lt;a href="http://www.openvswitch.org//features/">功能&lt;/a>？&lt;/h3>
+&lt;ul>
+&lt;li>支持NetFlow、sFlow(R)、IPFIX、SPAN、RSPAN和GRE隧道镜像等多种流量监控协议&lt;/li>
+&lt;li>支持LACP (IEEE 802.1AX-2008)&lt;/li>
+&lt;li>支持标准802.1Q VLAN协议，允许端口配置trunk模式&lt;/li>
+&lt;li>支持组播&lt;/li>
+&lt;li>支持BFD和802.1ag链路监控&lt;/li>
+&lt;li>支持STP（IEEE 802.1D-1998）和RSTP（IEEE 802.1D-2004）&lt;/li>
+&lt;li>支持细粒度的QoS（服务质量）配置&lt;/li>
+&lt;li>支持HFSC qdisc&lt;/li>
+&lt;li>支持接管每一个虚拟机的流量&lt;/li>
+&lt;li>支持基于源MAC的负载均衡、主备模式和L4哈希的端口绑带&lt;/li>
+&lt;li>支持OpenFlow协议（包含了很多对虚拟化的扩展）&lt;/li>
+&lt;li>支持IPv6&lt;/li>
+&lt;li>支持多种隧道协议（GRE、VXLAN、STT、Geneve和IPsec）&lt;/li>
+&lt;li>支持C和Python的远程配置协议&lt;/li>
+&lt;li>支持内核和用户空间的转发引擎选项&lt;/li>
+&lt;li>具有流缓存引擎的多表转发管道&lt;/li>
+&lt;li>转发层抽象以简化向新软件和硬件平台的移植&lt;/li>
+&lt;/ul>
+&lt;h1 id="ovs的术语解释">OVS的术语解释&lt;/h1>
+&lt;h3 id="bridge">Bridge&lt;/h3>
+&lt;p>中文名称&lt;strong>网桥&lt;/strong>，一个Bridge代表一个以太网交换机（Switch），一台主机中可以创建一个或多个Bridge，Bridge可以根据一定的规则，把某一个端口接收到的数据报文转发到另一个或多个端口上，也可以修改或者丢弃数据报文。&lt;/p>
+&lt;h3 id="port">Port&lt;/h3>
+&lt;p>中文名称&lt;strong>端口&lt;/strong>，需要注意的是它和TCP里面的端口不是同样的概念，它更像是物理交换机上面的插口，可以接水晶头的那种。Port隶属于Bridge，必须先添加了Bridge才能在Bridge上添加Port。Port有以下几种类型：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Normal&lt;/strong>&lt;/p>
+&lt;p>用户可以把操作系统中已有的网卡添加到Open vSwicth上，Open vSwitct会自动生成一个同名的Port开处理这张网卡进和出的数据报文。&lt;/p>
+&lt;blockquote>
+&lt;p>不过需要注意的是这种方式添加的Port不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。此类型的Port常用于VLAN模式的多台物理主机相连的那个口，交换机一端属于Trunk模式。&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Internal&lt;/strong>&lt;/p>
+&lt;p>当Port的类型是Internal时，OVS会自动创建一个虚拟网卡（Interface），此端口收到的数据报文都会转发给这块网卡，从这块网卡发出的数据报文也会通过Port交给OVS处理。当OVS创建一个新的网桥时，会自动创建一个与网桥同名的Internal Port，同时也会创建一个与网桥同名的Interface，因此可以通过ip命令在操作系统中查看到这张虚拟网卡，但是状态是down的。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Patch&lt;/strong>&lt;/p>
+&lt;p>Patch Port和veth pair功能相同，总是成双成对的出现，在其中一端收到的数据报文会被转发到另一个Patch Port上，就像是一根网线一样。Patch Port常用于连接两个Bridge，这样两个网桥就和一个网桥一样了。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Tunnel&lt;/strong>&lt;/p>
+&lt;p>OVS 支持 GRE、VXLAN、STT、Geneve和IPsec隧道协议，这些隧道协议就是overlay网络的基础协议，通过对物理网络做的一层封装和扩展，解决了二层网络数量不足的问题，最大限度的减少对底层物理网络拓扑的依赖性，同时也最大限度的增加了对网络的控制。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="interface">Interface&lt;/h3>
+&lt;p>（iface/接口）接口是OVS与操作系统交换数据报文的组件，一个接口即是操作系统上的一块网卡，这个网卡可能是OVS生成的虚拟网卡，也有可能是挂载在OVS上的物理网卡，操作系统上的虚拟网卡（TUN/TAP）也可以被挂载在OVS上。&lt;/p>
+&lt;h3 id="controller">Controller&lt;/h3>
+&lt;p>OpenFlow控制器，OVS可以接收一个或者多个OpenFlow控制器的管理，功能主要是下发流表，控制转发规则。&lt;/p>
+&lt;h3 id="flow">Flow&lt;/h3>
+&lt;p>流表是OVS进行数据转发的核心功能，定义了端口之间转发数据报文的规则，一条流表规则主要分为匹配和动作两部分，匹配部分决定哪些数据报文需要被处理，动作决定了匹配到的数据报文该如何处理。&lt;/p>
+&lt;h1 id="ovs常用操作">OVS常用操作&lt;/h1>
+&lt;h3 id="安装">安装&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install openvswitch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl enable openvswitch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl start openvswitch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>如果当前软件源中没有openvswitch，可以通过&lt;a href="https://developer.aliyun.com/packageSearch?word=openvswitch">阿里云官方镜像站&lt;/a>下载和操作系统版本对应的rpm包到本地再安装。 示例命令： &lt;code>yum localinstall openvswitch-2.9.0-3.el7.x86_64.rpm&lt;/code>&lt;/p></description></item></channel></rss>

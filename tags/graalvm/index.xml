@@ -1,42 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Graalvm on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/graalvm/</link>
-    <description>Recent content in Graalvm on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/graalvm/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>SpringBoot 3.0.0尝鲜与Java打包原生二进制【一】</title>
-      <link>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link>
-      <pubDate>Sat, 26 Nov 2022 23:44:00 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</guid>
-      <description>&lt;p&gt;2022年11月24日 SpringBoot 正式发布了 3.0 版本，带来许多新的特性，但我最关心的还是Java打包成原生二进制，运行时不再依赖jre环境，运行Java程序将和Go程序一样方便。&lt;/p&gt;
-&lt;h2 id=&#34;升级至-springboot-300&#34;&gt;升级至 SpringBoot 3.0.0&lt;/h2&gt;
-&lt;p&gt;说是尝鲜，但是我不想再试着搞 hello world 那种啥都没有的东西了，找到我之前写的一个Java开源项目 &lt;a href=&#34;https://github.com/dushixiang/kafka-map&#34;&gt;kafka-map&lt;/a&gt; 拿他开刀。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/dushixiang/kafka-map&#34;&gt;kafka-map&lt;/a&gt; 本身是基于 SpringBoot 2.4.x 开发的，sqlite 存储数据，且很久没有大的更新了，想要直接升级到 SpringBoot 3.0.0 是不可能的，我按照官方文档 &lt;a href=&#34;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide&#34;&gt;Spring Boot 3.0 迁移指南&lt;/a&gt; 首先升级到最新2.7.x版本，然后就发现 service 依赖循环了，这个时候有两种选择，一是在配置文件中允许依赖循环 &lt;code&gt;spring.main.allow-circular-references: true&lt;/code&gt;，二是梳理业务逻辑解决依赖循环的问题。作为一个合格的开发，我选择了解决依赖循环的问题，过程不表。&lt;/p&gt;
-&lt;p&gt;SpringBoot 3.0.0 升级了很多组件，其中 Jpa 依赖的 Hibernate 升级到了 6.x，我启动时又遇到了 sqlite 方言插件不可用的问题，还好 Hibernate 6.x 已经支持了 sqlite方言，切换到官方插件就好了。配置文件如下：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;spring&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;datasource&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;url&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;jdbc:sqlite:data/kafka-map.db&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;driver-class-name&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;org.sqlite.JDBC&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#f92672&#34;&gt;jpa&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;hibernate&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;ddl-auto&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;update&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;show-sql&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;properties&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#f92672&#34;&gt;hibernate&lt;/span&gt;:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#f92672&#34;&gt;dialect&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;org.hibernate.community.dialect.SQLiteDialect&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;原生二进制打包&#34;&gt;原生二进制打包&lt;/h2&gt;
-&lt;p&gt;打包原生二进制还是最折腾的，刚开始参考&lt;a href=&#34;https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/native-image.html#native-image.developing-your-first-application.buildpacks&#34;&gt;GraalVM Native Image Support&lt;/a&gt; 把打包 &lt;code&gt;springboot:build-image&lt;/code&gt; 当成了打包原生二进制了，而且打包的过程中还遇到了 &lt;code&gt;UnsupportedFeatureException: No instances of ch.qos.logback.classic.Logger&lt;/code&gt; 这个问题，找了一圈也没找到解决方案。&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;image.png&#34; loading=&#34;lazy&#34; src=&#34;https://oss.typesafe.cn/k5.png&#34;&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Graalvm on 整点Bug</title><link>https://www.typesafe.cn/tags/graalvm/</link><description>Recent content in Graalvm on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 26 Nov 2022 23:44:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/graalvm/index.xml" rel="self" type="application/rss+xml"/><item><title>SpringBoot 3.0.0尝鲜与Java打包原生二进制【一】</title><link>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</link><pubDate>Sat, 26 Nov 2022 23:44:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/kafka-map-springboot3-graalvm-1/</guid><description>&lt;p>2022年11月24日 SpringBoot 正式发布了 3.0 版本，带来许多新的特性，但我最关心的还是Java打包成原生二进制，运行时不再依赖jre环境，运行Java程序将和Go程序一样方便。&lt;/p>
+&lt;h2 id="升级至-springboot-300">升级至 SpringBoot 3.0.0&lt;/h2>
+&lt;p>说是尝鲜，但是我不想再试着搞 hello world 那种啥都没有的东西了，找到我之前写的一个Java开源项目 &lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a> 拿他开刀。&lt;/p>
+&lt;p>&lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a> 本身是基于 SpringBoot 2.4.x 开发的，sqlite 存储数据，且很久没有大的更新了，想要直接升级到 SpringBoot 3.0.0 是不可能的，我按照官方文档 &lt;a href="https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide">Spring Boot 3.0 迁移指南&lt;/a> 首先升级到最新2.7.x版本，然后就发现 service 依赖循环了，这个时候有两种选择，一是在配置文件中允许依赖循环 &lt;code>spring.main.allow-circular-references: true&lt;/code>，二是梳理业务逻辑解决依赖循环的问题。作为一个合格的开发，我选择了解决依赖循环的问题，过程不表。&lt;/p>
+&lt;p>SpringBoot 3.0.0 升级了很多组件，其中 Jpa 依赖的 Hibernate 升级到了 6.x，我启动时又遇到了 sqlite 方言插件不可用的问题，还好 Hibernate 6.x 已经支持了 sqlite方言，切换到官方插件就好了。配置文件如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">spring&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">datasource&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">url&lt;/span>: &lt;span style="color:#ae81ff">jdbc:sqlite:data/kafka-map.db&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">driver-class-name&lt;/span>: &lt;span style="color:#ae81ff">org.sqlite.JDBC&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">jpa&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">hibernate&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ddl-auto&lt;/span>: &lt;span style="color:#ae81ff">update&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">show-sql&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">properties&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">hibernate&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">dialect&lt;/span>: &lt;span style="color:#ae81ff">org.hibernate.community.dialect.SQLiteDialect&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="原生二进制打包">原生二进制打包&lt;/h2>
+&lt;p>打包原生二进制还是最折腾的，刚开始参考&lt;a href="https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/native-image.html#native-image.developing-your-first-application.buildpacks">GraalVM Native Image Support&lt;/a> 把打包 &lt;code>springboot:build-image&lt;/code> 当成了打包原生二进制了，而且打包的过程中还遇到了 &lt;code>UnsupportedFeatureException: No instances of ch.qos.logback.classic.Logger&lt;/code> 这个问题，找了一圈也没找到解决方案。&lt;/p>
+&lt;p>&lt;img src="https://oss.typesafe.cn/k5.png" alt="image.png">&lt;/p></description></item></channel></rss>

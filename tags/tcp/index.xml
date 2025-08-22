@@ -1,53 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Tcp on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/tcp/</link>
-    <description>Recent content in Tcp on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Sat, 31 Oct 2020 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/tcp/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>tcpkill在go语言下的实现和增强</title>
-      <link>https://www.typesafe.cn/posts/tcpwall/</link>
-      <pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/tcpwall/</guid>
-      <description>&lt;h2 id=&#34;tcpwall&#34;&gt;tcpwall&lt;/h2&gt;
-&lt;p&gt;当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案&lt;strong&gt;iptables&lt;/strong&gt;，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。&lt;/p&gt;
-&lt;p&gt;我在互联网上检索的时候发现了&lt;strong&gt;tcpkill&lt;/strong&gt;这个工具，tcpkill是一个网络分析工具集&lt;strong&gt;dsniff&lt;/strong&gt;中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。&lt;/p&gt;
-&lt;p&gt;通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过&lt;em&gt;&lt;strong&gt;Ctrl+C&lt;/strong&gt;&lt;/em&gt;来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。&lt;/p&gt;
-&lt;h2 id=&#34;如何阻断一个已经建立的tcp连接&#34;&gt;如何阻断一个已经建立的tcp连接？&lt;/h2&gt;
-&lt;p&gt;阻断一个已经建立的tcp连接通常有这几种方案：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;服务端主动断开&lt;/li&gt;
-&lt;li&gt;客户端主动断开&lt;/li&gt;
-&lt;li&gt;拔掉网线（时间要超过tcp超时时间）&lt;/li&gt;
-&lt;li&gt;伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;前三种局限性太大，只能用第4种了。&lt;/p&gt;
-&lt;h2 id=&#34;如何实现伪造rst数据报文包&#34;&gt;如何实现伪造RST数据报文包？&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/google/gopacket&#34;&gt;GoPacket&lt;/a&gt; 是go基于&lt;strong&gt;libpcap&lt;/strong&gt;构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。&lt;/p&gt;
-&lt;p&gt;在学习了&lt;strong&gt;tcpkill&lt;/strong&gt;的源码之后，我使用go开发了一个增强版的&lt;strong&gt;tcpwall&lt;/strong&gt;，&lt;strong&gt;tcpwall&lt;/strong&gt;不仅可以实现和&lt;strong&gt;tcpkill&lt;/strong&gt;同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。&lt;/p&gt;
-&lt;h2 id=&#34;如何使用&#34;&gt;如何使用&lt;/h2&gt;
-&lt;p&gt;阻断指定IP和端口的TCP连接（不关心是源或者目的）&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tcpwall -i &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;interface&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -host &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;host&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -port &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;port&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;阻断指定源IP和源端口的TCP连接&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tcpwall -i &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;interface&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -shost &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;src_host&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -sport &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;src_port&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;阻断指定目的IP和目的端口的TCP连接&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tcpwall -i &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;interface&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -dhost &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;dst_host&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -dport &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;dst_port&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tcpwall -i &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;interface&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -shost &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;src_host&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -sport &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;src_port&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -dhost &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;dst_host&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; -dport &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;dst_port&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;其他&#34;&gt;其他&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;-timeout 时间（秒）指定等待多久之后退出程序&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;项目地址 &lt;a href=&#34;https://github.com/dushixiang/tcpwall&#34;&gt;https://github.com/dushixiang/tcpwall&lt;/a&gt;&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tcp on 整点Bug</title><link>https://www.typesafe.cn/tags/tcp/</link><description>Recent content in Tcp on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 31 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/tcp/index.xml" rel="self" type="application/rss+xml"/><item><title>tcpkill在go语言下的实现和增强</title><link>https://www.typesafe.cn/posts/tcpwall/</link><pubDate>Sat, 31 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/tcpwall/</guid><description>&lt;h2 id="tcpwall">tcpwall&lt;/h2>
+&lt;p>当我们想要阻止某些TCP连接的建立，在Linux平台上有一个很好的解决方案&lt;strong>iptables&lt;/strong>，但是对那些已经建立的tcp连接，iptables就不能做到随心所欲的阻断了。&lt;/p>
+&lt;p>我在互联网上检索的时候发现了&lt;strong>tcpkill&lt;/strong>这个工具，tcpkill是一个网络分析工具集&lt;strong>dsniff&lt;/strong>中的一个小工具。在Linux上可以直接通过dsniff包安装，使用方式也非常简单。&lt;/p>
+&lt;p>通过测试我发现tcpkill在执行命令之后并不会立刻阻断tcp连接，而是等待有数据传输时，才会阻断，因此在执行完命令之后程序并不会主动退出，而是需要通过&lt;em>&lt;strong>Ctrl+C&lt;/strong>&lt;/em>来退出，这对于某些想要通过程序来调用的脚本小子（例如我）来说简直是个灾难。&lt;/p>
+&lt;h2 id="如何阻断一个已经建立的tcp连接">如何阻断一个已经建立的tcp连接？&lt;/h2>
+&lt;p>阻断一个已经建立的tcp连接通常有这几种方案：&lt;/p>
+&lt;ol>
+&lt;li>服务端主动断开&lt;/li>
+&lt;li>客户端主动断开&lt;/li>
+&lt;li>拔掉网线（时间要超过tcp超时时间）&lt;/li>
+&lt;li>伪造RST数据包发送给服务端和客户端让它们主动断开（tcpkill就是这么做的）&lt;/li>
+&lt;/ol>
+&lt;p>前三种局限性太大，只能用第4种了。&lt;/p>
+&lt;h2 id="如何实现伪造rst数据报文包">如何实现伪造RST数据报文包？&lt;/h2>
+&lt;p>&lt;a href="https://github.com/google/gopacket">GoPacket&lt;/a> 是go基于&lt;strong>libpcap&lt;/strong>构建的一个库，可以通过旁路的方式接收一份数据包的拷贝。因此我们可以很方便捕获到正在通信的tcp数据报文。通过数据报文，我们可以获取到通信双方的MAC地址，IP和端口号，以及ACK号等，这些都是伪造数据包必不可少的。&lt;/p>
+&lt;p>在学习了&lt;strong>tcpkill&lt;/strong>的源码之后，我使用go开发了一个增强版的&lt;strong>tcpwall&lt;/strong>，&lt;strong>tcpwall&lt;/strong>不仅可以实现和&lt;strong>tcpkill&lt;/strong>同样的基于ip或端口监听到指定数据报文之后伪造RST数据报文来阻断tcp连接，也可以通过源ip源端口，目的ip目的端口来主动发送SYN数据报文包来诱导那些没有数据的tcp连接发送ACK数据报文包以获取源MAC、目的MAC和ACK号，并且可以通过指定参数让程序等待一段时间后主动退出。&lt;/p>
+&lt;h2 id="如何使用">如何使用&lt;/h2>
+&lt;p>阻断指定IP和端口的TCP连接（不关心是源或者目的）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tcpwall -i &lt;span style="color:#f92672">{&lt;/span>interface&lt;span style="color:#f92672">}&lt;/span> -host &lt;span style="color:#f92672">{&lt;/span>host&lt;span style="color:#f92672">}&lt;/span> -port &lt;span style="color:#f92672">{&lt;/span>port&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>阻断指定源IP和源端口的TCP连接&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tcpwall -i &lt;span style="color:#f92672">{&lt;/span>interface&lt;span style="color:#f92672">}&lt;/span> -shost &lt;span style="color:#f92672">{&lt;/span>src_host&lt;span style="color:#f92672">}&lt;/span> -sport &lt;span style="color:#f92672">{&lt;/span>src_port&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>阻断指定目的IP和目的端口的TCP连接&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tcpwall -i &lt;span style="color:#f92672">{&lt;/span>interface&lt;span style="color:#f92672">}&lt;/span> -dhost &lt;span style="color:#f92672">{&lt;/span>dst_host&lt;span style="color:#f92672">}&lt;/span> -dport &lt;span style="color:#f92672">{&lt;/span>dst_port&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>阻断指定源IP、源端口、目的IP、目的端口的TCP连接（会主动向双方发送SYN数据报文包）&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tcpwall -i &lt;span style="color:#f92672">{&lt;/span>interface&lt;span style="color:#f92672">}&lt;/span> -shost &lt;span style="color:#f92672">{&lt;/span>src_host&lt;span style="color:#f92672">}&lt;/span> -sport &lt;span style="color:#f92672">{&lt;/span>src_port&lt;span style="color:#f92672">}&lt;/span> -dhost &lt;span style="color:#f92672">{&lt;/span>dst_host&lt;span style="color:#f92672">}&lt;/span> -dport &lt;span style="color:#f92672">{&lt;/span>dst_port&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="其他">其他&lt;/h2>
+&lt;ul>
+&lt;li>-timeout 时间（秒）指定等待多久之后退出程序&lt;/li>
+&lt;/ul>
+&lt;p>项目地址 &lt;a href="https://github.com/dushixiang/tcpwall">https://github.com/dushixiang/tcpwall&lt;/a>&lt;/p></description></item></channel></rss>

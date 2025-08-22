@@ -1,174 +1,137 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>虚拟化 on 整点Bug</title>
-    <link>https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
-    <description>Recent content in 虚拟化 on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>KVM 虚拟机磁盘扩容</title>
-      <link>https://www.typesafe.cn/posts/kvm-disk-resize/</link>
-      <pubDate>Mon, 31 May 2021 19:20:00 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/kvm-disk-resize/</guid>
-      <description>&lt;h3 id=&#34;一镜像扩容&#34;&gt;一、镜像扩容&lt;/h3&gt;
-&lt;p&gt;注意：需要先关闭虚拟机才能操作，&lt;code&gt;+&lt;/code&gt;号前面有空格，后面没有空格。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;qemu-img resize test.qcow2 +80G
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;原镜像磁盘大小20GB，扩容完成后可使用以下命令查看&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;qemu-img info test.qcow2
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;image: test.qcow2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;file format: qcow2
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;virtual size: 100G &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;107374182400&lt;/span&gt; bytes&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;disk size: 885M
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cluster_size: &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Format specific information:
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    compat: 1.1
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    lazy refcounts: false
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    refcount bits: &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    corrupt: false
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;二windows磁盘扩容&#34;&gt;二、Windows磁盘扩容&lt;/h3&gt;
-&lt;p&gt;Windows磁盘扩容比较方便，进入 &lt;strong&gt;计算机管理&amp;gt;磁盘管理&lt;/strong&gt; 找到新增的分区把它添加到需要的分区即可。&lt;/p&gt;
-&lt;h3 id=&#34;三linux磁盘扩容&#34;&gt;三、Linux磁盘扩容&lt;/h3&gt;
-&lt;p&gt;启动虚拟机后，进入虚拟机控制台，使用&lt;code&gt;fdisk -l&lt;/code&gt;命令查看磁盘信息。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Disk /dev/vda: &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt; GiB, &lt;span style=&#34;color:#ae81ff&#34;&gt;107374182400&lt;/span&gt; bytes, &lt;span style=&#34;color:#ae81ff&#34;&gt;209715200&lt;/span&gt; sectors
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Units: sectors of &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; * 512 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Sector size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;logical/physical&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;I/O size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Disklabel type: dos
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Disk identifier: 0xe11f7f01
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Device     Boot   Start      End  Sectors Size Id Type
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/dev/vda1  *       &lt;span style=&#34;color:#ae81ff&#34;&gt;2048&lt;/span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;2099199&lt;/span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;2097152&lt;/span&gt;   1G &lt;span style=&#34;color:#ae81ff&#34;&gt;83&lt;/span&gt; Linux
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;/dev/vda2       &lt;span style=&#34;color:#ae81ff&#34;&gt;2099200&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;41943039&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;39843840&lt;/span&gt;  19G 8e Linux LVM
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Disk /dev/mapper/cl-root: &lt;span style=&#34;color:#ae81ff&#34;&gt;17&lt;/span&gt; GiB, &lt;span style=&#34;color:#ae81ff&#34;&gt;18249416704&lt;/span&gt; bytes, &lt;span style=&#34;color:#ae81ff&#34;&gt;35643392&lt;/span&gt; sectors
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Units: sectors of &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; * 512 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Sector size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;logical/physical&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;I/O size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Disk /dev/mapper/cl-swap: &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; GiB, &lt;span style=&#34;color:#ae81ff&#34;&gt;2147483648&lt;/span&gt; bytes, &lt;span style=&#34;color:#ae81ff&#34;&gt;4194304&lt;/span&gt; sectors
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Units: sectors of &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; * 512 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Sector size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;logical/physical&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;I/O size &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;minimum/optimal&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes / &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt; bytes
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Linux虚拟化技术KVM</title>
-      <link>https://www.typesafe.cn/posts/linux-kvm/</link>
-      <pubDate>Sat, 29 May 2021 17:07:00 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/linux-kvm/</guid>
-      <description>&lt;p&gt;在Windows平台上我们习惯于使用VmWare或者virtual box来实现虚拟化，虽然它们拥有Linux版本，但大多数企业都选择了使用KVM来做Linux平台的虚拟化，因此学习掌握KVM是一项必不可少的技能。&lt;/p&gt;
-&lt;h3 id=&#34;安装kvm&#34;&gt;安装KVM&lt;/h3&gt;
-&lt;p&gt;以centos为例，下面是安装KVM虚拟化的命令。&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;yum install -y qemu-kvm libvirt virt-install bridge-utils
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;这么多软件都是什么作用？&lt;/strong&gt;&lt;/p&gt;
-&lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;软件&lt;/th&gt;
-          &lt;th&gt;作用&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;qemu-kvm&lt;/td&gt;
-          &lt;td&gt;整合了QEMU 和 KVM 的一个软件。&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;libvirt&lt;/td&gt;
-          &lt;td&gt;封装了QEMU的接口，可以更加方便的操作虚拟机，并且提供了很多种编程语言的SDK。&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;virt-install&lt;/td&gt;
-          &lt;td&gt;用来创建虚拟机的命令行工具。&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;bridge-utils&lt;/td&gt;
-          &lt;td&gt;Linux网桥，用来配置虚拟机的桥接网络。&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;&lt;strong&gt;kvm、qemu、qemu-kvm和libvirt到底有什么关系？&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT、AMD-V；内存相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。&lt;/p&gt;
-&lt;p&gt;QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。&lt;/p&gt;
-&lt;p&gt;qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，相较于直接使用硬件，带来的损耗大概在1%-2%之间。&lt;/p&gt;
-&lt;p&gt;libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;启动libvirt&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl start libvirtd
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;systemctl enable libvirtd
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;yum install -y virt-manager
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在支持x11转发的ssh客户端（例如：&lt;a href=&#34;https://mobaxterm.mobatek.net/&#34;&gt;MobaXterm&lt;/a&gt;）上可以直接输入 virt-manager 来启动。&lt;/p&gt;
-&lt;h3 id=&#34;虚拟网络类型&#34;&gt;虚拟网络类型&lt;/h3&gt;
-&lt;p&gt;和vmware类型，kvm也支持多种类型的网络，主要分为三种。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;NAT模式&lt;/strong&gt; 虚拟机需要把流量发送到宿主机，宿主机器转换网络信息后再发出，外部机器无法感知到虚拟机的存在。此种方式宿主机器相当于一个路由器，因此宿主机上会有一个和虚拟机同网段的IP，并且虚拟机的网关地址是宿主机的这个IP。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;主机模式&lt;/strong&gt; 虚拟机只能互相访问，不能访问宿主机。此种方式与NAT模式类似，但它没有与虚拟机同网段的IP，因此虚拟机也不能借助于宿主机来访问外部网络。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;桥接模式&lt;/strong&gt; 虚拟机和宿主机都关联在一个网桥上，因此虚拟机可以与宿主机在同一个网段，并且外部机器可以直接访问到虚拟机，虚拟机也可以借助网桥来访问外部网络。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;还有一种模式在openstack等云平台上使用较为广泛，网桥上绑定的物理网卡没有IP，对应交换机配置端口为trunk模式，虚拟机 端口连接到网桥上，并配置端口不同的VLAN tag以达到隔离和互联的目的。&lt;/p&gt;&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;NAT模式和主机模式都无需单独配置，接下来我们看下如何配置桥接网络。&lt;/p&gt;
-&lt;h3 id=&#34;配置桥接网络&#34;&gt;配置桥接网络&lt;/h3&gt;
-&lt;p&gt;物理网卡绑定到网桥上之后就会导致网络断开，因此我们需要把原IP配置到网桥上。&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 进入网卡配置文件夹
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>虚拟化 on 整点Bug</title><link>https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link><description>Recent content in 虚拟化 on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 31 May 2021 19:20:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>KVM 虚拟机磁盘扩容</title><link>https://www.typesafe.cn/posts/kvm-disk-resize/</link><pubDate>Mon, 31 May 2021 19:20:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/kvm-disk-resize/</guid><description>&lt;h3 id="一镜像扩容">一、镜像扩容&lt;/h3>
+&lt;p>注意：需要先关闭虚拟机才能操作，&lt;code>+&lt;/code>号前面有空格，后面没有空格。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>qemu-img resize test.qcow2 +80G
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>原镜像磁盘大小20GB，扩容完成后可使用以下命令查看&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>qemu-img info test.qcow2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输出&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>image: test.qcow2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>file format: qcow2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>virtual size: 100G &lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#ae81ff">107374182400&lt;/span> bytes&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>disk size: 885M
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cluster_size: &lt;span style="color:#ae81ff">65536&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Format specific information:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> compat: 1.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lazy refcounts: false
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> refcount bits: &lt;span style="color:#ae81ff">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> corrupt: false
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="二windows磁盘扩容">二、Windows磁盘扩容&lt;/h3>
+&lt;p>Windows磁盘扩容比较方便，进入 &lt;strong>计算机管理&amp;gt;磁盘管理&lt;/strong> 找到新增的分区把它添加到需要的分区即可。&lt;/p>
+&lt;h3 id="三linux磁盘扩容">三、Linux磁盘扩容&lt;/h3>
+&lt;p>启动虚拟机后，进入虚拟机控制台，使用&lt;code>fdisk -l&lt;/code>命令查看磁盘信息。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Disk /dev/vda: &lt;span style="color:#ae81ff">100&lt;/span> GiB, &lt;span style="color:#ae81ff">107374182400&lt;/span> bytes, &lt;span style="color:#ae81ff">209715200&lt;/span> sectors
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Units: sectors of &lt;span style="color:#ae81ff">1&lt;/span> * 512 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Sector size &lt;span style="color:#f92672">(&lt;/span>logical/physical&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I/O size &lt;span style="color:#f92672">(&lt;/span>minimum/optimal&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Disklabel type: dos
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Disk identifier: 0xe11f7f01
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Device Boot Start End Sectors Size Id Type
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/dev/vda1 * &lt;span style="color:#ae81ff">2048&lt;/span> &lt;span style="color:#ae81ff">2099199&lt;/span> &lt;span style="color:#ae81ff">2097152&lt;/span> 1G &lt;span style="color:#ae81ff">83&lt;/span> Linux
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/dev/vda2 &lt;span style="color:#ae81ff">2099200&lt;/span> &lt;span style="color:#ae81ff">41943039&lt;/span> &lt;span style="color:#ae81ff">39843840&lt;/span> 19G 8e Linux LVM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Disk /dev/mapper/cl-root: &lt;span style="color:#ae81ff">17&lt;/span> GiB, &lt;span style="color:#ae81ff">18249416704&lt;/span> bytes, &lt;span style="color:#ae81ff">35643392&lt;/span> sectors
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Units: sectors of &lt;span style="color:#ae81ff">1&lt;/span> * 512 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Sector size &lt;span style="color:#f92672">(&lt;/span>logical/physical&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I/O size &lt;span style="color:#f92672">(&lt;/span>minimum/optimal&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Disk /dev/mapper/cl-swap: &lt;span style="color:#ae81ff">2&lt;/span> GiB, &lt;span style="color:#ae81ff">2147483648&lt;/span> bytes, &lt;span style="color:#ae81ff">4194304&lt;/span> sectors
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Units: sectors of &lt;span style="color:#ae81ff">1&lt;/span> * 512 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Sector size &lt;span style="color:#f92672">(&lt;/span>logical/physical&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I/O size &lt;span style="color:#f92672">(&lt;/span>minimum/optimal&lt;span style="color:#f92672">)&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span> bytes / &lt;span style="color:#ae81ff">512&lt;/span> bytes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。&lt;/p></description></item><item><title>Linux虚拟化技术KVM</title><link>https://www.typesafe.cn/posts/linux-kvm/</link><pubDate>Sat, 29 May 2021 17:07:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/linux-kvm/</guid><description>&lt;p>在Windows平台上我们习惯于使用VmWare或者virtual box来实现虚拟化，虽然它们拥有Linux版本，但大多数企业都选择了使用KVM来做Linux平台的虚拟化，因此学习掌握KVM是一项必不可少的技能。&lt;/p>
+&lt;h3 id="安装kvm">安装KVM&lt;/h3>
+&lt;p>以centos为例，下面是安装KVM虚拟化的命令。&lt;/p>
+&lt;pre tabindex="0">&lt;code>yum install -y qemu-kvm libvirt virt-install bridge-utils
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>这么多软件都是什么作用？&lt;/strong>&lt;/p>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>软件&lt;/th>
+ &lt;th>作用&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>qemu-kvm&lt;/td>
+ &lt;td>整合了QEMU 和 KVM 的一个软件。&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>libvirt&lt;/td>
+ &lt;td>封装了QEMU的接口，可以更加方便的操作虚拟机，并且提供了很多种编程语言的SDK。&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>virt-install&lt;/td>
+ &lt;td>用来创建虚拟机的命令行工具。&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>bridge-utils&lt;/td>
+ &lt;td>Linux网桥，用来配置虚拟机的桥接网络。&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;p>&lt;strong>kvm、qemu、qemu-kvm和libvirt到底有什么关系？&lt;/strong>&lt;/p>
+&lt;p>KVM（Kernel Virtual Machine）是Linux的一个内核驱动模块，它需要CPU的支持，采用硬件辅助虚拟化技术Intel-VT、AMD-V；内存相关如Intel的EPT和AMD的RVI技术，使得它能够让Linux主机成为一个Hypervisor（虚拟机监控器）。&lt;/p>
+&lt;p>QEMU是一个纯软件实现的虚拟机，它可以模拟CPU、内存、磁盘等其他硬件，让虚拟机认为自己底层就是硬件，其实这些都是QEMU模拟的，虚拟机的所有操作都要经过QEMU转译一层，也就导致了QEMU本身的性能较差。&lt;/p>
+&lt;p>qemu-kvm是QEMU整合了KVM，把CPU虚拟化和内存虚拟化交给了KVM来做，自己来模拟IO设备，例如网卡和磁盘。这一套组合拳打下来，性能损失大大降低，相较于直接使用硬件，带来的损耗大概在1%-2%之间。&lt;/p>
+&lt;p>libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API。Libvirtd是一个daemon进程，可以被本地的virsh调用，也可以被远程的virsh调用，Libvirtd调用qemu-kvm操作虚拟机。&lt;/p>
+&lt;p>&lt;strong>启动libvirt&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl start libvirtd
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl enable libvirtd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果你不想使用命令行工具来管理虚拟机，可以安装 virt-manager 。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install -y virt-manager
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在支持x11转发的ssh客户端（例如：&lt;a href="https://mobaxterm.mobatek.net/">MobaXterm&lt;/a>）上可以直接输入 virt-manager 来启动。&lt;/p>
+&lt;h3 id="虚拟网络类型">虚拟网络类型&lt;/h3>
+&lt;p>和vmware类型，kvm也支持多种类型的网络，主要分为三种。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>NAT模式&lt;/strong> 虚拟机需要把流量发送到宿主机，宿主机器转换网络信息后再发出，外部机器无法感知到虚拟机的存在。此种方式宿主机器相当于一个路由器，因此宿主机上会有一个和虚拟机同网段的IP，并且虚拟机的网关地址是宿主机的这个IP。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>主机模式&lt;/strong> 虚拟机只能互相访问，不能访问宿主机。此种方式与NAT模式类似，但它没有与虚拟机同网段的IP，因此虚拟机也不能借助于宿主机来访问外部网络。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>桥接模式&lt;/strong> 虚拟机和宿主机都关联在一个网桥上，因此虚拟机可以与宿主机在同一个网段，并且外部机器可以直接访问到虚拟机，虚拟机也可以借助网桥来访问外部网络。&lt;/p>
+&lt;blockquote>
+&lt;p>还有一种模式在openstack等云平台上使用较为广泛，网桥上绑定的物理网卡没有IP，对应交换机配置端口为trunk模式，虚拟机 端口连接到网桥上，并配置端口不同的VLAN tag以达到隔离和互联的目的。&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;/ol>
+&lt;p>NAT模式和主机模式都无需单独配置，接下来我们看下如何配置桥接网络。&lt;/p>
+&lt;h3 id="配置桥接网络">配置桥接网络&lt;/h3>
+&lt;p>物理网卡绑定到网桥上之后就会导致网络断开，因此我们需要把原IP配置到网桥上。&lt;/p>
+&lt;pre tabindex="0">&lt;code># 进入网卡配置文件夹
 cd /etc/sysconfig/network-scripts/
 # 拷贝原网卡配置文件作为桥接网卡
 cp ifcfg-enp134s0f0 ifcfg-br0
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;修改 &lt;code&gt;ifcfg-br0&lt;/code&gt; 中的 &lt;code&gt;TYPE=Ethernet&lt;/code&gt;  为 &lt;code&gt; TYPE=Bridge&lt;/code&gt;，最终效果如下：&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用libvirt-java采集KVM虚拟机状态信息</title>
-      <link>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link>
-      <pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate>
-      <guid>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid>
-      <description>&lt;p&gt;虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 &lt;code&gt;libvirt-java&lt;/code&gt; 来采集KVM虚拟机的资源使用信息。&lt;/p&gt;
-&lt;h3 id=&#34;cpu使用率&#34;&gt;CPU使用率&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;libvirt&lt;/code&gt;并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-latex&#34; data-lang=&#34;latex&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Java代码如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// t秒前的CPU时间&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; c1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; domain.&lt;span style=&#34;color:#a6e22e&#34;&gt;getInfo&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;cpuTime&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Thread.&lt;span style=&#34;color:#a6e22e&#34;&gt;sleep&lt;/span&gt;(1000);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 当前CPU时间&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; c2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; domain.&lt;span style=&#34;color:#a6e22e&#34;&gt;getInfo&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;cpuTime&lt;/span&gt;;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 虚拟CPU数量&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; vCpus &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; domain.&lt;span style=&#34;color:#a6e22e&#34;&gt;getMaxVcpus&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// t 为1秒&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Double cpuUsage &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 100 &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; (c2 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; c1) &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (1 &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; vCpus &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; Math.&lt;span style=&#34;color:#a6e22e&#34;&gt;pow&lt;/span&gt;(10, 9));
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;log.&lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;&lt;/span&gt;, uuid, cpuUsage);
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;内存使用率&#34;&gt;内存使用率&lt;/h3&gt;
-&lt;p&gt;不要使用&lt;code&gt;domain.getInfo()&lt;/code&gt;返回的 &lt;code&gt;memory&lt;/code&gt;字段，虽然它注释写的是&lt;code&gt;the memory in KBytes used by the domain&lt;/code&gt;，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和&lt;code&gt;maxMem&lt;/code&gt;字段的值是相同的。&lt;/p&gt;
-&lt;p&gt;正确做法是使用&lt;code&gt;domain.memoryStats(10)&lt;/code&gt;来获取，那为什么参数要输入一个&lt;code&gt;10&lt;/code&gt;呢？这是因为&lt;code&gt;10&lt;/code&gt;代表的是要返回的信息数量，经过我手动执行&lt;code&gt;virsh dommemstat uuid&lt;/code&gt; 测试发现有10个参数返回，所以需要填入&lt;code&gt;10&lt;/code&gt;。另外命令返回的&lt;code&gt;unused&lt;/code&gt; 字段值与数组中&lt;code&gt;tag=8&lt;/code&gt;的数据一致，最终我们获取到了未使用的内存大小，计算内存使用率更是轻轻松松。&lt;/p&gt;
-&lt;p&gt;Java代码如下&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;MemoryStatistic&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; memoryStatistics &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; domain.&lt;span style=&#34;color:#a6e22e&#34;&gt;memoryStats&lt;/span&gt;(10);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Optional&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;MemoryStatistic&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; first &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Arrays.&lt;span style=&#34;color:#a6e22e&#34;&gt;stream&lt;/span&gt;(memoryStatistics).&lt;span style=&#34;color:#a6e22e&#34;&gt;filter&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; x.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTag&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; 8).&lt;span style=&#34;color:#a6e22e&#34;&gt;findFirst&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (first.&lt;span style=&#34;color:#a6e22e&#34;&gt;isPresent&lt;/span&gt;()) {
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  MemoryStatistic memoryStatistic &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; first.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; unusedMemory &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; memoryStatistic.&lt;span style=&#34;color:#a6e22e&#34;&gt;getValue&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; maxMemory &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; domain.&lt;span style=&#34;color:#a6e22e&#34;&gt;getMaxMemory&lt;/span&gt;();
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;double&lt;/span&gt; memoryUsage &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (maxMemory &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; unusedMemory) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; 100.&lt;span style=&#34;color:#a6e22e&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; maxMemory;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  log.&lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;虚拟机[{}]内存使用率为: {}&amp;#34;&lt;/span&gt;, uuid, memoryUsage);
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;网卡数据包信息&#34;&gt;网卡数据包信息&lt;/h3&gt;
-&lt;p&gt;同样&lt;code&gt;libvirt&lt;/code&gt;并没有提供获取虚拟机网卡的接口，因此需要获取虚拟机的xml文件来查询。&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;p>修改 &lt;code>ifcfg-br0&lt;/code> 中的 &lt;code>TYPE=Ethernet&lt;/code> 为 &lt;code> TYPE=Bridge&lt;/code>，最终效果如下：&lt;/p></description></item><item><title>使用libvirt-java采集KVM虚拟机状态信息</title><link>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link><pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate><guid>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid><description>&lt;p>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 &lt;code>libvirt-java&lt;/code> 来采集KVM虚拟机的资源使用信息。&lt;/p>
+&lt;h3 id="cpu使用率">CPU使用率&lt;/h3>
+&lt;p>&lt;code>libvirt&lt;/code>并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Java代码如下&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// t秒前的CPU时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">long&lt;/span> c1 &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getInfo&lt;/span>().&lt;span style="color:#a6e22e">cpuTime&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Thread.&lt;span style="color:#a6e22e">sleep&lt;/span>(1000);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 当前CPU时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">long&lt;/span> c2 &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getInfo&lt;/span>().&lt;span style="color:#a6e22e">cpuTime&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 虚拟CPU数量&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> vCpus &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getMaxVcpus&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// t 为1秒&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Double cpuUsage &lt;span style="color:#f92672">=&lt;/span> 100 &lt;span style="color:#f92672">*&lt;/span> (c2 &lt;span style="color:#f92672">-&lt;/span> c1) &lt;span style="color:#f92672">/&lt;/span> (1 &lt;span style="color:#f92672">*&lt;/span> vCpus &lt;span style="color:#f92672">*&lt;/span> Math.&lt;span style="color:#a6e22e">pow&lt;/span>(10, 9));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>log.&lt;span style="color:#a6e22e">debug&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;&lt;/span>, uuid, cpuUsage);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="内存使用率">内存使用率&lt;/h3>
+&lt;p>不要使用&lt;code>domain.getInfo()&lt;/code>返回的 &lt;code>memory&lt;/code>字段，虽然它注释写的是&lt;code>the memory in KBytes used by the domain&lt;/code>，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和&lt;code>maxMem&lt;/code>字段的值是相同的。&lt;/p>
+&lt;p>正确做法是使用&lt;code>domain.memoryStats(10)&lt;/code>来获取，那为什么参数要输入一个&lt;code>10&lt;/code>呢？这是因为&lt;code>10&lt;/code>代表的是要返回的信息数量，经过我手动执行&lt;code>virsh dommemstat uuid&lt;/code> 测试发现有10个参数返回，所以需要填入&lt;code>10&lt;/code>。另外命令返回的&lt;code>unused&lt;/code> 字段值与数组中&lt;code>tag=8&lt;/code>的数据一致，最终我们获取到了未使用的内存大小，计算内存使用率更是轻轻松松。&lt;/p>
+&lt;p>Java代码如下&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>MemoryStatistic&lt;span style="color:#f92672">[]&lt;/span> memoryStatistics &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">memoryStats&lt;/span>(10);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Optional&lt;span style="color:#f92672">&amp;lt;&lt;/span>MemoryStatistic&lt;span style="color:#f92672">&amp;gt;&lt;/span> first &lt;span style="color:#f92672">=&lt;/span> Arrays.&lt;span style="color:#a6e22e">stream&lt;/span>(memoryStatistics).&lt;span style="color:#a6e22e">filter&lt;/span>(x &lt;span style="color:#f92672">-&amp;gt;&lt;/span> x.&lt;span style="color:#a6e22e">getTag&lt;/span>() &lt;span style="color:#f92672">==&lt;/span> 8).&lt;span style="color:#a6e22e">findFirst&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (first.&lt;span style="color:#a6e22e">isPresent&lt;/span>()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MemoryStatistic memoryStatistic &lt;span style="color:#f92672">=&lt;/span> first.&lt;span style="color:#a6e22e">get&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> unusedMemory &lt;span style="color:#f92672">=&lt;/span> memoryStatistic.&lt;span style="color:#a6e22e">getValue&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> maxMemory &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getMaxMemory&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">double&lt;/span> memoryUsage &lt;span style="color:#f92672">=&lt;/span> (maxMemory &lt;span style="color:#f92672">-&lt;/span> unusedMemory) &lt;span style="color:#f92672">*&lt;/span> 100.&lt;span style="color:#a6e22e">0&lt;/span> &lt;span style="color:#f92672">/&lt;/span> maxMemory;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> log.&lt;span style="color:#a6e22e">debug&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;虚拟机[{}]内存使用率为: {}&amp;#34;&lt;/span>, uuid, memoryUsage);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="网卡数据包信息">网卡数据包信息&lt;/h3>
+&lt;p>同样&lt;code>libvirt&lt;/code>并没有提供获取虚拟机网卡的接口，因此需要获取虚拟机的xml文件来查询。&lt;/p></description></item></channel></rss>

@@ -1,28 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Limit on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/limit/</link>
-    <description>Recent content in Limit on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/limit/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Linux 修改最大文件描述符</title>
-      <link>https://www.typesafe.cn/posts/linux-limit/</link>
-      <pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/linux-limit/</guid>
-      <description>&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf
-echo &amp;#34;* soft nofile 655350&amp;#34;  &amp;gt;&amp;gt; /etc/security/limits.conf
-echo &amp;#34;* hard nofile 655350&amp;#34;  &amp;gt;&amp;gt; /etc/security/limits.conf
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Limit on 整点Bug</title><link>https://www.typesafe.cn/tags/limit/</link><description>Recent content in Limit on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 11 Jan 2021 15:40:41 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/limit/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 修改最大文件描述符</title><link>https://www.typesafe.cn/posts/linux-limit/</link><pubDate>Mon, 11 Jan 2021 15:40:41 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-limit/</guid><description>&lt;pre tabindex="0">&lt;code>echo &amp;#34;fs.file-max=655350&amp;#34; &amp;gt;&amp;gt;/etc/sysctl.conf
+echo &amp;#34;* soft nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf
+echo &amp;#34;* hard nofile 655350&amp;#34; &amp;gt;&amp;gt; /etc/security/limits.conf
 ulimit -n 655350
-&lt;/code&gt;&lt;/pre&gt;</description>
-    </item>
-  </channel>
-</rss>
+&lt;/code>&lt;/pre></description></item></channel></rss>

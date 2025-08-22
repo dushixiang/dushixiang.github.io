@@ -1,38 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Loopback on 整点Bug</title>
-    <link>https://www.typesafe.cn/tags/loopback/</link>
-    <description>Recent content in Loopback on 整点Bug</description>
-    <image>
-      <title>整点Bug</title>
-      <url>https://www.typesafe.cn/papermod-cover.png</url>
-      <link>https://www.typesafe.cn/papermod-cover.png</link>
-    </image>
-    <generator>Hugo -- 0.148.0</generator>
-    <language>zh</language>
-    <lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate>
-    <atom:link href="https://www.typesafe.cn/tags/loopback/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Linux 环回网络接口</title>
-      <link>https://www.typesafe.cn/posts/linux-loopback/</link>
-      <pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate>
-      <guid>https://www.typesafe.cn/posts/linux-loopback/</guid>
-      <description>&lt;p&gt;在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动&lt;code&gt;nginx&lt;/code&gt;之后，在浏览器输入&lt;code&gt;lcoalhost&lt;/code&gt;或者&lt;code&gt;127.0.0.1&lt;/code&gt;就可以访问到本机上面的&lt;code&gt;http&lt;/code&gt;服务。&lt;/p&gt;
-&lt;h2 id=&#34;linux是如何访问本机ip的&#34;&gt;Linux是如何访问本机IP的？&lt;/h2&gt;
-&lt;p&gt;大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过&lt;code&gt;TCP/IP&lt;/code&gt;与同一台主机上的其他服务进行通信，以&lt;code&gt;127&lt;/code&gt;开头的&lt;code&gt;IPv4&lt;/code&gt;地址就是为它保留的，主流&lt;code&gt;Linux&lt;/code&gt;操作系统为环回网卡分配的地址都是&lt;code&gt;127.0.0.1&lt;/code&gt;，主机名是&lt;code&gt;localhost&lt;/code&gt;。&lt;/p&gt;
-&lt;p&gt;环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。&lt;/p&gt;
-&lt;p&gt;那环回网络接口是如何判断目的IP是否为本机地址的呢？&lt;/p&gt;
-&lt;p&gt;答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ip route show table local
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出内容如下：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;local 127.0.0.1 dev lo proto kernel scope host src 127.0.0.1
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中&lt;code&gt;local&lt;/code&gt;开头的便是本地IP，&lt;code&gt;dev&lt;/code&gt;后面是网卡名称。&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Loopback on 整点Bug</title><link>https://www.typesafe.cn/tags/loopback/</link><description>Recent content in Loopback on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 28 Jan 2021 22:59:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/loopback/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 环回网络接口</title><link>https://www.typesafe.cn/posts/linux-loopback/</link><pubDate>Thu, 28 Jan 2021 22:59:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-loopback/</guid><description>&lt;p>在开发或者调试时，我们经常需要和本地的服务器进行通信，例如启动&lt;code>nginx&lt;/code>之后，在浏览器输入&lt;code>lcoalhost&lt;/code>或者&lt;code>127.0.0.1&lt;/code>就可以访问到本机上面的&lt;code>http&lt;/code>服务。&lt;/p>
+&lt;h2 id="linux是如何访问本机ip的">Linux是如何访问本机IP的？&lt;/h2>
+&lt;p>大多数操作系统都在网络层实现了环回能力，通常是使用一个虚拟的环回网络接口来实现。这个虚拟的环回网络接口看着像是一个真实的网卡，实际上是操作系统用软件模拟的，它可以通过&lt;code>TCP/IP&lt;/code>与同一台主机上的其他服务进行通信，以&lt;code>127&lt;/code>开头的&lt;code>IPv4&lt;/code>地址就是为它保留的，主流&lt;code>Linux&lt;/code>操作系统为环回网卡分配的地址都是&lt;code>127.0.0.1&lt;/code>，主机名是&lt;code>localhost&lt;/code>。&lt;/p>
+&lt;p>环回网络接口之所以被称之为环回网络接口，是因为从本机发送到本机任意一个IP的数据报文都会在网络层交给环回网络接口，不再下发到数据链路层进行处理，环回网络接口直接发送回网络层，最终交由应用层软件程序进行处理。这种方式对于性能测试非常有用，因为省去了硬件的开销，可以直接测试协议栈软件所需要的时间。&lt;/p>
+&lt;p>那环回网络接口是如何判断目的IP是否为本机地址的呢？&lt;/p>
+&lt;p>答案就是网络层在进行路由转发的时候会先查本地的路由表，发现是本机IP后交给环回网络接口。查看本地路由表的命令如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ip route show table local
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输出内容如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>broadcast 10.141.128.0 dev eth0 proto kernel scope link src 10.141.155.131 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>local 10.141.155.131 dev eth0 proto kernel scope host src 10.141.155.131 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>broadcast 10.141.191.255 dev eth0 proto kernel scope link src 10.141.155.131 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>broadcast 127.0.0.0 dev lo proto kernel scope link src 127.0.0.1 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>local 127.0.0.0/8 dev lo proto kernel scope host src 127.0.0.1 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>local 127.0.0.1 dev lo proto kernel scope host src 127.0.0.1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中&lt;code>local&lt;/code>开头的便是本地IP，&lt;code>dev&lt;/code>后面是网卡名称。&lt;/p></description></item></channel></rss>
