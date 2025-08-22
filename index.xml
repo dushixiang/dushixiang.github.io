@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>整点Bug</title><link>https://www.typesafe.cn/</link><description>Recent content on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 22 Aug 2025 13:15:30 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>《关于优秀系统设计我所知道的一切》的总结</title><link>https://www.typesafe.cn/posts/good-system-design-summary/</link><pubDate>Fri, 22 Aug 2025 13:15:30 +0800</pubDate><guid>https://www.typesafe.cn/posts/good-system-design-summary/</guid><description>&lt;p>今天看到 GitHub 高级工程师写的一篇文章《Everything I know about good system design》，写的很好。&lt;/p>
-&lt;p>总结一下&lt;/p>
+&lt;p>链接地址：&lt;/p>
+&lt;p>&lt;a href="https://www.seangoedecke.com/good-system-design/">https://www.seangoedecke.com/good-system-design/&lt;/a>&lt;/p>
+&lt;p>总结一下。&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;strong>真正优秀的系统设计是“不起眼的”（underwhelming）和简单的&lt;/strong>。它追求的是长期稳定运行，而不是使用各种时髦、复杂的技术。一个看起来令人印象深刻的复杂系统，往往掩盖了糟糕的底层决策。&lt;/p>&lt;/blockquote>
 &lt;h3 id="核心设计哲学">核心设计哲学&lt;/h3>
@@ -65,15 +67,7 @@
 &lt;/ul>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;strong>容错设计 (Failing Gracefully)&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>重试 (Retries)&lt;/strong>：不能盲目重试，可能会压垮下游服务。写操作需要使用“幂等键 (idempotency key)”来防止重复执行。&lt;/li>
-&lt;li>&lt;strong>故障开放/关闭 (Fail Open/Closed)&lt;/strong>：必须明确组件故障时的行为。例如，&lt;strong>限流&lt;/strong>系统应“故障开放”（允许请求通过），而&lt;strong>认证&lt;/strong>系统则必须“故障关闭”（拒绝访问）。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="结论">结论&lt;/h3>
-&lt;p>好的系统设计不是关于使用各种“聪明技巧”，而是关于&lt;strong>知道如何将那些无聊、经过充分测试的组件用在正确的地方&lt;/strong>。就像好的管道工一样，如果你在工作中寻求刺激，最后很可能会搞得一团糟。&lt;/p></description></item><item><title>Base58 编码详解与 Go 实现</title><link>https://www.typesafe.cn/posts/base58-implementation-in-go/</link><pubDate>Sun, 10 Aug 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/base58-implementation-in-go/</guid><description>&lt;p>在处理二进制数据时，我们经常需要将其转换成可读的字符串，比如生成地址、密钥、邀请码等。
+&lt;p>&lt;strong>容错设计 (Failing Gracefully)&lt;/strong>&lt;/p></description></item><item><title>Base58 编码详解与 Go 实现</title><link>https://www.typesafe.cn/posts/base58-implementation-in-go/</link><pubDate>Sun, 10 Aug 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/base58-implementation-in-go/</guid><description>&lt;p>在处理二进制数据时，我们经常需要将其转换成可读的字符串，比如生成地址、密钥、邀请码等。
 常见方案有 &lt;strong>Base64&lt;/strong>、&lt;strong>Hex&lt;/strong> 等，但在某些场景下，它们并不是最佳选择。
 这时，&lt;strong>Base58&lt;/strong> 就登场了。&lt;/p>
 &lt;h2 id="什么是-base58">什么是 Base58？&lt;/h2>
