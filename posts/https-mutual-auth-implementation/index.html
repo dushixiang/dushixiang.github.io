@@ -1,0 +1,215 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="双向认证的含义就是服务端和客户端都需要验证对方的身份，相比普通的单向认证多了一些步骤。
+基础概念
+下面先讲一些 https 相关的概念。
+对称加密
+对称加密是一种加密算法，使用相同的密钥来加密和解密数据。
+这意味着发送和接收方都必须共享相同的密钥。
+对称加密是加密领域中最快的一种加密方式，因为它使用的是相对较小的密钥和简单的运算。
+非对称加密
+非对称加密是一种密码学方法，与对称加密不同，它使用一对密钥而不是一个密钥。
+这对密钥包括一个公钥和一个私钥。公钥用于加密数据，而私钥用于解密数据。
+
+公钥： 公钥是一个用于加密的密钥，可以公开被任何人访问，公钥加密的数据只有私钥可以解开。
+私钥： 私钥是与公钥配对的另一个密钥，需要妥善保管避免被泄露。
+加密和解密： 如果使用公钥加密了一段数据，只有拥有相应私钥的人才能解密它。反之亦然，如果使用私钥加密了数据，只有拥有相应公钥的人才能解密。
+数字签名：简单点说数字签名就是私钥加密摘要，而非加密原文，分为下面几个步骤：
+
+消息摘要：使用哈希算法把原文生成一份摘要。
+私钥加密：使用私钥对摘要进行加密，得到数字签名。
+发送消息和签名：把原数据和加密后的数据摘要打包一起发给对方。
+验证：接收方使用发送方的公钥来解密数字签名，得到摘要。然后接收方对收到的消息使用同样的哈希算法得到一个新的摘要。如果这两个摘要匹配，说明消息未被篡改，且确实是由私钥的所有者签名的。
+
+
+
+RSA、DSA、ECDSA 和 Elliptic Curve Diffie-Hellman (ECDH) 是一些常见的非对称加密算法。
+这些算法每个有其独特的优点和应用场景，比如 RSA 用于数字签名，ECDH 适用于密钥协商。
+与对称加密相比，非对称加密算法的性能都比较低。
+证书
+
+CA：也就是常说的根证书，操作系统默认集成了很多权威机构的根证书，因此不必再自己安装和信任一遍。
+https 证书：通常包括一个公钥证书和一个私钥，它们由权威机构（CA）签发，这些权威机构通常是要收费的，也有免费的机构，类似Let&rsquo;s Encrypt。
+另一种方式是自己签发，不过需要让客户端信任自己签发的CA证书，目的是为了让自己签发的域名证书通过校验。
+证书签发：就是用权威机构帮你生成一个私钥，并使用它的根证书和这个私钥对你的域名进行证书签发，最后将签发后的公钥证书和这个私钥给你。
+
+证书是建立信任的关键，包括 CA 根证书、https 证书和自签名证书。CA 提供权威认证，而自签名证书适用于开发环境。
+https 通信步骤
+https 通信大致上是分为3个阶段。
+
+握手阶段（Handshake）：
+
+客户端向服务器发送一个加密通信的请求，请求中包含支持的加密算法和其他相关信息。
+服务器将自己的证书、支持的加密算法等信息发送给客户端。
+客户端验证服务器的证书是否有效。
+
+
+密钥协商阶段：
+
+利用非对称加密算法使得双方安全的获取到一个会话密钥。
+
+
+加密通信阶段：
+
+客户端和服务器使用协商好的会话密钥进行对称加密通信，保护数据的机密性。
+
+
+
+配置https证书
+常见的web服务器都有配置https证书的功能，例如 nginx、caddy等。
+基本上只需要把证书和私钥配置到某一个目录，更改web服务器的配置即可生效。
+https单向认证
+顾名思义，就是只有一个方向进行了认证，这里指的是客户端认证，通常浏览器都会对网站上的https证书进行验证。
+正常情况下访问https站点，浏览器左上角的小锁就会是灰色的。（如果你的浏览器版本过低，有可能是绿色的。）
+当 https 站点的证书不正确时，就会出现一个出现【不安全】这个三个红色的大字，有下面几种原因会导致不安全。
+
+当前域名和证书签名的域名不匹配。（这种情况就需要重新进行域名签发了。）
+当前IP和证书签名的IP不匹配。（这种情况较少，因为之前市面上的机构都不签发IP证书，现在好像也有了不少。）
+证书过期了。（需要定期检查域名是否过期并及时更新）
+
+https双向认证"><title>HTTPS 双向认证原理和实现方式</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2023-11-23 00:00:00 +0800 +0800">2023-11-23</time></p></div><article><h1>HTTPS 双向认证原理和实现方式</h1><p>双向认证的含义就是服务端和客户端都需要验证对方的身份，相比普通的单向认证多了一些步骤。</p><h2 id=基础概念>基础概念</h2><p>下面先讲一些 https 相关的概念。</p><p><strong>对称加密</strong></p><p>对称加密是一种加密算法，使用相同的密钥来加密和解密数据。
+这意味着发送和接收方都必须共享相同的密钥。
+对称加密是加密领域中最快的一种加密方式，因为它使用的是相对较小的密钥和简单的运算。</p><p><strong>非对称加密</strong></p><p>非对称加密是一种密码学方法，与对称加密不同，它使用一对密钥而不是一个密钥。
+这对密钥包括一个公钥和一个私钥。公钥用于加密数据，而私钥用于解密数据。</p><ul><li>公钥： 公钥是一个用于加密的密钥，可以公开被任何人访问，公钥加密的数据只有私钥可以解开。</li><li>私钥： 私钥是与公钥配对的另一个密钥，需要妥善保管避免被泄露。</li><li>加密和解密： 如果使用公钥加密了一段数据，只有拥有相应私钥的人才能解密它。反之亦然，如果使用私钥加密了数据，只有拥有相应公钥的人才能解密。</li><li>数字签名：简单点说数字签名就是私钥加密摘要，而非加密原文，分为下面几个步骤：<ol><li>消息摘要：使用哈希算法把原文生成一份摘要。</li><li>私钥加密：使用私钥对摘要进行加密，得到数字签名。</li><li>发送消息和签名：把原数据和加密后的数据摘要打包一起发给对方。</li><li>验证：接收方使用发送方的公钥来解密数字签名，得到摘要。然后接收方对收到的消息使用同样的哈希算法得到一个新的摘要。如果这两个摘要匹配，说明消息未被篡改，且确实是由私钥的所有者签名的。</li></ol></li></ul><p>RSA、DSA、ECDSA 和 Elliptic Curve Diffie-Hellman (ECDH) 是一些常见的非对称加密算法。
+这些算法每个有其独特的优点和应用场景，比如 RSA 用于数字签名，ECDH 适用于密钥协商。
+与对称加密相比，非对称加密算法的性能都比较低。</p><p><strong>证书</strong></p><ul><li>CA：也就是常说的根证书，操作系统默认集成了很多权威机构的根证书，因此不必再自己安装和信任一遍。</li><li>https 证书：通常包括一个公钥证书和一个私钥，它们由权威机构（CA）签发，这些权威机构通常是要收费的，也有免费的机构，类似<a href=https://letsencrypt.org/>Let&rsquo;s Encrypt</a>。
+另一种方式是自己签发，不过需要让客户端信任自己签发的CA证书，目的是为了让自己签发的域名证书通过校验。</li><li>证书签发：就是用权威机构帮你生成一个私钥，并使用它的根证书和这个私钥对你的域名进行证书签发，最后将签发后的公钥证书和这个私钥给你。</li></ul><p>证书是建立信任的关键，包括 CA 根证书、https 证书和自签名证书。CA 提供权威认证，而自签名证书适用于开发环境。</p><p><strong>https 通信步骤</strong></p><p>https 通信大致上是分为3个阶段。</p><ol><li>握手阶段（Handshake）：<ul><li>客户端向服务器发送一个加密通信的请求，请求中包含支持的加密算法和其他相关信息。</li><li>服务器将自己的证书、支持的加密算法等信息发送给客户端。</li><li>客户端验证服务器的证书是否有效。</li></ul></li><li>密钥协商阶段：<ul><li>利用非对称加密算法使得双方安全的获取到一个会话密钥。</li></ul></li><li>加密通信阶段：<ul><li>客户端和服务器使用协商好的会话密钥进行对称加密通信，保护数据的机密性。</li></ul></li></ol><p><strong>配置https证书</strong></p><p>常见的web服务器都有配置https证书的功能，例如 nginx、caddy等。</p><p>基本上只需要把证书和私钥配置到某一个目录，更改web服务器的配置即可生效。</p><p><strong>https单向认证</strong></p><p>顾名思义，就是只有一个方向进行了认证，这里指的是客户端认证，通常浏览器都会对网站上的https证书进行验证。</p><p>正常情况下访问https站点，浏览器左上角的小锁就会是灰色的。（如果你的浏览器版本过低，有可能是绿色的。）</p><p>当 https 站点的证书不正确时，就会出现一个出现【不安全】这个三个红色的大字，有下面几种原因会导致不安全。</p><ol><li>当前域名和证书签名的域名不匹配。（这种情况就需要重新进行域名签发了。）</li><li>当前IP和证书签名的IP不匹配。（这种情况较少，因为之前市面上的机构都不签发IP证书，现在好像也有了不少。）</li><li>证书过期了。（需要定期检查域名是否过期并及时更新）</li></ol><p><strong>https双向认证</strong></p><p>与https单向认证不同的是，服务端也会要求验证客户端的证书，除了域名证书和私钥外（开启https用），还需要一张客户端CA证书用于验证客户端提供的普通证书。</p><p>客户端在访问服务端时，需要将自己的证书发送给对方，经过服务端的验证后才能够正常通信。</p><p>客户端证书认证提供额外的安全层，确保只有授权的客户端能够连接。生成和管理客户端证书时，需要采取措施保护私钥，确保其不被泄露。</p><p>效果如下图所示：</p><p><img src=/images/https-mutual-auth-demo.png alt=https-two-way-auth-demo></p><h2 id=golang-实现-https-双向认证>golang 实现 https 双向认证</h2><p><strong>生成服务端CA证书，域名证书和私钥</strong></p><blockquote><p>具体的生成证书部分代码可以查看文章末尾的 GitHub 仓库。</p></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#a6e22e>serverCACsr</span>, <span style=color:#a6e22e>serverCAKey</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>utils</span>.<span style=color:#a6e22e>LoadOrCreateCA</span>(<span style=color:#e6db74>&#34;server-ca.crt&#34;</span>, <span style=color:#e6db74>&#34;server-ca.key&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>serverCert</span>, <span style=color:#a6e22e>serverKey</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>utils</span>.<span style=color:#a6e22e>SignCertWithCA</span>(<span style=color:#a6e22e>serverCACsr</span>, <span style=color:#a6e22e>serverCAKey</span>, <span style=color:#66d9ef>false</span>, <span style=color:#e6db74>&#34;localhost&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>WriteFile</span>(<span style=color:#e6db74>&#34;server.crt&#34;</span>, <span style=color:#a6e22e>serverCert</span>, <span style=color:#ae81ff>0755</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>WriteFile</span>(<span style=color:#e6db74>&#34;server.key&#34;</span>, <span style=color:#a6e22e>serverKey</span>, <span style=color:#ae81ff>0755</span>)
+</span></span></code></pre></div><p><strong>生成服务端CA证书，普通证书和私钥</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#a6e22e>clientCACsr</span>, <span style=color:#a6e22e>clientCAKey</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>utils</span>.<span style=color:#a6e22e>LoadOrCreateCA</span>(<span style=color:#e6db74>&#34;client-ca.crt&#34;</span>, <span style=color:#e6db74>&#34;client-ca.key&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clientCert</span>, <span style=color:#a6e22e>clientKey</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>utils</span>.<span style=color:#a6e22e>SignCertWithCA</span>(<span style=color:#a6e22e>clientCACsr</span>, <span style=color:#a6e22e>clientCAKey</span>, <span style=color:#66d9ef>true</span>, <span style=color:#e6db74>&#34;localhost&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>WriteFile</span>(<span style=color:#e6db74>&#34;client.crt&#34;</span>, <span style=color:#a6e22e>clientCert</span>, <span style=color:#ae81ff>0755</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>WriteFile</span>(<span style=color:#e6db74>&#34;client.key&#34;</span>, <span style=color:#a6e22e>clientKey</span>, <span style=color:#ae81ff>0755</span>)
+</span></span></code></pre></div><p><strong>导入证书</strong></p><p>如果你想要用浏览器体验双向认证，还需要把客户端证书和私钥转换成p12证书并导入到本地计算机中。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span>  <span style=color:#75715e>// 将证书和私钥转换为 PKCS#12 格式，用于导入到本地计算机中测试浏览器</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>certificate</span>, <span style=color:#a6e22e>fkey</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>utils</span>.<span style=color:#a6e22e>ParseCertAndPrivateKey</span>(<span style=color:#a6e22e>clientCert</span>, <span style=color:#a6e22e>clientKey</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Error:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>p12Data</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gopkcs12</span>.<span style=color:#a6e22e>Legacy</span>.<span style=color:#a6e22e>WithRand</span>(<span style=color:#a6e22e>rand</span>.<span style=color:#a6e22e>Reader</span>).<span style=color:#a6e22e>Encode</span>(<span style=color:#a6e22e>fkey</span>, <span style=color:#a6e22e>certificate</span>, <span style=color:#66d9ef>nil</span>, <span style=color:#e6db74>&#34;password&#34;</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Encode pem to pkcs12 Error:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 将 PKCS#12 数据保存到文件</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>WriteFile</span>(<span style=color:#e6db74>&#34;client.p12&#34;</span>, <span style=color:#a6e22e>p12Data</span>, <span style=color:#ae81ff>0755</span>)
+</span></span></code></pre></div><p>这里就不再赘述如何导入了，和导入抓包软件CA证书的流程是相同的。</p><p><strong>配置服务端</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>server</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;crypto/tls&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;crypto/x509&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handler</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>WriteString</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;OK&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>Serv</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>handler</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 服务器证书和私钥</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cert</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>LoadX509KeyPair</span>(<span style=color:#e6db74>&#34;server.crt&#34;</span>, <span style=color:#e6db74>&#34;server.key&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 客户端 CA 证书池</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCert</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>ReadFile</span>(<span style=color:#e6db74>&#34;client-ca.crt&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCertPool</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>x509</span>.<span style=color:#a6e22e>NewCertPool</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCertPool</span>.<span style=color:#a6e22e>AppendCertsFromPEM</span>(<span style=color:#a6e22e>caCert</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// HTTPS 配置</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tlsConfig</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>Config</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Certificates</span>: []<span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>Certificate</span>{<span style=color:#a6e22e>cert</span>},
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>ClientCAs</span>:    <span style=color:#a6e22e>caCertPool</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>ClientAuth</span>:   <span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>RequireAndVerifyClientCert</span>,
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>server</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Server</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Addr</span>:      <span style=color:#e6db74>&#34;:8443&#34;</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>TLSConfig</span>: <span style=color:#a6e22e>tlsConfig</span>,
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Server is running on https://localhost:8443&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>server</span>.<span style=color:#a6e22e>ListenAndServeTLS</span>(<span style=color:#e6db74>&#34;&#34;</span>, <span style=color:#e6db74>&#34;&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>配置客户端</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>client</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;crypto/tls&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;crypto/x509&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>Request</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 服务器 CA 证书池</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCert</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>ReadFile</span>(<span style=color:#e6db74>&#34;server-ca.crt&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCertPool</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>x509</span>.<span style=color:#a6e22e>NewCertPool</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>caCertPool</span>.<span style=color:#a6e22e>AppendCertsFromPEM</span>(<span style=color:#a6e22e>caCert</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 客户端证书和私钥</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cert</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>LoadX509KeyPair</span>(<span style=color:#e6db74>&#34;client.crt&#34;</span>, <span style=color:#e6db74>&#34;client.key&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// HTTPS 配置</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>tlsConfig</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>Config</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>RootCAs</span>:      <span style=color:#a6e22e>caCertPool</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Certificates</span>: []<span style=color:#a6e22e>tls</span>.<span style=color:#a6e22e>Certificate</span>{<span style=color:#a6e22e>cert</span>},
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Client</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Transport</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Transport</span>{<span style=color:#a6e22e>TLSClientConfig</span>: <span style=color:#a6e22e>tlsConfig</span>},
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resp</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;https://localhost:8443&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#e6db74>&#34;get &#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#e6db74>&#34;read &#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(string(<span style=color:#a6e22e>body</span>))
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>此时提前说一句，如果你想要访问服务端https是安全的，还需要导入并信任服务端CA证书，原因上面已经说过。</p><h2 id=认证过程>认证过程</h2><p>TLS v1.2 和 TLS v1.3 有很大不同，当然这些并不是最重要的，因为我们并不能改变或者控制这些协议。</p><p>我整理了 TLS v1.2 和 TLS v1.3 在双向认证的过程中不同的地方，如下图，仅供参考。</p><blockquote><p>红色标记部分是双向认证时才有的通信步骤。</p></blockquote><p><strong>TLS v1.2</strong></p><p><img src=/images/https-tls-v1.2-two-way-auth.png alt=https-tls-v1.2-two-way-auth></p><p><strong>TLS v1.3</strong></p><p><img src=/images/https-tls-v1.3-two-way-auth.png alt=https-tls-v1.3-two-way-auth></p><p>TLS v1.3 使用了 ECDH 等密钥协商算法，因此在交互的过程中只需要双方计算一个临时密钥并发送给对方，双方就能通过这个临时密钥计算出最终要使用的加密密钥。
+减少了很多步骤，对于性能和安全性方便有着极大提高。</p><h3 id=golang-代码地址>golang 代码地址</h3><p><a href=https://github.com/dushixiang/https-two-way-auth>https://github.com/dushixiang/https-two-way-auth</a></p></article></div></main></body></html>

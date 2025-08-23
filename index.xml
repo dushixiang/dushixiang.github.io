@@ -109,7 +109,51 @@
 &lt;p>&lt;img src="https://www.typesafe.cn/images/edgeone-pages-deploy.png" alt="">&lt;/p>
 &lt;p>最后点击开始部署，等待部署完成即可。&lt;/p>
 &lt;hr>
-&lt;p>每次提交后，Github Action 自动编译发布在分支 &lt;code>gh-pages&lt;/code> 上， EdgeOne 会自动检测到仓库 &lt;code>gh-pages&lt;/code> 分支的变化，最后更新到 EdgeOne Pages 上。&lt;/p></description></item><item><title>about</title><link>https://www.typesafe.cn/about/</link><pubDate>Wed, 01 Jan 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/about/</guid><description>&lt;p>你好，我是杜世翔，软件开发工程师。&lt;/p>
+&lt;p>每次提交后，Github Action 自动编译发布在分支 &lt;code>gh-pages&lt;/code> 上， EdgeOne 会自动检测到仓库 &lt;code>gh-pages&lt;/code> 分支的变化，最后更新到 EdgeOne Pages 上。&lt;/p></description></item><item><title>Golang 二进制文件的静态和动态链接</title><link>https://www.typesafe.cn/posts/golang-binary-linking-types/</link><pubDate>Tue, 07 Jan 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/golang-binary-linking-types/</guid><description>&lt;h2 id="概述">概述&lt;/h2>
+&lt;p>Golang 最大的优势之一就是支持跨平台编译，真正的实现了Java的梦想：一次编译，到处运行。&lt;/p>
+&lt;p>不过，在某些特定情况下，也会存在一些特殊之处。&lt;/p>
+&lt;h2 id="静态链接与动态链接">静态链接与动态链接&lt;/h2>
+&lt;p>&lt;strong>静态链接&lt;/strong>是是在编译时将程序与所依赖的所有库（通常是 &lt;code>.a&lt;/code> 或 &lt;code>.lib&lt;/code> 文件）一起打包，生成一个独立的可执行文件。也就是说，所有需要的函数和库代码在编译过程中就已经嵌入到可执行文件中。&lt;/p>
+&lt;p>因为这样编译出来的二进制更便携，它不需要在其运行的主机系统上存在库。因此，你的二进制文件可以在任何系统上运行，无论哪个发行版/版本，并且不依赖于任何系统库。&lt;/p>
+&lt;p>&lt;strong>动态链接&lt;/strong>是在程序运行时（即执行时）将程序与共享库（如 &lt;code>.dll&lt;/code>、&lt;code>.so&lt;/code> 或 &lt;code>.dylib&lt;/code> 文件）链接。程序本身包含对这些库的引用，而不直接包含库的代码。程序启动时，操作系统会加载这些库文件并链接到程序。&lt;/p>
+&lt;p>这种方式的优点是比较灵活，如果依赖的库发生了更新，只要接口没变，程序不需要编译就可以使用最新版本的库，而且因为二进制包含对库的引用，不包含库代码，因此文件较小。&lt;/p>
+&lt;h2 id="静态链接程序">静态链接程序&lt;/h2>
+&lt;p>我们先来编写一个简单的 “Hello World” 程序，，经过打包后，它将成为一个静态链接的二进制文件。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() { 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> println(&lt;span style="color:#e6db74">&amp;#34;hello world!&amp;#34;&lt;/span>) 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>接着编译这个 Go 文件：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go build -o main1 main.go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后使用 &lt;code>file&lt;/code> 命令来检查文件类型：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ file main1 | tr , &lt;span style="color:#e6db74">&amp;#39;\n&amp;#39;&lt;/span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello_linux: ELF 64-bit LSB executable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x86-64
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> version &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">(&lt;/span>SYSV&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> statically linked
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Go BuildID&lt;span style="color:#f92672">=&lt;/span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> with debug_info
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> not stripped
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>从上述命令的输出结果可知，&lt;code>main1&lt;/code> 文件属于 &lt;strong>64 位静态链接的 ELF 格式&lt;/strong> 可执行文件，适用于 &lt;strong>x86-64&lt;/strong> 架构，包含了 &lt;strong>调试信息&lt;/strong>，并且没有进行 &lt;strong>剥离&lt;/strong>（即保留了调试符号）。&lt;/p></description></item><item><title>HTTP代理的原理和实现</title><link>https://www.typesafe.cn/posts/http-proxy/</link><pubDate>Thu, 02 Jan 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/http-proxy/</guid><description>&lt;p>HTTP 代理可以说是每个开发者都绕不开的工具。几乎每天都会使用，但你真的了解 HTTP 代理的原理吗？&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>说明&lt;/strong>：这里讨论的 HTTP 代理是指 HTTP Proxy Server，具体是正向 HTTP 代理服务端的原理和实现。&lt;/p>&lt;/blockquote>
+&lt;p>想了解 HTTP 代理的原理，最严谨的方法是阅读 RFC 文档，但这同时也是最困难的方式。今天，我将介绍一种更直观的学习技巧。&lt;/p>
+&lt;p>从名字上就可以看出，HTTP 代理基于 HTTP 协议，而 HTTP 协议运行在 TCP 之上。我们可以直接监听某个 TCP 端口，模拟 HTTP 代理服务端，同时使用 &lt;code>curl&lt;/code> 命令通过代理访问网站，观察具体数据，再决定如何实现这个 HTTP 代理服务端。&lt;/p>
+&lt;hr>
+&lt;h2 id="代理-http-请求">代理 HTTP 请求&lt;/h2>
+&lt;p>&lt;strong>步骤 1&lt;/strong>：使用 &lt;code>ncat&lt;/code> 监听端口 7788。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ncat -lvp &lt;span style="color:#ae81ff">7788&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>步骤 2&lt;/strong>：执行 &lt;code>curl&lt;/code> 命令，通过代理访问百度的 HTTP 协议。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl http://baidu.com/123?a&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span> --proxy 127.0.0.1:7788
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>步骤 3&lt;/strong>：查看 &lt;code>ncat&lt;/code> 的输出：&lt;/p>
+&lt;pre tabindex="0">&lt;code>Ncat: Connection from 127.0.0.1:58458.
+GET http://baidu.com/123?a=1 HTTP/1.1
+Host: baidu.com
+User-Agent: curl/8.7.1
+Accept: */*
+Proxy-Connection: Keep-Alive
+&lt;/code>&lt;/pre>&lt;p>第一行是 &lt;code>ncat&lt;/code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。&lt;/p></description></item><item><title>about</title><link>https://www.typesafe.cn/about/</link><pubDate>Wed, 01 Jan 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/about/</guid><description>&lt;p>你好，我是杜世翔，软件开发工程师。&lt;/p>
 &lt;p>我主要使用 Golang，对 Java、JavaScript、Python 也比较熟悉。&lt;/p>
 &lt;p>目前在奇安信从事安全开发工作。&lt;/p>
 &lt;hr>
@@ -119,7 +163,235 @@
 &lt;ul>
 &lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a>&lt;/strong> 一个美观简洁且强大的kafka web管理工具。&lt;/li>
 &lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/4dnat">4dnat&lt;/a>&lt;/strong> 一个专门为目的地址转发而服务的工具。&lt;/li>
-&lt;/ul></description></item><item><title>在 Java 里如何让方法只执行一次？</title><link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link><pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid><description>&lt;p>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。&lt;/p>
+&lt;/ul></description></item><item><title>记一次曲折的N1盒子重装系统经历</title><link>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</link><pubDate>Sun, 28 Jan 2024 19:31:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</guid><description>&lt;h2 id="为什么要重装系统">为什么要重装系统？&lt;/h2>
+&lt;p>倒不是为了折腾，而是我手上这台斐讯 N1 盒子（armbian系统）在上个月让我不小心 &lt;code>rm -rf /&lt;/code> 全给删除了，等我反应过来的时候已经为时已晚。&lt;/p>
+&lt;p>由于 Linux 系统的特性，我运行的程序只要不重启系统都还能正常使用，我也懒得立刻处理，就这样挺到了现在。终于在本周五下班之后我心血来潮，准备给它重装一个系统，但没有想到让我花费了将近10个小时。&lt;/p>
+&lt;h2 id="第一个坑垃圾百度云盘下载速度感人">第一个坑，垃圾百度云盘下载速度感人&lt;/h2>
+&lt;p>N1 盒子是一个比较老的设备了，刷机救砖教程也都是2020年或者更早的时候发布的，那个时候恩山论坛上的大佬主要还是用百度云盘来共享工具。&lt;/p>
+&lt;p>每秒100KB的下载速度下载1个多GB的资料让人等的着急。&lt;/p>
+&lt;h2 id="第二个坑刷机工具版本之坑">第二个坑，刷机工具版本之坑&lt;/h2>
+&lt;p>Amlogic线刷工具 USB Burning Tool 有两个版本 v3.1.0 和 v2.2.4，理论上来说 v3.1.0 是新的版本，所以我刚开始安装的也是这个版本，但是我在使用的过程中各种错误，而且分辨率在我4k的屏幕上表现也很糟糕，最后下载了 v2.2.4 才能正常使用。&lt;/p>
+&lt;h2 id="第三个坑刷机工具识别不到设备">第三个坑，刷机工具识别不到设备&lt;/h2>
+&lt;p>前面说了，我的盒子不是原来的安卓系统了，现在运行的是 armbian，而且系统被我破坏了无法正常启动。也就导致常规手段都无法让工具识别，我看到有人说设备先不要供电，先在工具导入烧录包，然后点击【开始】，并且在3秒内迅速上电就可以识别到并且刷机了，我像个傻子一样尝试了很多遍。&lt;/p>
+&lt;p>消息来源：https://www.right.com.cn/forum/thread-4041517-1-1.html&lt;/p>
+&lt;h2 id="第四个坑刷机报错">第四个坑，刷机报错&lt;/h2>
+&lt;p>本来不想拆的，因为麻烦，但最终没有其他办法的我还是拆机进行了短接，需要一把非常细且长的螺丝刀和一个镊子进行短接，幸亏我乱七八糟的工具比较多，翻箱倒柜找到了合适的工具。&lt;/p>
+&lt;p>我上一次刷机还是几年前，具体的过程我已经忘记了，这次我也只下载了一个 N1 的固件，刷的时候进度到 1% 就报错了，然后就看到说要先刷 T1 的固件，因为需要 T1 固件中前面的一部分，我又从百度云盘下载了 T1 的固件，并且严格安装网上的教程来尝试，不幸的是还是失败了。&lt;/p>
+&lt;p>又看到有人说可能是USB口的问题，我便把电脑上的6个USB口都试了一遍，还是行不通。&lt;/p>
+&lt;p>上网又查了一下，说是AMD硬件的问题，换了因特尔的就好了。&lt;/p>
+&lt;p>WTF？？？&lt;/p>
+&lt;p>这个时候已经凌晨一点钟，搞得我心态爆炸。感觉面对这种【黑盒子】太无力了，竟然还有人能享受这个过程，我是无法理解的。&lt;/p>
+&lt;p>总之周五晚上从7点钟干到凌晨1点钟并没有解决这个问题。&lt;/p>
+&lt;h2 id="第五个坑u盘启动">第五个坑，U盘启动&lt;/h2>
+&lt;p>周六的时候我又测试了几遍刷机的方案，还是行不通，我便想着使用常规Windows和Linux装系统的方案，使用 U盘 启动来装系统。&lt;/p>
+&lt;p>搜索了一下找到了这个项目 &lt;a href="https://github.com/ophub/amlogic-s9xxx-armbian">https://github.com/ophub/amlogic-s9xxx-armbian&lt;/a> ，从release下载到了合适的固件，之后找了一个U盘搭配 rufus 把固件写入到了 U盘。&lt;/p>
+&lt;p>我便开始了U盘启动之旅，尴尬的是 N1 并没有 BIOS 这个东西，我查询到的U盘启动方案都是在原来安卓系统下，使用 telnet 连接上之后执行指令来控制从U盘启动，但是我的 N1 在启动之后会卡在启动 armbian 失败的页面上。&lt;/p></description></item><item><title>HTTPS 双向认证原理和实现方式</title><link>https://www.typesafe.cn/posts/https-mutual-auth-implementation/</link><pubDate>Thu, 23 Nov 2023 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/https-mutual-auth-implementation/</guid><description>&lt;p>双向认证的含义就是服务端和客户端都需要验证对方的身份，相比普通的单向认证多了一些步骤。&lt;/p>
+&lt;h2 id="基础概念">基础概念&lt;/h2>
+&lt;p>下面先讲一些 https 相关的概念。&lt;/p>
+&lt;p>&lt;strong>对称加密&lt;/strong>&lt;/p>
+&lt;p>对称加密是一种加密算法，使用相同的密钥来加密和解密数据。
+这意味着发送和接收方都必须共享相同的密钥。
+对称加密是加密领域中最快的一种加密方式，因为它使用的是相对较小的密钥和简单的运算。&lt;/p>
+&lt;p>&lt;strong>非对称加密&lt;/strong>&lt;/p>
+&lt;p>非对称加密是一种密码学方法，与对称加密不同，它使用一对密钥而不是一个密钥。
+这对密钥包括一个公钥和一个私钥。公钥用于加密数据，而私钥用于解密数据。&lt;/p>
+&lt;ul>
+&lt;li>公钥： 公钥是一个用于加密的密钥，可以公开被任何人访问，公钥加密的数据只有私钥可以解开。&lt;/li>
+&lt;li>私钥： 私钥是与公钥配对的另一个密钥，需要妥善保管避免被泄露。&lt;/li>
+&lt;li>加密和解密： 如果使用公钥加密了一段数据，只有拥有相应私钥的人才能解密它。反之亦然，如果使用私钥加密了数据，只有拥有相应公钥的人才能解密。&lt;/li>
+&lt;li>数字签名：简单点说数字签名就是私钥加密摘要，而非加密原文，分为下面几个步骤：
+&lt;ol>
+&lt;li>消息摘要：使用哈希算法把原文生成一份摘要。&lt;/li>
+&lt;li>私钥加密：使用私钥对摘要进行加密，得到数字签名。&lt;/li>
+&lt;li>发送消息和签名：把原数据和加密后的数据摘要打包一起发给对方。&lt;/li>
+&lt;li>验证：接收方使用发送方的公钥来解密数字签名，得到摘要。然后接收方对收到的消息使用同样的哈希算法得到一个新的摘要。如果这两个摘要匹配，说明消息未被篡改，且确实是由私钥的所有者签名的。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;p>RSA、DSA、ECDSA 和 Elliptic Curve Diffie-Hellman (ECDH) 是一些常见的非对称加密算法。
+这些算法每个有其独特的优点和应用场景，比如 RSA 用于数字签名，ECDH 适用于密钥协商。
+与对称加密相比，非对称加密算法的性能都比较低。&lt;/p>
+&lt;p>&lt;strong>证书&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>CA：也就是常说的根证书，操作系统默认集成了很多权威机构的根证书，因此不必再自己安装和信任一遍。&lt;/li>
+&lt;li>https 证书：通常包括一个公钥证书和一个私钥，它们由权威机构（CA）签发，这些权威机构通常是要收费的，也有免费的机构，类似&lt;a href="https://letsencrypt.org/">Let&amp;rsquo;s Encrypt&lt;/a>。
+另一种方式是自己签发，不过需要让客户端信任自己签发的CA证书，目的是为了让自己签发的域名证书通过校验。&lt;/li>
+&lt;li>证书签发：就是用权威机构帮你生成一个私钥，并使用它的根证书和这个私钥对你的域名进行证书签发，最后将签发后的公钥证书和这个私钥给你。&lt;/li>
+&lt;/ul>
+&lt;p>证书是建立信任的关键，包括 CA 根证书、https 证书和自签名证书。CA 提供权威认证，而自签名证书适用于开发环境。&lt;/p>
+&lt;p>&lt;strong>https 通信步骤&lt;/strong>&lt;/p>
+&lt;p>https 通信大致上是分为3个阶段。&lt;/p>
+&lt;ol>
+&lt;li>握手阶段（Handshake）：
+&lt;ul>
+&lt;li>客户端向服务器发送一个加密通信的请求，请求中包含支持的加密算法和其他相关信息。&lt;/li>
+&lt;li>服务器将自己的证书、支持的加密算法等信息发送给客户端。&lt;/li>
+&lt;li>客户端验证服务器的证书是否有效。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>密钥协商阶段：
+&lt;ul>
+&lt;li>利用非对称加密算法使得双方安全的获取到一个会话密钥。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>加密通信阶段：
+&lt;ul>
+&lt;li>客户端和服务器使用协商好的会话密钥进行对称加密通信，保护数据的机密性。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>配置https证书&lt;/strong>&lt;/p>
+&lt;p>常见的web服务器都有配置https证书的功能，例如 nginx、caddy等。&lt;/p>
+&lt;p>基本上只需要把证书和私钥配置到某一个目录，更改web服务器的配置即可生效。&lt;/p>
+&lt;p>&lt;strong>https单向认证&lt;/strong>&lt;/p>
+&lt;p>顾名思义，就是只有一个方向进行了认证，这里指的是客户端认证，通常浏览器都会对网站上的https证书进行验证。&lt;/p>
+&lt;p>正常情况下访问https站点，浏览器左上角的小锁就会是灰色的。（如果你的浏览器版本过低，有可能是绿色的。）&lt;/p>
+&lt;p>当 https 站点的证书不正确时，就会出现一个出现【不安全】这个三个红色的大字，有下面几种原因会导致不安全。&lt;/p>
+&lt;ol>
+&lt;li>当前域名和证书签名的域名不匹配。（这种情况就需要重新进行域名签发了。）&lt;/li>
+&lt;li>当前IP和证书签名的IP不匹配。（这种情况较少，因为之前市面上的机构都不签发IP证书，现在好像也有了不少。）&lt;/li>
+&lt;li>证书过期了。（需要定期检查域名是否过期并及时更新）&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>https双向认证&lt;/strong>&lt;/p></description></item><item><title>Linux Shell 实现类似 golang defer 的功能</title><link>https://www.typesafe.cn/posts/linux-shell-defer-implementation/</link><pubDate>Wed, 02 Aug 2023 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/linux-shell-defer-implementation/</guid><description>&lt;h3 id="基本信息">基本信息&lt;/h3>
+&lt;p>trap命令用于指定在接收到信号后将要采取的动作。trap命令有两种格式。&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>trap [COMMANDS] [SIGNALS] 此格式用来指定在接收到 SIGNALS 信号列表后将执行的命令。 示例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>trap &lt;span style="color:#e6db74">&amp;#34;echo &amp;#39;Ctrl+C is trapped.&amp;#39;&amp;#34;&lt;/span> SIGINT
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输出将会在你按下 Ctrl+C 时显示，即在接收到 SIGINT 信号时。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>trap - [SIGNALS] 此格式用来重置SIGNALS的默认处理程序。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>trap - SIGINT
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>该命令将恢复 SIGINT 信号的默认处理程序。 一旦指定了信号的处理程序，那么在脚本执行过程中，都会保持指定的动作，直到脚本执行结束。如果你想在脚本执行完毕后，不再处理这个信号，你可以使用trap - SIGNALS来重置信号的默认处理程序。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>你也可以使用 trap -l 列出所有的信号，或者 trap 命令 获取当前的 trap 设置。&lt;/p>
+&lt;p>以下是一些常见的信号&lt;/p>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>信号值&lt;/th>
+ &lt;th>信号名&lt;/th>
+ &lt;th>描述&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>1&lt;/td>
+ &lt;td>SIGHUP&lt;/td>
+ &lt;td>终止控制进程或者进程组&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>2&lt;/td>
+ &lt;td>SIGINT&lt;/td>
+ &lt;td>通常由于终端的挂断或者死亡而导致进程也中断&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>3&lt;/td>
+ &lt;td>SIGQUIT&lt;/td>
+ &lt;td>Quit信号，和SIGINT类似，但由Quit键发出，通常用ctrl+\，执行后会生成core文件&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>9&lt;/td>
+ &lt;td>SIGKILL&lt;/td>
+ &lt;td>Kill信号，用于结束最不能终止的进程，信号不能被进程捕捉&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>15&lt;/td>
+ &lt;td>SIGTERM&lt;/td>
+ &lt;td>请求中止进程，kill命令缺省产生这个信号&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;h3 id="示例代码">示例代码&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cleanup&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo &lt;span style="color:#e6db74">&amp;#34;Caught Interrupt, cleaning up...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 在这里放置你的清理代码。例如，删除一些临时文件。&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>exit_handler&lt;span style="color:#f92672">()&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo &lt;span style="color:#e6db74">&amp;#34;Caught Terminate, exit...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exit &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>trap &lt;span style="color:#e6db74">&amp;#39;cleanup&amp;#39;&lt;/span> SIGINT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>trap &lt;span style="color:#e6db74">&amp;#39;exit_handler&amp;#39;&lt;/span> SIGTERM
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">while&lt;/span> true; &lt;span style="color:#66d9ef">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> echo &lt;span style="color:#e6db74">&amp;#34;Sleeping...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如何测试这段代码？&lt;/p></description></item><item><title>裸写TCP通信的正确方式</title><link>https://www.typesafe.cn/posts/raw-tcp-best-practice/</link><pubDate>Wed, 19 Jul 2023 21:35:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/raw-tcp-best-practice/</guid><description>&lt;blockquote>
+&lt;p>TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协议。&lt;/p>&lt;/blockquote>
+&lt;p>由于TCP的特性，在裸写TCP通信的时候，是不能直接把数据序列化为字节后直接发送的，否则就可能会遇到数据包被“截断”或“粘包”的问题。(粘包警察正在赶来。)&lt;/p>
+&lt;h3 id="截断的原因">“截断”的原因&lt;/h3>
+&lt;p>&lt;strong>数据包之所以被“截断”，是因为网卡的 mtu。&lt;/strong>&lt;/p>
+&lt;p>MTU（Maximum Transmission Unit，MTU）的中文名称是【最大传输单元】，它是指网络能够传输的最大数据包大小，以字节为单位。MTU的大小决定了发送端一次能够发送报文的最大字节数。如果MTU超过了接收端所能够承受的最大值，或者是超过了发送路径上途经的某台设备所能够承受的最大值，就会造成报文分片甚至丢弃，加重网络传输的负担。&lt;/p>
+&lt;p>普通网卡常见的mtu值是1500，vxlan 等隧道协议的 mtu 则会小于1500，这是因为 vxlan 等隧道协议需要对原始数据进行一层封装，并加上一个包头。&lt;/p>
+&lt;h3 id="粘包的原因">“粘包”的原因&lt;/h3>
+&lt;p>&lt;strong>而数据包之所以被“粘包”，则是因为不确定消息的边界，接收端根本不知到要拿多少数据。&lt;/strong>&lt;/p>
+&lt;p>你说我知道网卡的 mtu 是 1500，那我一次取1500个字节吧，但你拿到的数据报文里面往往会“粘”着下一条消息的一部分。&lt;/p>
+&lt;h3 id="解决方案">解决方案&lt;/h3>
+&lt;p>因此我们需要一个固定长度的包头，写入消息的时候，把正文的长度写入到包头里面再打包发出，每次读取消息的时候，则先读取固定长度的包头，解析出来正文的长度，再使用正文长度取读取正文。&lt;/p>
+&lt;p>代码示例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-golang" data-lang="golang">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">MaxBodyLen&lt;/span> = &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span>&lt;span style="color:#ae81ff">32&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Header&lt;/span> [&lt;span style="color:#ae81ff">8&lt;/span>]&lt;span style="color:#66d9ef">byte&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">h&lt;/span> &lt;span style="color:#a6e22e">Header&lt;/span>) &lt;span style="color:#a6e22e">Version&lt;/span>() &lt;span style="color:#66d9ef">int&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> int(&lt;span style="color:#a6e22e">h&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">h&lt;/span> &lt;span style="color:#a6e22e">Header&lt;/span>) &lt;span style="color:#a6e22e">Flag&lt;/span>() &lt;span style="color:#66d9ef">int&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> int(&lt;span style="color:#a6e22e">h&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">h&lt;/span> &lt;span style="color:#a6e22e">Header&lt;/span>) &lt;span style="color:#a6e22e">BodyLen&lt;/span>() &lt;span style="color:#66d9ef">uint32&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">binary&lt;/span>.&lt;span style="color:#a6e22e">BigEndian&lt;/span>.&lt;span style="color:#a6e22e">Uint32&lt;/span>(&lt;span style="color:#a6e22e">h&lt;/span>[&lt;span style="color:#ae81ff">4&lt;/span>:])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">Read&lt;/span>(&lt;span style="color:#a6e22e">conn&lt;/span> &lt;span style="color:#a6e22e">net&lt;/span>.&lt;span style="color:#a6e22e">Conn&lt;/span>) (&lt;span style="color:#a6e22e">Header&lt;/span>, []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">h&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">Header&lt;/span>{}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadFull&lt;/span>(&lt;span style="color:#a6e22e">conn&lt;/span>, &lt;span style="color:#a6e22e">h&lt;/span>[:])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">h&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">bodyLen&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">h&lt;/span>.&lt;span style="color:#a6e22e">BodyLen&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">bodyLen&lt;/span> &lt;span style="color:#f92672">&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">h&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">body&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">bodyLen&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadFull&lt;/span>(&lt;span style="color:#a6e22e">conn&lt;/span>, &lt;span style="color:#a6e22e">body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">h&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">h&lt;/span>, &lt;span style="color:#a6e22e">body&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">Write&lt;/span>(&lt;span style="color:#a6e22e">conn&lt;/span> &lt;span style="color:#a6e22e">net&lt;/span>.&lt;span style="color:#a6e22e">Conn&lt;/span>, &lt;span style="color:#a6e22e">flag&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>, &lt;span style="color:#a6e22e">body&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">body&lt;/span>) &amp;gt; &lt;span style="color:#a6e22e">MaxBodyLen&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;too large body, body length must be &amp;lt;= %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">MaxBodyLen&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">bodyLen&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#ae81ff">4&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">binary&lt;/span>.&lt;span style="color:#a6e22e">BigEndian&lt;/span>.&lt;span style="color:#a6e22e">PutUint32&lt;/span>(&lt;span style="color:#a6e22e">bodyLen&lt;/span>, uint32(len(&lt;span style="color:#a6e22e">body&lt;/span>)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">hdr&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>{&lt;span style="color:#ae81ff">0x01&lt;/span>, byte(&lt;span style="color:#a6e22e">flag&lt;/span>)}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">hdr&lt;/span> = append(&lt;span style="color:#a6e22e">hdr&lt;/span>, make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>)&lt;span style="color:#f92672">...&lt;/span>) &lt;span style="color:#75715e">// 补2个0让消息头总长度为8&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">hdr&lt;/span> = append(&lt;span style="color:#a6e22e">hdr&lt;/span>, &lt;span style="color:#a6e22e">bodyLen&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">writeBody&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">writeBody&lt;/span> = append(&lt;span style="color:#a6e22e">writeBody&lt;/span>, &lt;span style="color:#a6e22e">hdr&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">writeBody&lt;/span> = append(&lt;span style="color:#a6e22e">writeBody&lt;/span>, &lt;span style="color:#a6e22e">body&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">conn&lt;/span>.&lt;span style="color:#a6e22e">Write&lt;/span>(&lt;span style="color:#a6e22e">writeBody&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>在 Java 里如何让方法只执行一次？</title><link>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</link><pubDate>Sun, 02 Apr 2023 13:18:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/how-does-java-make-methods-execute-only-once/</guid><description>&lt;p>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。&lt;/p>
 &lt;p>正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 &lt;code>Once&lt;/code> 功能。&lt;/p>
 &lt;blockquote>
 &lt;p>&lt;code>sync.Once&lt;/code> 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。&lt;/p>
@@ -501,58 +773,7 @@ Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行后输出：&lt;/p></description></item><item><title>分享一款非常好用的kafka可视化web管理工具</title><link>https://www.typesafe.cn/posts/share-a-kafka-web-manager/</link><pubDate>Sun, 13 Jun 2021 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/share-a-kafka-web-manager/</guid><description>&lt;p>使用过&lt;code>kafka&lt;/code>的小伙伴应该都知道&lt;code>kafka&lt;/code>本身是没有管理界面的，所有操作都需要手动执行命令来完成。但有些命令又多又长，如果没有做笔记，别说是新手，就连老手也不一定能记得住，每次想要使用的时候都要上网搜索一下。有些崇尚geek精神的人或许觉得命令行才是真爱，但使用一款好用的可视化管理工具真的可以极大的提升效率。&lt;/p>
-&lt;p>今天给大家介绍的这款工具叫做&lt;code>kafka-map&lt;/code>，是我针对日常工作中高频使用的场景开发的，使用了这款工具之后就不必费心费力的去查资料某个命令要怎么写，就像是：“给编程插上翅膀，给kafka装上导航”。&lt;/p>
-&lt;h2 id="kafka-map-介绍">kafka-map 介绍&lt;/h2>
-&lt;p>&lt;code>kafka map&lt;/code>是使用&lt;code>Java11&lt;/code>和&lt;code>React&lt;/code>开发的一款&lt;code>kafka&lt;/code>可视化工具。&lt;/p>
-&lt;p>目前支持的功能有：&lt;/p>
-&lt;ul>
-&lt;li>多集群管理&lt;/li>
-&lt;li>集群状态监控（分区数量、副本数量、存储大小、offset）&lt;/li>
-&lt;li>主题创建、删除、扩容（删除需配置delete.topic.enable = true）&lt;/li>
-&lt;li>broker状态监控&lt;/li>
-&lt;li>消费者组查看、删除&lt;/li>
-&lt;li>重置offset&lt;/li>
-&lt;li>消息查询（支持String和json方式展示）&lt;/li>
-&lt;li>发送消息（支持向指定的topic和partition发送字符串消息）&lt;/li>
-&lt;/ul>
-&lt;h2 id="功能截图">功能截图&lt;/h2>
-&lt;h3 id="添加集群">添加集群&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/import-cluster.png" alt="添加集群">&lt;/p>
-&lt;h3 id="集群管理">集群管理&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/clusters.png" alt="集群管理">&lt;/p>
-&lt;h3 id="broker">broker&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/brokers.png" alt="broker">&lt;/p>
-&lt;h3 id="主题管理">主题管理&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topics.png" alt="主题管理">&lt;/p>
-&lt;h3 id="消费组">消费组&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumers.png" alt="消费组">&lt;/p>
-&lt;h3 id="查看消费组已订阅主题">查看消费组已订阅主题&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumer-subscription.png" alt="消费组详情">&lt;/p>
-&lt;h3 id="topic详情分区">topic详情——分区&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-partition.png" alt="topic详情——分区">&lt;/p>
-&lt;h3 id="topic详情broker">topic详情——broker&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-broker.png" alt="topic详情——broker">&lt;/p>
-&lt;h3 id="topic详情消费组">topic详情——消费组&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-consumer.png" alt="topic详情——消费组">&lt;/p>
-&lt;h3 id="topic详情消费组重置offset">topic详情——消费组重置offset&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-consumer-reset-offset.png" alt="topic详情——消费组重置offset">&lt;/p>
-&lt;h3 id="topic详情配置信息">topic详情——配置信息&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/topic-info-config.png" alt="topic详情——配置信息">&lt;/p>
-&lt;h3 id="生产消息">生产消息&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/producer-message.png" alt="消费消息">&lt;/p>
-&lt;h3 id="消费消息">消费消息&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/dushixiang/kafka-map/raw/master/screenshot/consumer-message.png" alt="消费消息">&lt;/p>
-&lt;h2 id="docker-方式安装">docker 方式安装&lt;/h2>
-&lt;p>一行命令即可完成安装&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>docker run -d &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -p 8080:8080 &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -v /opt/kafka-map/data:/usr/local/kafka-map/data &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -e DEFAULT_USERNAME&lt;span style="color:#f92672">=&lt;/span>admin
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -e DEFAULT_PASSWORD&lt;span style="color:#f92672">=&lt;/span>admin
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --name kafka-map &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --restart always dushixiang/kafka-map:latest
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>更多安装方式以及相信信息可查看: &lt;a href="https://github.com/dushixiang/kafka-map">https://github.com/dushixiang/kafka-map&lt;/a>&lt;/p></description></item><item><title>openstack victoria版安装</title><link>https://www.typesafe.cn/posts/install-openstack-victoria/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/install-openstack-victoria/</guid><description>&lt;p>近期公司业务需求，需要安装一套Openstack环境学习，看了一下现在已经出了&lt;code>wallaby&lt;/code>版了，我果断选择了上一个版本&lt;code>victoria&lt;/code>。因为没有足够多的物理服务器了，只好找了一台64核256G内存6T硬盘的机器来创建几台虚拟机来搭环境了。&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行后输出：&lt;/p></description></item><item><title>openstack victoria版安装</title><link>https://www.typesafe.cn/posts/install-openstack-victoria/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/install-openstack-victoria/</guid><description>&lt;p>近期公司业务需求，需要安装一套Openstack环境学习，看了一下现在已经出了&lt;code>wallaby&lt;/code>版了，我果断选择了上一个版本&lt;code>victoria&lt;/code>。因为没有足够多的物理服务器了，只好找了一台64核256G内存6T硬盘的机器来创建几台虚拟机来搭环境了。&lt;/p>
 &lt;h1 id="实验环境">实验环境&lt;/h1>
 &lt;p>此次实验使用到了三台虚拟机，都是使用centos8系统，一台机器当作控制和网络节点，另外两台当作计算节点，使用OVS+VLAN的网络模式，eth0作为管理网络，eth1互相连接到OVS网桥上模拟trunk网卡，controller多增加一个eth2用于访问外部网络。&lt;/p>
 &lt;table>
@@ -1353,106 +1574,7 @@ if (流表匹配条件){
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl enable openvswitch
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl start openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>如果当前软件源中没有openvswitch，可以通过&lt;a href="https://developer.aliyun.com/packageSearch?word=openvswitch">阿里云官方镜像站&lt;/a>下载和操作系统版本对应的rpm包到本地再安装。 示例命令： &lt;code>yum localinstall openvswitch-2.9.0-3.el7.x86_64.rpm&lt;/code>&lt;/p></description></item><item><title>服务器不允许上网并且需要跳板机才能访问？学会使用这个工具，轻松让服务器使用yum。</title><link>https://www.typesafe.cn/posts/4dnat/</link><pubDate>Thu, 19 Nov 2020 22:33:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/4dnat/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
-&lt;p>你是否遇到过这样的场景，服务器不能上网，但是又需要安装某个软件，面对如蛛网般杂乱的rpm包依赖关系，放弃或许是最好的选择，这样你就不必再为无法完成工作而痛苦又懊恼。&lt;/p>
-&lt;p>但是今天，你有了一个更好的选择。&lt;/p>
-&lt;h1 id="4dnat">&lt;a href="https://github.com/dushixiang/4dnat">4DNAT&lt;/a>&lt;/h1>
-&lt;p>4DNAT取名源自4和DNAT。这个工具工作在OSI模型的第四层传输层，同时4和for谐音，意为专门为目标地址转换而服务的工具。4DNAT使用go语言开发，具有天然的跨平台性，并且完全使用go标准库开发，没有任何的第三方依赖，编译之后只有一个二进制可执行文件。它有4种工作模式：&lt;/p>
-&lt;h3 id="转发模式">转发模式&lt;/h3>
-&lt;p>接受两个参数，监听端口和目标地址，在监听端口接收到请求后会主动连接目标地址，示例：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -forward &lt;span style="color:#ae81ff">2222&lt;/span> 192.168.1.100:22
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="监听模式">监听模式&lt;/h3>
-&lt;p>接受两个参数，监听端口1和监听端口2，并交换两个端口接收到的数据，示例：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -listen &lt;span style="color:#ae81ff">10000&lt;/span> &lt;span style="color:#ae81ff">10001&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="代理人模式">代理人模式&lt;/h3>
-&lt;p>接受两个参数，目标地址1和目标地址2，启动后会主动连接这两个目标地址，并交换两个端口接收到的数据，示例：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -agent 127.0.0.1:10000 127.0.0.1:22
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="httphttps代理模式">http/https代理模式&lt;/h3>
-&lt;p>接受两个参数或四个参数，代理类型、监听端口、证书路径和私钥路径，示例：&lt;/p>
-&lt;h4 id="http代理">http代理&lt;/h4>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./4dnat -proxy http &lt;span style="color:#ae81ff">1080&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="https代理">https代理&lt;/h4>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./4dnat -proxy https &lt;span style="color:#ae81ff">1080&lt;/span> server.crt server.key
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="使用场景">使用场景&lt;/h1>
-&lt;h3 id="场景一">场景一&lt;/h3>
-&lt;p>期望可以在&lt;strong>用户电脑&lt;/strong>上直接访问目标服务器上的3306端口，跳板机器是一台Windows机器，没办法做ssh端口转发。
-&lt;img src="https://oss.typesafe.cn/break-through-the-network.png" alt="请输入图片描述">&lt;/p>
-&lt;blockquote>
-&lt;p>单向虚线箭头表示可以单向访问，反之不行。&lt;/p>&lt;/blockquote>
-&lt;p>使用4DNAT在&lt;strong>跳板机器&lt;/strong>上执行如下命令做端口转发&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 本地监听3307端口，接收到请求后主动连接10.1.0.40的3306端口&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./4dnat -forward &lt;span style="color:#ae81ff">3307&lt;/span> 10.1.0.40:3306
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在&lt;strong>用户电脑&lt;/strong>上访问&lt;strong>172.16.0.30:3307&lt;/strong>即等同于访问&lt;strong>10.1.0.40:3306&lt;/strong>，于是就可以在&lt;strong>用户电脑&lt;/strong>愉快的访问&lt;strong>目标机器&lt;/strong>上的服务啦。&lt;/p>
-&lt;h3 id="场景二">场景二&lt;/h3>
-&lt;p>期望目标&lt;strong>目标机器&lt;/strong>可以上网，如使用yum安装软件。
-&lt;img src="https://oss.typesafe.cn/break-through-the-network2.png" alt="请输入图片描述">&lt;/p>
-&lt;ol>
-&lt;li>在&lt;strong>用户电脑&lt;/strong>上开启一个http代理&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -proxy http &lt;span style="color:#ae81ff">1080&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
-&lt;li>在&lt;strong>跳板机器&lt;/strong>上使用监听模式监听两个端口，用于交换数据&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -listen &lt;span style="color:#ae81ff">10000&lt;/span> &lt;span style="color:#ae81ff">10001&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
-&lt;li>在&lt;strong>目标机器&lt;/strong>上使用监听模式监听两个端口，用于交换数据&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -listen &lt;span style="color:#ae81ff">20000&lt;/span> &lt;span style="color:#ae81ff">20001&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
-&lt;li>在&lt;strong>用户电脑&lt;/strong>上使用代理人模式主动连接两个目标地址，用于交换数据&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -agent 127.0.0.1:1080 172.16.0.30:10000
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
-&lt;li>在&lt;strong>跳板机器&lt;/strong>上使用代理人模式主动连接两个目标地址，用于交换数据&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./4dnat -agent 127.0.0.1:10001 10.1.0.40:20000
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="6">
-&lt;li>在&lt;strong>目标机器&lt;/strong>上修改代理&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>cat &lt;span style="color:#e6db74">&amp;lt;&amp;lt;EOF &amp;gt;&amp;gt; /etc/profile
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">http_proxy=http://127.0.0.1:20001
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">https_proxy=http://127.0.0.1:20001
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">export http_proxy https_proxy
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">EOF&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>source /etc/profile
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="7">
-&lt;li>在&lt;strong>目标机器&lt;/strong>上测试访问互联网&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl https://typesafe.cn
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后奉上项目地址 &lt;a href="https://github.com/dushixiang/4dnat">https://github.com/dushixiang/4dnat&lt;/a>&lt;/p></description></item><item><title>Docker？Vmware？小孩子才做选择，打工人我全都要。</title><link>https://www.typesafe.cn/posts/docker-on-vmware/</link><pubDate>Tue, 17 Nov 2020 15:39:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/docker-on-vmware/</guid><description>&lt;h1 id="前言">前言&lt;/h1>
-&lt;p>作为一个称职的打工人，电脑上常备一个Vmware不是什么新鲜事了，但是它和Docker for Windows不兼容往往很让人头大。通过查找资料，发现提供的解决方案大致有三种&lt;/p>
-&lt;ol>
-&lt;li>先使用Vmware创建一台Linux虚拟机，在这台Linux虚拟机上再安装docker。&lt;/li>
-&lt;li>配置Vmware作为Docker for Windows的运行平台。&lt;/li>
-&lt;li>使用微软的Hyper-v来创建虚拟机。&lt;/li>
-&lt;/ol>
-&lt;p>对我而言，第一种不太优雅，第二种配置繁琐，第三种不会用。&lt;/p>
-&lt;p>直到我发现了vctl这个好东西。&lt;/p>
-&lt;h1 id="vctl-是什么">vctl 是什么？&lt;/h1>
-&lt;blockquote>
-&lt;p>vctl 是一款捆绑在Vmware Workstation Pro 应用程序中的命令行实用程序，仅在 Windows 10 1809 或更高版本上受支持。如果 Workstation Pro 所在主机上的 Windows 操作系统低于 Windows 10 1809，则它不支持 vctl CLI。&lt;/p>&lt;/blockquote>
-&lt;p>简单来说它就是Vmware上的一个工具，可以用它来管理容器，使用命令基本上和docker一致，只需要把&lt;code>docker &amp;lt;cmd&amp;gt;&lt;/code>换成&lt;code>vctl &amp;lt;cmd&amp;gt;&lt;/code>就足够了。Docker for Windows？不需要。现在容器都交给vctl来管理了。&lt;/p>
-&lt;p>在使用vctl命令前，和启动docker一样，需要先启动vctl的守护进程。&lt;/p>
-&lt;pre tabindex="0">&lt;code>vctl system start
-&lt;/code>&lt;/pre>&lt;p>当需要关闭守护进程时执行&lt;/p>
-&lt;pre tabindex="0">&lt;code>vctl system stop
-&lt;/code>&lt;/pre>&lt;p>接下来就是和普通的docker命令一样了。&lt;/p>
-&lt;pre tabindex="0">&lt;code># 拉取镜像
-vctl pull nginx
-
-# 查看镜像
-vctl images
-
-# 启动容器
-vctl --name some-nginx -d -p 8080:80 nginx
-
-# 查看容器
-vctl ps
-
-# 进入容器
-vctl exec -it &amp;lt;cid&amp;gt; bash 
-&lt;/code>&lt;/pre>&lt;p>更多使用信息可参考Vmware的官方文档 &lt;a href="https://docs.vmware.com/cn/VMware-Fusion/11/com.vmware.fusion.using.doc/GUID-78E7339F-7294-4F3E-9AD0-1E14C201FA40.html">使用vctl命令管理容器&lt;/a>&lt;/p></description></item><item><title>Linux Bridge 详解</title><link>https://www.typesafe.cn/posts/linux-bridge/</link><pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-bridge/</guid><description>&lt;h1 id="linux-bridge-详解">Linux Bridge 详解&lt;/h1>
+&lt;p>如果当前软件源中没有openvswitch，可以通过&lt;a href="https://developer.aliyun.com/packageSearch?word=openvswitch">阿里云官方镜像站&lt;/a>下载和操作系统版本对应的rpm包到本地再安装。 示例命令： &lt;code>yum localinstall openvswitch-2.9.0-3.el7.x86_64.rpm&lt;/code>&lt;/p></description></item><item><title>Linux Bridge 详解</title><link>https://www.typesafe.cn/posts/linux-bridge/</link><pubDate>Fri, 13 Nov 2020 21:47:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-bridge/</guid><description>&lt;h1 id="linux-bridge-详解">Linux Bridge 详解&lt;/h1>
 &lt;p>Linux Bridge（网桥）是用纯软件实现的虚拟交换机，有着和物理交换机相同的功能，例如二层交换，MAC地址学习等。因此我们可以把tun/tap，veth pair等设备绑定到网桥上，就像是把设备连接到物理交换机上一样。此外它和veth pair、tun/tap一样，也是一种虚拟网络设备，具有虚拟设备的所有特性，例如配置IP，MAC地址等。&lt;/p>
 &lt;p>Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。&lt;/p>
 &lt;h2 id="如何使用linux-bridge">如何使用Linux Bridge？&lt;/h2>
