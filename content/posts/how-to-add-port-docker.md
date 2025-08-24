@@ -7,11 +7,11 @@ slug: "how-to-add-port-for-docker"
 date: "2021-05-23T13:37:00+08:00"
 ---
 
-之前我们介绍`Network Namespace`（以下简称`netns`）和`veth pair`时说过`docker`是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下`docker`到底是如何做到的。
+之前我们介绍 Network Namespace（以下简称 netns）和 veth pair 时说过 docker 是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下 docker 到底是如何做到的。
 
 ### 启动一个无网络的容器
 
-首先我们使用 `--net=none` 参数启动一个无网络的容器，为了方便调试，这里我们使用了`centos`镜像。
+首先我们使用 `--net=none` 参数启动一个无网络的容器，为了方便调试，这里我们使用了 centos 镜像。
 
 ``` bash
 docker run -itd --name centos-test --net=none centos
@@ -35,7 +35,7 @@ CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          POR
 
 ### 如何查看docker对应的netns？
 
-当容器启动时，`docker`内部会自动为这个容器创建一个`netns`用于网络隔离，但当我们使用 `ip netns list` 查看时却看不到任何数据，这是因为`docker`把 `netns` 创建在了其他地方，而`ip netns list`命令只能读目录`/var/run/netns`下面的数据。
+当容器启动时，docker 内部会自动为这个容器创建一个 netns 用于网络隔离，但当我们使用 `ip netns list` 查看时却看不到任何数据，这是因为 docker 把 netns 创建在了其他地方，而`ip netns list`命令只能读目录`/var/run/netns`下面的数据。
 
 我们可以通过以下命令来解决这个问题，方便我们学习`docker`网络。
 

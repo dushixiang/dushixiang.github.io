@@ -17,9 +17,9 @@ Base58 是一种基于 58 个字符的编码方式，它的设计目标是：
 
 它的字符集是：
 
-```
+
 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz
-```
+
 
 > 可以看到，`0`、`O`、`l`、`I` 等容易混淆的字符被剔除，没有 `+`、`/` 这类特殊符号。
 
@@ -77,7 +77,7 @@ func main() {
 
 运行结果：
 
-```
+```shell
 Encoded: TcgsE5e9XJSrakNTEQQ
 Decoded: Hello, Base58!
 ```

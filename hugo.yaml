@@ -1,0 +1,38 @@
+baseURL: 'https://www.typesafe.cn'
+languageCode: 'en-us'
+title: '整点Bug'
+theme: 'nostyleplease'
+
+# 模块配置
+module:
+  hugoVersion:
+    extended: true
+    min: "0.41.0"
+
+# Markup 配置
+markup:
+  goldmark:
+    parser:
+      attribute:
+        block: true
+        title: true
+  
+  highlight:
+    noClasses: true
+    style: "dracula"
+    tabWidth: 4
+    lineNumbers: true
+  
+  tableOfContents:
+    startLevel: 2
+    endLevel: 3
+    ordered: false
+
+# 主题参数配置
+params:
+  theme_config:
+    appearance: "auto"
+    back_home_text: ".."
+    date_format: "2006-01-02"
+    isListGroupByDate: false
+    isShowFooter: true
