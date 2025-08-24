@@ -3,20 +3,20 @@
 &lt;p>公司有个项目需要将系统部署在 &lt;strong>kylinos&lt;/strong>上，刚开始还有点头疼，害怕各种程序无法安装和使用，等安装好服务器进行使用的时候发现这不就是基于centos的嘛，虽然基于哪个版本不知道，但是可以测试的，于是我一顿操作，最后发现它是基于Centos8的，系统内核版本是 4.19，问题不大，既然是基于Centos8的，那Centos8上能跑的程序，在这肯定也能跑，然后我就开始了愉快（痛苦）的安装docker之旅了。&lt;/p>
 &lt;h3 id="配置阿里云centos8镜像源">配置阿里云Centos8镜像源&lt;/h3>
 &lt;p>之所以要配置 Centos8 的镜像源是因为在安装docker的时候需要额外的一些依赖，而这些依赖在麒麟官方的源里面是没有的。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-8.repo
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="配置阿里云-docker-镜像源">配置阿里云 docker 镜像源&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#f1fa8c">&amp;#39;s+download.docker.com+mirrors.aliyun.com/docker-ce+&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="定义-yum-变量修改-repo">定义 yum 变量&amp;amp;修改 repo&lt;/h3>
 &lt;p>修改 centos 和 docker &lt;code>repo&lt;/code>文件中的 &lt;code>$releasever&lt;/code> 为 &lt;code>centos_version&lt;/code> ，原因是在麒麟服务器操作系统V10中 &lt;code>$releasever&lt;/code>被修改为了 10，而我们需要使用 centos 8的镜像源，如果你不替换，基本上仓库的每一个地址都是404。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;8&amp;#34;&lt;/span> &amp;gt; /etc/yum/vars/centos_version
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#e6db74">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/CentOS-Base.repo
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">echo&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;8&amp;#34;&lt;/span> &amp;gt; /etc/yum/vars/centos_version
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#f1fa8c">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/docker-ce.repo
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sed -i &lt;span style="color:#f1fa8c">&amp;#39;s/$releasever/$centos_version/g&amp;#39;&lt;/span> /etc/yum.repos.d/CentOS-Base.repo
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="建立yum缓存">建立yum缓存&lt;/h3>
 &lt;p>没啥可说的&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum makecache
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum makecache
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="查看docker-ce-版本">查看docker-ce 版本&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum list docker-ce --showduplicates | sort -r
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum list docker-ce --showduplicates | sort -r
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.9-3.el8 docker-ce-stable
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker-ce.x86_64 3:20.10.8-3.el8 docker-ce-stable

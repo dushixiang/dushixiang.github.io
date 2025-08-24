@@ -57,10 +57,10 @@ ip netns exec ns0 ip addr add 192.168.0.2/24 dev vnet0
 &lt;p>如果把OpenFlow控制器比作“大脑”，OVS流表就像是“大腿”一样接受来自“大脑”的指令，决定要向哪个方向前进。但OVS流表功能更加强大，在没有OpenFlow控制器时，也可以自主工作，它本身也供一些命令让我们可以直接管理流表。&lt;/p>
 &lt;h1 id="操作命令">操作命令&lt;/h1>
 &lt;h3 id="查看流表规则">查看流表规则&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 查看br-tun上的全部流表规则&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 查看br-tun上的全部流表规则&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl dump-flows br-tun
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="添加或修改流表规则">添加或修改流表规则&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions&lt;span style="color:#f92672">=[&lt;/span>动作1&lt;span style="color:#f92672">][&lt;/span>,动作2…&lt;span style="color:#f92672">]&lt;/span>”
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>ovs-ofctl add−flow／add−flows／mod−flows “流表匹配条件,actions&lt;span style="color:#ff79c6">=[&lt;/span>动作1&lt;span style="color:#ff79c6">][&lt;/span>,动作2…&lt;span style="color:#ff79c6">]&lt;/span>”
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果你有过编程的经验，流表规则其实就是一个个简单的&lt;code>if&lt;/code>语句，伪代码如下。&lt;/p>
 &lt;pre tabindex="0">&lt;code>if (流表匹配条件){
 	动作1，
@@ -72,10 +72,10 @@ if (流表匹配条件){
 	动作2...
 }
 &lt;/code>&lt;/pre>&lt;h3 id="删除流表规则">删除流表规则&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 删除br-tun上的全部流表规则&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 删除br-tun上的全部流表规则&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl del-flows br-tun
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 删除br-tun上匹配xx的全部流表规则&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 删除br-tun上匹配xx的全部流表规则&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-ofctl del-flows br-tun xx 
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="流表匹配条件">流表匹配条件&lt;/h1>
 &lt;p>OVS 流表匹配条件较多，下面我将其分成四部分来说明，分别是:&lt;/p>
@@ -125,19 +125,19 @@ if (流表匹配条件){
 &lt;/ul>
 &lt;h3 id="基础操作命令">基础操作命令&lt;/h3>
 &lt;p>新增端口镜像&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl -- set Bridge &amp;lt;bridge_name&amp;gt; mirrors&lt;span style="color:#f92672">=&lt;/span>@m &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -- --id&lt;span style="color:#f92672">=&lt;/span>@m create Mirror name&lt;span style="color:#f92672">=&lt;/span>&amp;lt;mirror_name&amp;gt; &lt;span style="color:#66d9ef">select&lt;/span>-dst-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; &lt;span style="color:#66d9ef">select&lt;/span>-src-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port0&amp;gt; output-port&lt;span style="color:#f92672">=&lt;/span>@&amp;lt;port1&amp;gt;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Bridge &amp;lt;bridge_name&amp;gt; &lt;span style="color:#8be9fd;font-style:italic">mirrors&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>@m &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> -- --id&lt;span style="color:#ff79c6">=&lt;/span>@&amp;lt;port0&amp;gt; get Port &amp;lt;port0&amp;gt; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> -- --id&lt;span style="color:#ff79c6">=&lt;/span>@&amp;lt;port1&amp;gt; get Port &amp;lt;port1&amp;gt; &lt;span style="color:#f1fa8c">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f1fa8c">&lt;/span> -- --id&lt;span style="color:#ff79c6">=&lt;/span>@m create Mirror &lt;span style="color:#8be9fd;font-style:italic">name&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>&amp;lt;mirror_name&amp;gt; &lt;span style="color:#ff79c6">select&lt;/span>-dst-port&lt;span style="color:#ff79c6">=&lt;/span>@&amp;lt;port0&amp;gt; &lt;span style="color:#ff79c6">select&lt;/span>-src-port&lt;span style="color:#ff79c6">=&lt;/span>@&amp;lt;port0&amp;gt; output-port&lt;span style="color:#ff79c6">=&lt;/span>@&amp;lt;port1&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>这行命令会输出一个镜像ID&lt;/p>&lt;/blockquote>
 &lt;p>删除端口镜像&lt;/p>
 &lt;pre tabindex="0">&lt;code>ovs-vsctl remove Bridge &amp;lt;bridge-name&amp;gt; mirrors &amp;lt;mirror-id&amp;gt;
 &lt;/code>&lt;/pre>&lt;p>在原端口镜像的基础上增加一个镜像源&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 获取端口的ID&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 获取端口的ID&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl get port &amp;lt;port_name&amp;gt; _uuid
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 在原端口镜像的基础上增加镜像源&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 在原端口镜像的基础上增加镜像源&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_src_port &amp;lt;port-id&amp;gt;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add Mirror &amp;lt;mirror-name&amp;gt; select_dst_port &amp;lt;port-id&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在原端口镜像的基础上删除一个镜像源&lt;/p></description></item><item><title>Open vSwitch 入门实践（3）使用OVS构建分布式隔离网络</title><link>https://www.typesafe.cn/posts/ovs-learn-3/</link><pubDate>Sun, 27 Dec 2020 11:38:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-3/</guid><description>&lt;h1 id="使用ovs构建分布式隔离网络">使用OVS构建分布式隔离网络&lt;/h1>
@@ -156,68 +156,68 @@ if (流表匹配条件){
 &lt;ul>
 &lt;li>配置环境 &lt;code>主机A&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int eth1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个内部端口&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加两个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet1 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加两个netns&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 netns ns1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip addr add 10.0.0.1/24 dev vnet0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip addr add 10.0.0.2/24 dev vnet1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>配置环境 &lt;code>主机B&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 请修改eth1为当前实验环境的业务网卡名称&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int eth1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个内部端口&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加两个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加两个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet1 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加两个netns&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 netns ns1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.3/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip addr add 10.0.0.3/24 dev vnet0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.4/24 dev vnet1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip addr add 10.0.0.4/24 dev vnet1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="测试">测试&lt;/h3>
 &lt;ul>
 &lt;li>测试 &lt;code>主机A&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.4
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.4
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ping 10.0.0.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ping 10.0.0.4
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ping 10.0.0.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ping 10.0.0.4
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>测试 &lt;code>主机B&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ping 10.0.0.2
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ping 10.0.0.2
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ping 10.0.0.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ping 10.0.0.2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ping 10.0.0.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ping 10.0.0.2
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>测试结果&lt;/li>
 &lt;/ul>
@@ -258,33 +258,33 @@ if (流表匹配条件){
 &lt;p>接下来我们来尝试完成两个实验，单机无隔离网络、单机隔离网络。&lt;/p>
 &lt;h2 id="实验一单机无隔离网络">实验一：单机无隔离网络&lt;/h2>
 &lt;p>使用ovs构建无隔离网络非常简单，只需要添加一个网桥，然后在这个网桥上再增加几个内部端口，最后把端口移动到netns中即可。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加网桥&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加网桥&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-int
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加三个内部端口&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- set Interface vnet0 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- set Interface vnet1 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet2 -- set Interface vnet2 type&lt;span style="color:#f92672">=&lt;/span>internal
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加三个netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加三个内部端口&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet0 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet1 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet1 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ovs-vsctl add-port br-int vnet2 -- &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> Interface vnet2 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span>&lt;span style="color:#ff79c6">=&lt;/span>internal
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加三个netns&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns2
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将内部端口分别移动到netns中&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet0 netns ns0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet1 netns ns1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set vnet2 netns ns2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将内部端口分别移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet2 netns ns2
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动端口并配置IP&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set vnet0 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip addr add 10.0.0.1/24 dev vnet0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 启动端口并配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip addr add 10.0.0.1/24 dev vnet0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set vnet1 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip addr add 10.0.0.2/24 dev vnet1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip addr add 10.0.0.2/24 dev vnet1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip link set lo up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip link set vnet2 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns2 ip addr add 10.0.0.3/24 dev vnet2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns2 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> lo up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns2 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> vnet2 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns2 ip addr add 10.0.0.3/24 dev vnet2
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>测试&lt;/p></description></item><item><title>Open vSwitch 入门实践（1）Open vSwitch 是什么</title><link>https://www.typesafe.cn/posts/ovs-learn-1/</link><pubDate>Wed, 25 Nov 2020 17:49:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/ovs-learn-1/</guid><description>&lt;h1 id="ovs简介">OVS简介&lt;/h1>
 &lt;h3 id="open-vswitch-是什么">Open vSwitch 是什么？&lt;/h3>
 &lt;p>Open vSwitch(以下简称OVS)是一个用C语言开发的多层虚拟交换机，使用Apcahe 2开源许可证，现如今基本上已经成为了开源SDN（软件定义网络）基础设施层的事实标准。&lt;/p>
@@ -341,8 +341,8 @@ if (流表匹配条件){
 &lt;p>流表是OVS进行数据转发的核心功能，定义了端口之间转发数据报文的规则，一条流表规则主要分为匹配和动作两部分，匹配部分决定哪些数据报文需要被处理，动作决定了匹配到的数据报文该如何处理。&lt;/p>
 &lt;h1 id="ovs常用操作">OVS常用操作&lt;/h1>
 &lt;h3 id="安装">安装&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install openvswitch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl enable openvswitch
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install openvswitch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#8be9fd;font-style:italic">enable&lt;/span> openvswitch
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl start openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>如果当前软件源中没有openvswitch，可以通过&lt;a href="https://developer.aliyun.com/packageSearch?word=openvswitch">阿里云官方镜像站&lt;/a>下载和操作系统版本对应的rpm包到本地再安装。 示例命令： &lt;code>yum localinstall openvswitch-2.9.0-3.el7.x86_64.rpm&lt;/code>&lt;/p></description></item></channel></rss>

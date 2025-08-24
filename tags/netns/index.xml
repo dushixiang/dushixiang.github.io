@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Netns on 整点Bug</title><link>https://www.typesafe.cn/tags/netns/</link><description>Recent content in Netns on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 08 Nov 2020 23:12:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/netns/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux Network Namespace (netns) 详解</title><link>https://www.typesafe.cn/posts/linux-netns/</link><pubDate>Sun, 08 Nov 2020 23:12:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-netns/</guid><description>&lt;p>Network Namespace （以下简称netns）是Linux内核提供的一项实现网络隔离的功能，它能隔离多个不同的网络空间，并且各自拥有独立的网络协议栈，这其中便包括了网络接口（网卡），路由表，iptables规则等。例如大名鼎鼎的docker便是基于netns实现的网络隔离，今天我们就来手动实验一下netns的隔离特性。&lt;/p>
 &lt;h3 id="使用方式">使用方式&lt;/h3>
 &lt;p>使用&lt;code>ip netns help&lt;/code>查看使用帮助&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Usage: ip netns list
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Usage: ip netns list
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns add NAME
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns set NAME NETNSID
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip &lt;span style="color:#f92672">[&lt;/span>-all&lt;span style="color:#f92672">]&lt;/span> netns delete &lt;span style="color:#f92672">[&lt;/span>NAME&lt;span style="color:#f92672">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns identify &lt;span style="color:#f92672">[&lt;/span>PID&lt;span style="color:#f92672">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> NAME NETNSID
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip &lt;span style="color:#ff79c6">[&lt;/span>-all&lt;span style="color:#ff79c6">]&lt;/span> netns delete &lt;span style="color:#ff79c6">[&lt;/span>NAME&lt;span style="color:#ff79c6">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns identify &lt;span style="color:#ff79c6">[&lt;/span>PID&lt;span style="color:#ff79c6">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns pids NAME
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip &lt;span style="color:#f92672">[&lt;/span>-all&lt;span style="color:#f92672">]&lt;/span> netns exec &lt;span style="color:#f92672">[&lt;/span>NAME&lt;span style="color:#f92672">]&lt;/span> cmd ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip &lt;span style="color:#ff79c6">[&lt;/span>-all&lt;span style="color:#ff79c6">]&lt;/span> netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span>NAME&lt;span style="color:#ff79c6">]&lt;/span> cmd ...
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns monitor
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns list-id
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始实验">开始实验&lt;/h3>
 &lt;p>我们将要构建如下图的网络&lt;/p>
 &lt;p>&lt;img src="https://oss.typesafe.cn/netns.png?t=2" alt="https://oss.typesafe.cn/netns.png">&lt;/p>
 &lt;p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加并启动虚拟网卡tap设备&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加并启动虚拟网卡tap设备&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tap0 mode tap 
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tap1 mode tap 
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set tap0 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set tap1 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 配置IP&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap1 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 配置IP&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip addr add 10.0.0.1/24 dev tap0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip addr add 10.0.0.2/24 dev tap1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 添加netns&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加netns&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns add ns1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将虚拟网卡tap0，tap1分别移动到ns0和ns1中&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set tap0 netns ns0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set tap1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将虚拟网卡tap0，tap1分别移动到ns0和ns1中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap1 netns ns1
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在宿主机器上使用&lt;code>ping 10.0.0.1&lt;/code>测试与tap0的网络连通性&lt;/p></description></item></channel></rss>

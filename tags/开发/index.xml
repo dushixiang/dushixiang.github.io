@@ -2,62 +2,62 @@
 &lt;p>1995年3月23日&lt;strong>Sun&lt;/strong>公司发布了&lt;strong>Java&lt;/strong>，至今已有近26年，可以说是一门十分成熟的开发语言了，但在某些不为人知的地方存在着一些意料之外的特性。&lt;/p>
 &lt;h3 id="java的保留关键字-goto和const">Java的保留关键字 goto和const&lt;/h3>
 &lt;p>在&lt;strong>Java&lt;/strong>里面没有&lt;code>goto&lt;/code>这个功能，但它作为保留字是无法当做变量来使用的，&lt;code>const&lt;/code>也是同样。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#66d9ef">goto&lt;/span> &lt;span style="color:#f92672">=&lt;/span> 0;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#f92672">=&lt;/span> 0;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#ff79c6">goto&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> 0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">const&lt;/span> &lt;span style="color:#ff79c6">=&lt;/span> 0;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面这两行代码的写法存在问题，无法正常编译通过。&lt;/p>
 &lt;h3 id="java标签label">Java标签Label&lt;/h3>
 &lt;p>上面说了在&lt;strong>Java&lt;/strong>里面没有&lt;code>goto&lt;/code>这个功能，但为了处理多重循环引入了Label，目的是为了在多重循环中方便的使用 break 和coutinue ，但好像在其他地方也可以用。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>outerLoop:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">while&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;I&amp;#39;m the outer loop&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> 0;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">while&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;I am the inner loop&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		i&lt;span style="color:#f92672">++&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">if&lt;/span> (i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> 3) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#66d9ef">break&lt;/span> outerLoop;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">outerLoop&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">while&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;I&amp;#39;m the outer loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd">int&lt;/span> i &lt;span style="color:#ff79c6">=&lt;/span> 0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">while&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;I am the inner loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		i&lt;span style="color:#ff79c6">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">if&lt;/span> (i &lt;span style="color:#ff79c6">&amp;gt;=&lt;/span> 3) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#ff79c6">break&lt;/span> outerLoop;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Complete the loop&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;Complete the loop&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I&lt;span style="color:#960050;background-color:#1e0010">&amp;#39;&lt;/span>m the outer loop
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I&amp;#39;m the outer loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>I am the inner loop
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Complete the loop
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>test:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">try&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#66d9ef">true&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">break&lt;/span> test; &lt;span style="color:#75715e">// works&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">test&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">try&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;hello&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">if&lt;/span> (&lt;span style="color:#ff79c6">true&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">break&lt;/span> test; &lt;span style="color:#6272a4">// works&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#a6e22e">out&lt;/span>.&lt;span style="color:#a6e22e">println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;world&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#66d9ef">finally&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	System.&lt;span style="color:#50fa7b">out&lt;/span>.&lt;span style="color:#50fa7b">println&lt;/span>(&lt;span style="color:#f1fa8c">&amp;#34;world&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#ff79c6">finally&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// 输出&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hello
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="integer的是否相等问题">Integer的是否相等问题&lt;/h3>
 &lt;p>日常开发使用到Java基本数据类型是不可避免的一件事，但它却包含了一些很容易犯错的点，踩过一些坑的同学可能了解Java基本包装类型的常量池技术，例如&lt;code>Integer&lt;/code>就具有数值&lt;code>[-128，127] &lt;/code>的相应类型的缓存数据，但下面定义的4个变量是否相等你是否能说的出来呢？&lt;/p></description></item></channel></rss>

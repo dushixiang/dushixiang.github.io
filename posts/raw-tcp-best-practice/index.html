@@ -65,58 +65,58 @@ func Write(conn net.Conn, flag int, body []byte) error {
     _, err := conn.Write(writeBody)
     return err
 }
-'><title>裸写TCP通信的正确方式</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2023-07-19 21:35:00 +0800 +0800">2023-07-19</time></p></div><article><h1>裸写TCP通信的正确方式</h1><blockquote><p>TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协议。</p></blockquote><p>由于TCP的特性，在裸写TCP通信的时候，是不能直接把数据序列化为字节后直接发送的，否则就可能会遇到数据包被“截断”或“粘包”的问题。(粘包警察正在赶来。)</p><h3 id=截断的原因>“截断”的原因</h3><p><strong>数据包之所以被“截断”，是因为网卡的 mtu。</strong></p><p>MTU（Maximum Transmission Unit，MTU）的中文名称是【最大传输单元】，它是指网络能够传输的最大数据包大小，以字节为单位。MTU的大小决定了发送端一次能够发送报文的最大字节数。如果MTU超过了接收端所能够承受的最大值，或者是超过了发送路径上途经的某台设备所能够承受的最大值，就会造成报文分片甚至丢弃，加重网络传输的负担。</p><p>普通网卡常见的mtu值是1500，vxlan 等隧道协议的 mtu 则会小于1500，这是因为 vxlan 等隧道协议需要对原始数据进行一层封装，并加上一个包头。</p><h3 id=粘包的原因>“粘包”的原因</h3><p><strong>而数据包之所以被“粘包”，则是因为不确定消息的边界，接收端根本不知到要拿多少数据。</strong></p><p>你说我知道网卡的 mtu 是 1500，那我一次取1500个字节吧，但你拿到的数据报文里面往往会“粘”着下一条消息的一部分。</p><h3 id=解决方案>解决方案</h3><p>因此我们需要一个固定长度的包头，写入消息的时候，把正文的长度写入到包头里面再打包发出，每次读取消息的时候，则先读取固定长度的包头，解析出来正文的长度，再使用正文长度取读取正文。</p><p>代码示例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang><span style=display:flex><span><span style=color:#66d9ef>const</span> <span style=color:#a6e22e>MaxBodyLen</span> = <span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>32</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
+'><title>裸写TCP通信的正确方式</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2023-07-19 21:35:00 +0800 +0800">2023-07-19</time></p></div><article><h1>裸写TCP通信的正确方式</h1><blockquote><p>TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协议。</p></blockquote><p>由于TCP的特性，在裸写TCP通信的时候，是不能直接把数据序列化为字节后直接发送的，否则就可能会遇到数据包被“截断”或“粘包”的问题。(粘包警察正在赶来。)</p><h3 id=截断的原因>“截断”的原因</h3><p><strong>数据包之所以被“截断”，是因为网卡的 mtu。</strong></p><p>MTU（Maximum Transmission Unit，MTU）的中文名称是【最大传输单元】，它是指网络能够传输的最大数据包大小，以字节为单位。MTU的大小决定了发送端一次能够发送报文的最大字节数。如果MTU超过了接收端所能够承受的最大值，或者是超过了发送路径上途经的某台设备所能够承受的最大值，就会造成报文分片甚至丢弃，加重网络传输的负担。</p><p>普通网卡常见的mtu值是1500，vxlan 等隧道协议的 mtu 则会小于1500，这是因为 vxlan 等隧道协议需要对原始数据进行一层封装，并加上一个包头。</p><h3 id=粘包的原因>“粘包”的原因</h3><p><strong>而数据包之所以被“粘包”，则是因为不确定消息的边界，接收端根本不知到要拿多少数据。</strong></p><p>你说我知道网卡的 mtu 是 1500，那我一次取1500个字节吧，但你拿到的数据报文里面往往会“粘”着下一条消息的一部分。</p><h3 id=解决方案>解决方案</h3><p>因此我们需要一个固定长度的包头，写入消息的时候，把正文的长度写入到包头里面再打包发出，每次读取消息的时候，则先读取固定长度的包头，解析出来正文的长度，再使用正文长度取读取正文。</p><p>代码示例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>const</span> MaxBodyLen = <span style=color:#bd93f9>1</span><span style=color:#ff79c6>&lt;&lt;</span><span style=color:#bd93f9>32</span> <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>1</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Header</span> [<span style=color:#ae81ff>8</span>]<span style=color:#66d9ef>byte</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>type</span> Header [<span style=color:#bd93f9>8</span>]<span style=color:#8be9fd>byte</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#a6e22e>Header</span>) <span style=color:#a6e22e>Version</span>() <span style=color:#66d9ef>int</span> {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> int(<span style=color:#a6e22e>h</span>[<span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> (h Header) <span style=color:#50fa7b>Version</span>() <span style=color:#8be9fd>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>int</span>(h[<span style=color:#bd93f9>0</span>])
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#a6e22e>Header</span>) <span style=color:#a6e22e>Flag</span>() <span style=color:#66d9ef>int</span> {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> int(<span style=color:#a6e22e>h</span>[<span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> (h Header) <span style=color:#50fa7b>Flag</span>() <span style=color:#8be9fd>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>int</span>(h[<span style=color:#bd93f9>1</span>])
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#a6e22e>Header</span>) <span style=color:#a6e22e>BodyLen</span>() <span style=color:#66d9ef>uint32</span> {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>binary</span>.<span style=color:#a6e22e>BigEndian</span>.<span style=color:#a6e22e>Uint32</span>(<span style=color:#a6e22e>h</span>[<span style=color:#ae81ff>4</span>:])
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> (h Header) <span style=color:#50fa7b>BodyLen</span>() <span style=color:#8be9fd>uint32</span> {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> binary.BigEndian.<span style=color:#50fa7b>Uint32</span>(h[<span style=color:#bd93f9>4</span>:])
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>Read</span>(<span style=color:#a6e22e>conn</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) (<span style=color:#a6e22e>Header</span>, []<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>h</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>Header</span>{}
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadFull</span>(<span style=color:#a6e22e>conn</span>, <span style=color:#a6e22e>h</span>[:])
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>h</span>, <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>Read</span>(conn net.Conn) (Header, []<span style=color:#8be9fd>byte</span>, <span style=color:#8be9fd>error</span>) {
+</span></span><span style=display:flex><span>    h <span style=color:#ff79c6>:=</span> Header{}
+</span></span><span style=display:flex><span>    _, err <span style=color:#ff79c6>:=</span> io.<span style=color:#50fa7b>ReadFull</span>(conn, h[:])
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> h, <span style=color:#ff79c6>nil</span>, err
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>bodyLen</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>h</span>.<span style=color:#a6e22e>BodyLen</span>()
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>bodyLen</span> <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span> {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>h</span>, <span style=color:#66d9ef>nil</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>    bodyLen <span style=color:#ff79c6>:=</span> h.<span style=color:#50fa7b>BodyLen</span>()
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> bodyLen <span style=color:#ff79c6>&lt;=</span> <span style=color:#bd93f9>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> h, <span style=color:#ff79c6>nil</span>, <span style=color:#ff79c6>nil</span>
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>body</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>bodyLen</span>)
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadFull</span>(<span style=color:#a6e22e>conn</span>, <span style=color:#a6e22e>body</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>h</span>, <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    body <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>([]<span style=color:#8be9fd>byte</span>, bodyLen)
+</span></span><span style=display:flex><span>    _, err = io.<span style=color:#50fa7b>ReadFull</span>(conn, body)
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> h, <span style=color:#ff79c6>nil</span>, err
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>h</span>, <span style=color:#a6e22e>body</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> h, body, <span style=color:#ff79c6>nil</span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>conn</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>, <span style=color:#a6e22e>flag</span> <span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>body</span> []<span style=color:#66d9ef>byte</span>) <span style=color:#66d9ef>error</span> {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>body</span>) &gt; <span style=color:#a6e22e>MaxBodyLen</span> {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;too large body, body length must be &lt;= %d&#34;</span>, <span style=color:#a6e22e>MaxBodyLen</span>)
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>Write</span>(conn net.Conn, flag <span style=color:#8be9fd>int</span>, body []<span style=color:#8be9fd>byte</span>) <span style=color:#8be9fd>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> <span style=color:#8be9fd;font-style:italic>len</span>(body) &gt; MaxBodyLen {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>return</span> fmt.<span style=color:#50fa7b>Errorf</span>(<span style=color:#f1fa8c>&#34;too large body, body length must be &lt;= %d&#34;</span>, MaxBodyLen)
 </span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>bodyLen</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>4</span>)
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>binary</span>.<span style=color:#a6e22e>BigEndian</span>.<span style=color:#a6e22e>PutUint32</span>(<span style=color:#a6e22e>bodyLen</span>, uint32(len(<span style=color:#a6e22e>body</span>)))
+</span></span><span style=display:flex><span>    bodyLen <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>([]<span style=color:#8be9fd>byte</span>, <span style=color:#bd93f9>4</span>)
+</span></span><span style=display:flex><span>    binary.BigEndian.<span style=color:#50fa7b>PutUint32</span>(bodyLen, <span style=color:#8be9fd;font-style:italic>uint32</span>(<span style=color:#8be9fd;font-style:italic>len</span>(body)))
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>hdr</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>byte</span>{<span style=color:#ae81ff>0x01</span>, byte(<span style=color:#a6e22e>flag</span>)}
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>hdr</span> = append(<span style=color:#a6e22e>hdr</span>, make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>2</span>)<span style=color:#f92672>...</span>) <span style=color:#75715e>// 补2个0让消息头总长度为8</span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>hdr</span> = append(<span style=color:#a6e22e>hdr</span>, <span style=color:#a6e22e>bodyLen</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>    hdr <span style=color:#ff79c6>:=</span> []<span style=color:#8be9fd>byte</span>{<span style=color:#bd93f9>0x01</span>, <span style=color:#8be9fd;font-style:italic>byte</span>(flag)}
+</span></span><span style=display:flex><span>    hdr = <span style=color:#8be9fd;font-style:italic>append</span>(hdr, <span style=color:#8be9fd;font-style:italic>make</span>([]<span style=color:#8be9fd>byte</span>, <span style=color:#bd93f9>2</span>)<span style=color:#ff79c6>...</span>) <span style=color:#6272a4>// 补2个0让消息头总长度为8</span>
+</span></span><span style=display:flex><span>    hdr = <span style=color:#8be9fd;font-style:italic>append</span>(hdr, bodyLen<span style=color:#ff79c6>...</span>)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>writeBody</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>writeBody</span> = append(<span style=color:#a6e22e>writeBody</span>, <span style=color:#a6e22e>hdr</span><span style=color:#f92672>...</span>)
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>writeBody</span> = append(<span style=color:#a6e22e>writeBody</span>, <span style=color:#a6e22e>body</span><span style=color:#f92672>...</span>)
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>writeBody</span>)
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    writeBody <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>([]<span style=color:#8be9fd>byte</span>, <span style=color:#bd93f9>0</span>)
+</span></span><span style=display:flex><span>    writeBody = <span style=color:#8be9fd;font-style:italic>append</span>(writeBody, hdr<span style=color:#ff79c6>...</span>)
+</span></span><span style=display:flex><span>    writeBody = <span style=color:#8be9fd;font-style:italic>append</span>(writeBody, body<span style=color:#ff79c6>...</span>)
+</span></span><span style=display:flex><span>    _, err <span style=color:#ff79c6>:=</span> conn.<span style=color:#50fa7b>Write</span>(writeBody)
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> err
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div></article></div></main></body></html>

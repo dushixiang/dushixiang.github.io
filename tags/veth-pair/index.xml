@@ -9,12 +9,13 @@
 &lt;p>我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：&lt;/p>
 &lt;p>&lt;img src="https://oss.typesafe.cn/vethpair.png" alt="https://oss.typesafe.cn/vethpair.png">&lt;/p>
 &lt;p>我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 创建一对veth&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link add veth0 type veth peer name veth1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 将veth移动到netns中&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set veth0 netns ns0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link set veth1 netns ns1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># 启动&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns0 ip link set veth0 up
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns exec ns1 ip link set veth1 up
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>接下来我们测试一下。&lt;/p></description></item></channel></rss>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 创建一对veth&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link add veth0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> veth peer name veth1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将veth移动到netns中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> veth0 netns ns0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> veth1 netns ns1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 启动&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns0 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> veth0 up
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip netns &lt;span style="color:#8be9fd;font-style:italic">exec&lt;/span> ns1 ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> veth1 up
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>接下来我们测试一下。&lt;/p>
+&lt;p>使用&lt;code>ip netns exec ns0 ping 10.0.0.2&lt;/code>在命名空间ns0中测试与tap1的网络连通性。&lt;/p></description></item></channel></rss>

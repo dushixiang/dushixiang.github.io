@@ -16,189 +16,189 @@ Host: baidu.com
 User-Agent: curl/8.7.1
 Accept: */*
 Proxy-Connection: Keep-Alive
-第一行是 ncat 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。"><title>HTTP代理的原理和实现</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-01-02 00:00:00 +0800 +0800">2025-01-02</time></p></div><article><h1>HTTP代理的原理和实现</h1><p>HTTP 代理可以说是每个开发者都绕不开的工具。几乎每天都会使用，但你真的了解 HTTP 代理的原理吗？</p><blockquote><p><strong>说明</strong>：这里讨论的 HTTP 代理是指 HTTP Proxy Server，具体是正向 HTTP 代理服务端的原理和实现。</p></blockquote><p>想了解 HTTP 代理的原理，最严谨的方法是阅读 RFC 文档，但这同时也是最困难的方式。今天，我将介绍一种更直观的学习技巧。</p><p>从名字上就可以看出，HTTP 代理基于 HTTP 协议，而 HTTP 协议运行在 TCP 之上。我们可以直接监听某个 TCP 端口，模拟 HTTP 代理服务端，同时使用 <code>curl</code> 命令通过代理访问网站，观察具体数据，再决定如何实现这个 HTTP 代理服务端。</p><hr><h2 id=代理-http-请求>代理 HTTP 请求</h2><p><strong>步骤 1</strong>：使用 <code>ncat</code> 监听端口 7788。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ncat -lvp <span style=color:#ae81ff>7788</span>
-</span></span></code></pre></div><p><strong>步骤 2</strong>：执行 <code>curl</code> 命令，通过代理访问百度的 HTTP 协议。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl http://baidu.com/123?a<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> --proxy 127.0.0.1:7788
+第一行是 ncat 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。"><title>HTTP代理的原理和实现</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-01-02 00:00:00 +0800 +0800">2025-01-02</time></p></div><article><h1>HTTP代理的原理和实现</h1><p>HTTP 代理可以说是每个开发者都绕不开的工具。几乎每天都会使用，但你真的了解 HTTP 代理的原理吗？</p><blockquote><p><strong>说明</strong>：这里讨论的 HTTP 代理是指 HTTP Proxy Server，具体是正向 HTTP 代理服务端的原理和实现。</p></blockquote><p>想了解 HTTP 代理的原理，最严谨的方法是阅读 RFC 文档，但这同时也是最困难的方式。今天，我将介绍一种更直观的学习技巧。</p><p>从名字上就可以看出，HTTP 代理基于 HTTP 协议，而 HTTP 协议运行在 TCP 之上。我们可以直接监听某个 TCP 端口，模拟 HTTP 代理服务端，同时使用 <code>curl</code> 命令通过代理访问网站，观察具体数据，再决定如何实现这个 HTTP 代理服务端。</p><hr><h2 id=代理-http-请求>代理 HTTP 请求</h2><p><strong>步骤 1</strong>：使用 <code>ncat</code> 监听端口 7788。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ncat -lvp <span style=color:#bd93f9>7788</span>
+</span></span></code></pre></div><p><strong>步骤 2</strong>：执行 <code>curl</code> 命令，通过代理访问百度的 HTTP 协议。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl http://baidu.com/123?a<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span> --proxy 127.0.0.1:7788
 </span></span></code></pre></div><p><strong>步骤 3</strong>：查看 <code>ncat</code> 的输出：</p><pre tabindex=0><code>Ncat: Connection from 127.0.0.1:58458.
 GET http://baidu.com/123?a=1 HTTP/1.1
 Host: baidu.com
 User-Agent: curl/8.7.1
 Accept: */*
 Proxy-Connection: Keep-Alive
-</code></pre><p>第一行是 <code>ncat</code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。</p><p>由此可见，HTTP 代理实际上是一个“传话筒”：客户端将完整的请求协议发送给 HTTP 代理，代理转发给目标服务器，并将响应返回给客户端。</p><p>接下来，我们用 Golang 实现这种代理功能。</p><hr><h2 id=使用-golang-实现-http-代理>使用 Golang 实现 HTTP 代理</h2><h3 id=1-搭建-http-服务>1. 搭建 HTTP 服务</h3><p>以下代码使用 Golang 官方库启动 HTTP 服务，并通过一个 <code>handler</code> 处理所有请求：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</code></pre><p>第一行是 <code>ncat</code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。</p><p>由此可见，HTTP 代理实际上是一个“传话筒”：客户端将完整的请求协议发送给 HTTP 代理，代理转发给目标服务器，并将响应返回给客户端。</p><p>接下来，我们用 Golang 实现这种代理功能。</p><hr><h2 id=使用-golang-实现-http-代理>使用 Golang 实现 HTTP 代理</h2><h3 id=1-搭建-http-服务>1. 搭建 HTTP 服务</h3><p>以下代码使用 Golang 官方库启动 HTTP 服务，并通过一个 <code>handler</code> 处理所有请求：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> main
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;io&#34;</span>
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;net/http&#34;</span>
 </span></span><span style=display:flex><span>)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>handler</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>handleHttp</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {
+</span></span><span style=display:flex><span>	handler <span style=color:#ff79c6>:=</span> http.<span style=color:#50fa7b>HandlerFunc</span>(<span style=color:#8be9fd;font-style:italic>func</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {
+</span></span><span style=display:flex><span>		<span style=color:#50fa7b>handleHttp</span>(w, r)
 </span></span><span style=display:flex><span>	})
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:7788&#34;</span>, <span style=color:#a6e22e>handler</span>)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	err <span style=color:#ff79c6>:=</span> http.<span style=color:#50fa7b>ListenAndServe</span>(<span style=color:#f1fa8c>&#34;:7788&#34;</span>, handler)
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>		log.<span style=color:#50fa7b>Fatal</span>(err)
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h3 id=2-实现代理逻辑>2. 实现代理逻辑</h3><p>接下来实现代理的核心功能：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleHttp</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 向目标服务器发送请求</span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>resp</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>DefaultTransport</span>.<span style=color:#a6e22e>RoundTrip</span>(<span style=color:#a6e22e>r</span>)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span></code></pre></div><h3 id=2-实现代理逻辑>2. 实现代理逻辑</h3><p>接下来实现代理的核心功能：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>handleHttp</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 向目标服务器发送请求</span>
+</span></span><span style=display:flex><span>	resp, err <span style=color:#ff79c6>:=</span> http.DefaultTransport.<span style=color:#50fa7b>RoundTrip</span>(r)
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>		http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span>
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>defer</span> resp.Body.<span style=color:#50fa7b>Close</span>()
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 将响应头和响应体写入客户端</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>k</span>, <span style=color:#a6e22e>vv</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Header</span> {
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>vv</span> {
-</span></span><span style=display:flex><span>			<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>Header</span>().<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>k</span>, <span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 将响应头和响应体写入客户端</span>
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>for</span> k, vv <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> resp.Header {
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>for</span> _, v <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> vv {
+</span></span><span style=display:flex><span>			w.<span style=color:#50fa7b>Header</span>().<span style=color:#50fa7b>Add</span>(k, v)
 </span></span><span style=display:flex><span>		}
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>WriteHeader</span>(<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>StatusCode</span>)
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>	w.<span style=color:#50fa7b>WriteHeader</span>(resp.StatusCode)
+</span></span><span style=display:flex><span>	_, _ = io.<span style=color:#50fa7b>Copy</span>(w, resp.Body)
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h3 id=测试结果>测试结果</h3><p>运行代码后，再次执行 <code>curl</code> 命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl http://baidu.com/123?a<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> --proxy 127.0.0.1:7788
-</span></span></code></pre></div><p><strong>输出：</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#75715e>&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;</span>
-</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>html</span>&gt;&lt;<span style=color:#f92672>head</span>&gt;
-</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>title</span>&gt;302 Found&lt;/<span style=color:#f92672>title</span>&gt;
-</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>head</span>&gt;&lt;<span style=color:#f92672>body</span>&gt;
-</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>h1</span>&gt;Found&lt;/<span style=color:#f92672>h1</span>&gt;
-</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>p</span>&gt;The document has moved &lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;http://www.baidu.com/search/error.html&#34;</span>&gt;here&lt;/<span style=color:#f92672>a</span>&gt;.&lt;/<span style=color:#f92672>p</span>&gt;
-</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>body</span>&gt;&lt;/<span style=color:#f92672>html</span>&gt;
-</span></span></code></pre></div><p>可以看到，HTTP 代理已经正确转发了请求。但目前只支持 HTTP 请求，接下来我们继续支持 HTTPS 协议。</p><hr><h2 id=代理-https-请求>代理 HTTPS 请求</h2><p><strong>步骤 1</strong>：使用 <code>ncat</code> 监听端口 7788。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ncat -lvp <span style=color:#ae81ff>7788</span>
-</span></span></code></pre></div><p><strong>步骤 2</strong>：执行 <code>curl</code> 命令，通过代理访问百度的 HTTPS 协议。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl https://baidu.com/123?a<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> --proxy 127.0.0.1:7788
+</span></span></code></pre></div><h3 id=测试结果>测试结果</h3><p>运行代码后，再次执行 <code>curl</code> 命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl http://baidu.com/123?a<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span> --proxy 127.0.0.1:7788
+</span></span></code></pre></div><p><strong>输出：</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#ff79c6>&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>html</span>&gt;&lt;<span style=color:#ff79c6>head</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>title</span>&gt;302 Found&lt;/<span style=color:#ff79c6>title</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>head</span>&gt;&lt;<span style=color:#ff79c6>body</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>h1</span>&gt;Found&lt;/<span style=color:#ff79c6>h1</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#ff79c6>p</span>&gt;The document has moved &lt;<span style=color:#ff79c6>a</span> <span style=color:#50fa7b>href</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;http://www.baidu.com/search/error.html&#34;</span>&gt;here&lt;/<span style=color:#ff79c6>a</span>&gt;.&lt;/<span style=color:#ff79c6>p</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#ff79c6>body</span>&gt;&lt;/<span style=color:#ff79c6>html</span>&gt;
+</span></span></code></pre></div><p>可以看到，HTTP 代理已经正确转发了请求。但目前只支持 HTTP 请求，接下来我们继续支持 HTTPS 协议。</p><hr><h2 id=代理-https-请求>代理 HTTPS 请求</h2><p><strong>步骤 1</strong>：使用 <code>ncat</code> 监听端口 7788。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>ncat -lvp <span style=color:#bd93f9>7788</span>
+</span></span></code></pre></div><p><strong>步骤 2</strong>：执行 <code>curl</code> 命令，通过代理访问百度的 HTTPS 协议。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl https://baidu.com/123?a<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span> --proxy 127.0.0.1:7788
 </span></span></code></pre></div><p><strong>步骤 3</strong>：查看 <code>ncat</code> 的输出：</p><pre tabindex=0><code>CONNECT baidu.com:443 HTTP/1.1
 Host: baidu.com:443
 User-Agent: curl/8.7.1
 Proxy-Connection: Keep-Alive
-</code></pre><p>在之前的 HTTP 请求中，我们能够获取到请求方法、路径、参数等完整信息。然而，在当前的 HTTPS 请求中，仅能看到 <code>CONNECT</code> 方法以及目标服务器的主机名和端口，其余信息完全无法获取。</p><p>为什么会出现这样的情况？我们需要参考 RFC 定义。</p><p>在 RFC 9110 章节 9.3.6 - CONNECT 方法： <a href=https://www.rfc-editor.org/rfc/rfc9110.html#name-connect>https://www.rfc-editor.org/rfc/rfc9110.html#name-connect</a></p><blockquote><p>The CONNECT method requests that the recipient establish a tunnel to the destination origin server identified by the request target and, if successful, thereafter restrict its behavior to blind forwarding of data, in both directions, until the tunnel is closed. Tunnels are commonly used to create an end-to-end virtual connection, through one or more proxies, which can then be secured using TLS (Transport Layer Security[TLS13]).</p></blockquote><p>翻译如下：</p><blockquote><p>CONNECT 方法请求接收者建立到由请求目标标识的目的地源服务器的隧道，如果成功，则将其行为限制为双向盲目转发数据，直到隧道关闭。隧道通常用于通过一个或多个代理创建端到端虚拟连接，然后可以使用 TLS（传输层安全性）保护该连接 [TLS13]。</p></blockquote><h3 id=使用-golang-实现隧道功能>使用 Golang 实现隧道功能</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleTunnel</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>remoteConn</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>DialTimeout</span>(<span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Host</span>, <span style=color:#ae81ff>5</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</code></pre><p>在之前的 HTTP 请求中，我们能够获取到请求方法、路径、参数等完整信息。然而，在当前的 HTTPS 请求中，仅能看到 <code>CONNECT</code> 方法以及目标服务器的主机名和端口，其余信息完全无法获取。</p><p>为什么会出现这样的情况？我们需要参考 RFC 定义。</p><p>在 RFC 9110 章节 9.3.6 - CONNECT 方法： <a href=https://www.rfc-editor.org/rfc/rfc9110.html#name-connect>https://www.rfc-editor.org/rfc/rfc9110.html#name-connect</a></p><blockquote><p>The CONNECT method requests that the recipient establish a tunnel to the destination origin server identified by the request target and, if successful, thereafter restrict its behavior to blind forwarding of data, in both directions, until the tunnel is closed. Tunnels are commonly used to create an end-to-end virtual connection, through one or more proxies, which can then be secured using TLS (Transport Layer Security[TLS13]).</p></blockquote><p>翻译如下：</p><blockquote><p>CONNECT 方法请求接收者建立到由请求目标标识的目的地源服务器的隧道，如果成功，则将其行为限制为双向盲目转发数据，直到隧道关闭。隧道通常用于通过一个或多个代理创建端到端虚拟连接，然后可以使用 TLS（传输层安全性）保护该连接 [TLS13]。</p></blockquote><h3 id=使用-golang-实现隧道功能>使用 Golang 实现隧道功能</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>handleTunnel</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {
+</span></span><span style=display:flex><span>	remoteConn, err <span style=color:#ff79c6>:=</span> net.<span style=color:#50fa7b>DialTimeout</span>(<span style=color:#f1fa8c>&#34;tcp&#34;</span>, r.Host, <span style=color:#bd93f9>5</span><span style=color:#ff79c6>*</span>time.Second)
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>		http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span>
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>remoteConn</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>defer</span> remoteConn.<span style=color:#50fa7b>Close</span>()
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 响应客户端隧道建立成功</span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>WriteHeader</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>)
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 响应客户端隧道建立成功</span>
+</span></span><span style=display:flex><span>	w.<span style=color:#50fa7b>WriteHeader</span>(http.StatusOK)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 获取客户端连接</span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>hijacker</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>w</span>.(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Hijacker</span>)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>ok</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;hijack not supported&#34;</span>, <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 获取客户端连接</span>
+</span></span><span style=display:flex><span>	hijacker, ok <span style=color:#ff79c6>:=</span> w.(http.Hijacker)
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> !ok {
+</span></span><span style=display:flex><span>		http.<span style=color:#50fa7b>Error</span>(w, <span style=color:#f1fa8c>&#34;hijack not supported&#34;</span>, http.StatusInternalServerError)
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span>
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>clientConn</span>, <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>hijacker</span>.<span style=color:#a6e22e>Hijack</span>()
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	clientConn, _, err <span style=color:#ff79c6>:=</span> hijacker.<span style=color:#50fa7b>Hijack</span>()
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>		http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span>
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>clientConn</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>defer</span> clientConn.<span style=color:#50fa7b>Close</span>()
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 双向拷贝数据</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>go</span> <span style=color:#a6e22e>bidirectionalCopy</span>(<span style=color:#a6e22e>remoteConn</span>, <span style=color:#a6e22e>clientConn</span>)
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 双向拷贝数据</span>
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>go</span> <span style=color:#50fa7b>bidirectionalCopy</span>(remoteConn, clientConn)
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>辅助函数：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>bidirectionalCopy</span>(<span style=color:#a6e22e>conn1</span>, <span style=color:#a6e22e>conn2</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) {
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>done</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>struct</span>{})
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>conn1</span>, <span style=color:#a6e22e>conn2</span>)
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>done</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}
+</span></span></code></pre></div><p>辅助函数：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>bidirectionalCopy</span>(conn1, conn2 net.Conn) {
+</span></span><span style=display:flex><span>	done <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>(<span style=color:#8be9fd;font-style:italic>chan</span> <span style=color:#8be9fd;font-style:italic>struct</span>{})
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>go</span> <span style=color:#8be9fd;font-style:italic>func</span>() {
+</span></span><span style=display:flex><span>		_, _ = io.<span style=color:#50fa7b>Copy</span>(conn1, conn2)
+</span></span><span style=display:flex><span>		done <span style=color:#ff79c6>&lt;-</span> <span style=color:#8be9fd;font-style:italic>struct</span>{}{}
 </span></span><span style=display:flex><span>	}()
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>conn2</span>, <span style=color:#a6e22e>conn1</span>)
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>done</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>go</span> <span style=color:#8be9fd;font-style:italic>func</span>() {
+</span></span><span style=display:flex><span>		_, _ = io.<span style=color:#50fa7b>Copy</span>(conn2, conn1)
+</span></span><span style=display:flex><span>		done <span style=color:#ff79c6>&lt;-</span> <span style=color:#8be9fd;font-style:italic>struct</span>{}{}
 </span></span><span style=display:flex><span>	}()
-</span></span><span style=display:flex><span>	<span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>done</span>
-</span></span><span style=display:flex><span>	<span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>done</span>
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>&lt;-</span>done
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>&lt;-</span>done
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><hr><h2 id=完整代码>完整代码</h2><p>最终实现如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>  
+</span></span></code></pre></div><hr><h2 id=完整代码>完整代码</h2><p>最终实现如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> main  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (  
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;io&#34;</span>  
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;log&#34;</span>    
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net&#34;</span>    
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net/http&#34;</span>    
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> (  
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;io&#34;</span>  
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;log&#34;</span>    
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;net&#34;</span>    
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;net/http&#34;</span>    
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;time&#34;</span>
 </span></span><span style=display:flex><span>)  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>handler</span> = <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {  
-</span></span><span style=display:flex><span>       <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Method</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>MethodConnect</span> {  
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>handleTunnel</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>r</span>)  
-</span></span><span style=display:flex><span>       } <span style=color:#66d9ef>else</span> {  
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>handleHttp</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>r</span>)  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {  
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>var</span> handler = http.<span style=color:#50fa7b>HandlerFunc</span>(<span style=color:#8be9fd;font-style:italic>func</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {  
+</span></span><span style=display:flex><span>       <span style=color:#ff79c6>if</span> r.Method <span style=color:#ff79c6>==</span> http.MethodConnect {  
+</span></span><span style=display:flex><span>          <span style=color:#50fa7b>handleTunnel</span>(w, r)  
+</span></span><span style=display:flex><span>       } <span style=color:#ff79c6>else</span> {  
+</span></span><span style=display:flex><span>          <span style=color:#50fa7b>handleHttp</span>(w, r)  
 </span></span><span style=display:flex><span>       }  
 </span></span><span style=display:flex><span>    })  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:7788&#34;</span>, <span style=color:#a6e22e>handler</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)  
+</span></span><span style=display:flex><span>    err <span style=color:#ff79c6>:=</span> http.<span style=color:#50fa7b>ListenAndServe</span>(<span style=color:#f1fa8c>&#34;:7788&#34;</span>, handler)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {  
+</span></span><span style=display:flex><span>       log.<span style=color:#50fa7b>Fatal</span>(err)  
 </span></span><span style=display:flex><span>    }  
 </span></span><span style=display:flex><span>}  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleHttp</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {  
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// 向下游服务器发送请求  </span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>resp</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>DefaultTransport</span>.<span style=color:#a6e22e>RoundTrip</span>(<span style=color:#a6e22e>r</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)  
-</span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span>  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>handleHttp</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {  
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// 向下游服务器发送请求  </span>
+</span></span><span style=display:flex><span>    resp, err <span style=color:#ff79c6>:=</span> http.DefaultTransport.<span style=color:#50fa7b>RoundTrip</span>(r)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {  
+</span></span><span style=display:flex><span>       http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)  
+</span></span><span style=display:flex><span>       <span style=color:#ff79c6>return</span>  
 </span></span><span style=display:flex><span>    }  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>defer</span> resp.Body.<span style=color:#50fa7b>Close</span>()  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// 将响应头和响应体写入到客户端  </span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>k</span>, <span style=color:#a6e22e>vv</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Header</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>vv</span> {  
-</span></span><span style=display:flex><span>          <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>Header</span>().<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>k</span>, <span style=color:#a6e22e>v</span>)  
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// 将响应头和响应体写入到客户端  </span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>for</span> k, vv <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> resp.Header {  
+</span></span><span style=display:flex><span>       <span style=color:#ff79c6>for</span> _, v <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> vv {  
+</span></span><span style=display:flex><span>          w.<span style=color:#50fa7b>Header</span>().<span style=color:#50fa7b>Add</span>(k, v)  
 </span></span><span style=display:flex><span>       }  
 </span></span><span style=display:flex><span>    }  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>WriteHeader</span>(<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>StatusCode</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>)  
+</span></span><span style=display:flex><span>    w.<span style=color:#50fa7b>WriteHeader</span>(resp.StatusCode)  
+</span></span><span style=display:flex><span>    _, _ = io.<span style=color:#50fa7b>Copy</span>(w, resp.Body)  
 </span></span><span style=display:flex><span>}  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleTunnel</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>remoteConn</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>DialTimeout</span>(<span style=color:#e6db74>&#34;tcp&#34;</span>, <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Host</span>, <span style=color:#ae81ff>5</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)  
-</span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span>  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>handleTunnel</span>(w http.ResponseWriter, r <span style=color:#ff79c6>*</span>http.Request) {  
+</span></span><span style=display:flex><span>    remoteConn, err <span style=color:#ff79c6>:=</span> net.<span style=color:#50fa7b>DialTimeout</span>(<span style=color:#f1fa8c>&#34;tcp&#34;</span>, r.Host, <span style=color:#bd93f9>5</span><span style=color:#ff79c6>*</span>time.Second)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {  
+</span></span><span style=display:flex><span>       http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)  
+</span></span><span style=display:flex><span>       <span style=color:#ff79c6>return</span>  
 </span></span><span style=display:flex><span>    }  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>remoteConn</span>.<span style=color:#a6e22e>Close</span>()  
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// 响应客户端隧道建立成功  </span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>w</span>.<span style=color:#a6e22e>WriteHeader</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>defer</span> remoteConn.<span style=color:#50fa7b>Close</span>()  
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// 响应客户端隧道建立成功  </span>
+</span></span><span style=display:flex><span>    w.<span style=color:#50fa7b>WriteHeader</span>(http.StatusOK)  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// 获取客户端长连接  </span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>hijacker</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>w</span>.(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Hijacker</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>ok</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;hijack not supported&#34;</span>, <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>)  
-</span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span>  
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// 获取客户端长连接  </span>
+</span></span><span style=display:flex><span>    hijacker, ok <span style=color:#ff79c6>:=</span> w.(http.Hijacker)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> !ok {  
+</span></span><span style=display:flex><span>       http.<span style=color:#50fa7b>Error</span>(w, <span style=color:#f1fa8c>&#34;hijack not supported&#34;</span>, http.StatusInternalServerError)  
+</span></span><span style=display:flex><span>       <span style=color:#ff79c6>return</span>  
 </span></span><span style=display:flex><span>    }  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>centralConn</span>, <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>hijacker</span>.<span style=color:#a6e22e>Hijack</span>()  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>)  
+</span></span><span style=display:flex><span>    centralConn, _, err <span style=color:#ff79c6>:=</span> hijacker.<span style=color:#50fa7b>Hijack</span>()  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {  
+</span></span><span style=display:flex><span>       http.<span style=color:#50fa7b>Error</span>(w, err.<span style=color:#50fa7b>Error</span>(), http.StatusServiceUnavailable)  
 </span></span><span style=display:flex><span>    }  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// 双向拷贝数据  </span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>bidirectionalCopy</span>(<span style=color:#a6e22e>remoteConn</span>, <span style=color:#a6e22e>centralConn</span>)  
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>// 双向拷贝数据  </span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>go</span> <span style=color:#50fa7b>bidirectionalCopy</span>(remoteConn, centralConn)  
 </span></span><span style=display:flex><span>}  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>bidirectionalCopy</span>(<span style=color:#a6e22e>conn1</span>, <span style=color:#a6e22e>conn2</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) {  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>done</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>struct</span>{})  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>conn1</span>, <span style=color:#a6e22e>conn2</span>)  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>done</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>bidirectionalCopy</span>(conn1, conn2 net.Conn) {  
+</span></span><span style=display:flex><span>    done <span style=color:#ff79c6>:=</span> <span style=color:#8be9fd;font-style:italic>make</span>(<span style=color:#8be9fd;font-style:italic>chan</span> <span style=color:#8be9fd;font-style:italic>struct</span>{})  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>go</span> <span style=color:#8be9fd;font-style:italic>func</span>() {  
+</span></span><span style=display:flex><span>       _, _ = io.<span style=color:#50fa7b>Copy</span>(conn1, conn2)  
+</span></span><span style=display:flex><span>       done <span style=color:#ff79c6>&lt;-</span> <span style=color:#8be9fd;font-style:italic>struct</span>{}{}  
 </span></span><span style=display:flex><span>    }()  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>conn2</span>, <span style=color:#a6e22e>conn1</span>)  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>done</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>go</span> <span style=color:#8be9fd;font-style:italic>func</span>() {  
+</span></span><span style=display:flex><span>       _, _ = io.<span style=color:#50fa7b>Copy</span>(conn2, conn1)  
+</span></span><span style=display:flex><span>       done <span style=color:#ff79c6>&lt;-</span> <span style=color:#8be9fd;font-style:italic>struct</span>{}{}  
 </span></span><span style=display:flex><span>    }()  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>done</span>  
-</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>done</span>  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&lt;-</span>done  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&lt;-</span>done  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>conn1</span>.<span style=color:#a6e22e>Close</span>()  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>conn2</span>.<span style=color:#a6e22e>Close</span>()  
+</span></span><span style=display:flex><span>    _ = conn1.<span style=color:#50fa7b>Close</span>()  
+</span></span><span style=display:flex><span>    _ = conn2.<span style=color:#50fa7b>Close</span>()  
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div></article></div></main></body></html>

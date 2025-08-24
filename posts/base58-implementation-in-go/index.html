@@ -30,35 +30,34 @@ IPFS CID：文件内容 ID 使用 Base58 编码，更短且可直接用在命令
 
 
 Go 语言 Base58 编码示例
-这里用我开源的 Golang Base58 库来演示："><title>Base58 编码详解与 Go 实现</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-08-10 23:36:35 +0800 +0800">2025-08-10</time></p></div><article><h1>Base58 编码详解与 Go 实现</h1><p>在处理二进制数据时，我们经常需要将其转换成可读的字符串，比如生成地址、密钥、邀请码等。
+这里用我开源的 Golang Base58 库来演示："><title>Base58 编码详解与 Go 实现</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-08-10 23:36:35 +0800 +0800">2025-08-10</time></p></div><article><h1>Base58 编码详解与 Go 实现</h1><p>在处理二进制数据时，我们经常需要将其转换成可读的字符串，比如生成地址、密钥、邀请码等。
 常见方案有 <strong>Base64</strong>、<strong>Hex</strong> 等，但在某些场景下，它们并不是最佳选择。
-这时，<strong>Base58</strong> 就登场了。</p><h2 id=什么是-base58>什么是 Base58？</h2><p>Base58 是一种基于 58 个字符的编码方式，它的设计目标是：</p><ul><li><strong>避免易混淆字符</strong>（<code>0</code> 和 <code>O</code>，<code>l</code> 和 <code>I</code>）</li><li><strong>不包含特殊符号</strong>（<code>+</code> <code>/</code> 等），适合直接用于 URL、文件名</li><li><strong>更适合人工抄写和阅读</strong>，降低输入错误率</li></ul><p>它的字符集是：</p><pre tabindex=0><code>123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz
-</code></pre><blockquote><p>可以看到，<code>0</code>、<code>O</code>、<code>l</code>、<code>I</code> 等容易混淆的字符被剔除，没有 <code>+</code>、<code>/</code> 这类特殊符号。</p></blockquote><hr><h2 id=为什么用-base58>为什么用 Base58？</h2><p>假设你有一个用户需要手动输入邀请码、钱包地址或交易 ID：</p><ul><li>如果用 <strong>Base64</strong>，会出现 <code>+</code> <code>/</code> 等特殊字符，在 URL 中需要转义；</li><li>如果用 <strong>Hex</strong>，数据会变得很长（每个字节要用两个字符表示）；</li><li>如果用 <strong>Base58</strong>，长度更短，可读性更高，错误率更低。</li></ul><p>这也是为什么比特币、IPFS 等项目都选择了 Base58（或其变种 Base58Check）。</p><hr><h2 id=base58-在实际项目中的应用>Base58 在实际项目中的应用</h2><ul><li><strong>比特币地址</strong>：Base58Check 编码，防止字符混淆并带有校验码</li><li><strong>IPFS CID</strong>：文件内容 ID 使用 Base58 编码，更短且可直接用在命令行</li><li><strong>邀请码 / 短链</strong>：直接放在 URL 中，不需要额外转义</li></ul><hr><h2 id=go-语言-base58-编码示例>Go 语言 Base58 编码示例</h2><p>这里用我开源的 Golang Base58 库来演示：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+这时，<strong>Base58</strong> 就登场了。</p><h2 id=什么是-base58>什么是 Base58？</h2><p>Base58 是一种基于 58 个字符的编码方式，它的设计目标是：</p><ul><li><strong>避免易混淆字符</strong>（<code>0</code> 和 <code>O</code>，<code>l</code> 和 <code>I</code>）</li><li><strong>不包含特殊符号</strong>（<code>+</code> <code>/</code> 等），适合直接用于 URL、文件名</li><li><strong>更适合人工抄写和阅读</strong>，降低输入错误率</li></ul><p>它的字符集是：</p><p>123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</p><blockquote><p>可以看到，<code>0</code>、<code>O</code>、<code>l</code>、<code>I</code> 等容易混淆的字符被剔除，没有 <code>+</code>、<code>/</code> 这类特殊符号。</p></blockquote><hr><h2 id=为什么用-base58>为什么用 Base58？</h2><p>假设你有一个用户需要手动输入邀请码、钱包地址或交易 ID：</p><ul><li>如果用 <strong>Base64</strong>，会出现 <code>+</code> <code>/</code> 等特殊字符，在 URL 中需要转义；</li><li>如果用 <strong>Hex</strong>，数据会变得很长（每个字节要用两个字符表示）；</li><li>如果用 <strong>Base58</strong>，长度更短，可读性更高，错误率更低。</li></ul><p>这也是为什么比特币、IPFS 等项目都选择了 Base58（或其变种 Base58Check）。</p><hr><h2 id=base58-在实际项目中的应用>Base58 在实际项目中的应用</h2><ul><li><strong>比特币地址</strong>：Base58Check 编码，防止字符混淆并带有校验码</li><li><strong>IPFS CID</strong>：文件内容 ID 使用 Base58 编码，更短且可直接用在命令行</li><li><strong>邀请码 / 短链</strong>：直接放在 URL 中，不需要额外转义</li></ul><hr><h2 id=go-语言-base58-编码示例>Go 语言 Base58 编码示例</h2><p>这里用我开源的 Golang Base58 库来演示：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> main
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;log&#34;</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/go-orz/base58&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#f1fa8c>&#34;github.com/go-orz/base58&#34;</span>
 </span></span><span style=display:flex><span>)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>data</span> <span style=color:#f92672>:=</span> []byte(<span style=color:#e6db74>&#34;Hello, Base58!&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {
+</span></span><span style=display:flex><span>	data <span style=color:#ff79c6>:=</span> []<span style=color:#8be9fd;font-style:italic>byte</span>(<span style=color:#f1fa8c>&#34;Hello, Base58!&#34;</span>)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 编码</span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>encoded</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>base58</span>.<span style=color:#a6e22e>EncodeToString</span>(<span style=color:#a6e22e>data</span>)
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Encoded:&#34;</span>, <span style=color:#a6e22e>encoded</span>)
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 编码</span>
+</span></span><span style=display:flex><span>	encoded <span style=color:#ff79c6>:=</span> base58.<span style=color:#50fa7b>EncodeToString</span>(data)
+</span></span><span style=display:flex><span>	fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;Encoded:&#34;</span>, encoded)
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>// 解码</span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>decoded</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>base58</span>.<span style=color:#a6e22e>DecodeString</span>(<span style=color:#a6e22e>encoded</span>)
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	<span style=color:#6272a4>// 解码</span>
+</span></span><span style=display:flex><span>	decoded, err <span style=color:#ff79c6>:=</span> base58.<span style=color:#50fa7b>DecodeString</span>(encoded)
+</span></span><span style=display:flex><span>	<span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {
+</span></span><span style=display:flex><span>		log.<span style=color:#50fa7b>Fatal</span>(err)
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Decoded:&#34;</span>, string(<span style=color:#a6e22e>decoded</span>))
+</span></span><span style=display:flex><span>	fmt.<span style=color:#50fa7b>Println</span>(<span style=color:#f1fa8c>&#34;Decoded:&#34;</span>, <span style=color:#8be9fd;font-style:italic>string</span>(decoded))
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>运行结果：</p><pre tabindex=0><code>Encoded: TcgsE5e9XJSrakNTEQQ
-Decoded: Hello, Base58!
-</code></pre><hr><h2 id=base58-与-base64-对比>Base58 与 Base64 对比</h2><table><thead><tr><th>特性</th><th>Base64</th><th>Base58</th></tr></thead><tbody><tr><td>字符集</td><td>64 个（含 + /）</td><td>58 个（无易混淆字符）</td></tr><tr><td>URL 友好</td><td>❌（需转义）</td><td>✅</td></tr><tr><td>人工抄写友好</td><td>❌</td><td>✅</td></tr><tr><td>编码长度</td><td>短</td><td>稍长</td></tr><tr><td>编解码速度</td><td>快</td><td>略慢</td></tr></tbody></table><p>如果你的数据主要是<strong>人类可读/可输入</strong>，Base58 更合适；
+</span></span></code></pre></div><p>运行结果：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>Encoded: TcgsE5e9XJSrakNTEQQ
+</span></span><span style=display:flex><span>Decoded: Hello, Base58!
+</span></span></code></pre></div><hr><h2 id=base58-与-base64-对比>Base58 与 Base64 对比</h2><table><thead><tr><th>特性</th><th>Base64</th><th>Base58</th></tr></thead><tbody><tr><td>字符集</td><td>64 个（含 + /）</td><td>58 个（无易混淆字符）</td></tr><tr><td>URL 友好</td><td>❌（需转义）</td><td>✅</td></tr><tr><td>人工抄写友好</td><td>❌</td><td>✅</td></tr><tr><td>编码长度</td><td>短</td><td>稍长</td></tr><tr><td>编解码速度</td><td>快</td><td>略慢</td></tr></tbody></table><p>如果你的数据主要是<strong>人类可读/可输入</strong>，Base58 更合适；
 如果主要是<strong>机器传输</strong>，Base64 更高效。</p><hr><h2 id=项目地址>项目地址</h2><p>我开源了一个 Golang 的 Base58 编码库，简单、轻量、无第三方依赖，
 欢迎 Star & Fork：</p><p>👉 <strong><a href=https://github.com/go-orz/base58>https://github.com/go-orz/base58</a></strong></p><hr><p>💡 <strong>总结</strong>：
 Base58 解决了 Base64 在人工输入、URL 传递上的不便，特别适合区块链、邀请码、短链接等场景。

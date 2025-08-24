@@ -38,15 +38,15 @@
 &lt;h1 id="安装虚拟机">安装虚拟机&lt;/h1>
 &lt;h2 id="安装依赖">安装依赖&lt;/h2>
 &lt;p>安装KVM和Linux网桥&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install -y qemu-kvm libvirt virt-install bridge-utils virt-manager dejavu-lgc-sans-fonts
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>&lt;code>dejavu-lgc-sans-fonts&lt;/code>用于解决 &lt;code>virt-manaer&lt;/code> 乱码&lt;/p>&lt;/blockquote>
 &lt;p>启动&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl enable libvirtd &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> systemctl start libvirtd
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#8be9fd;font-style:italic">enable&lt;/span> libvirtd &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> systemctl start libvirtd
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>安装OVS&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install openvswitch
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>yum install openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>启动OVS&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl enable openvswitch &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> systemctl start openvswitch
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#8be9fd;font-style:italic">enable&lt;/span> openvswitch &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> systemctl start openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建虚拟机">创建虚拟机&lt;/h3>
 &lt;p>使用 virt-manager 创建三台虚拟机&lt;/p>
 &lt;p>&lt;img src="https://oss.typesafe.cn/vm-nodes.png" alt="image-20210604140054913">&lt;/p>
@@ -56,5 +56,5 @@
 &lt;p>&lt;img src="https://oss.typesafe.cn/vm-manage-port-config.png" alt="">&lt;/p>
 &lt;h4 id="配置trunk网卡">配置trunk网卡&lt;/h4>
 &lt;p>使用ovs创建一个虚拟网桥。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-vlan
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-vlan
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>此时网桥&lt;code>br-vlan&lt;/code>上是没有任何虚拟网卡的，然后关闭虚拟机，在&lt;code>virt-manager&lt;/code>上添加一个网络设备&lt;/p></description></item></channel></rss>

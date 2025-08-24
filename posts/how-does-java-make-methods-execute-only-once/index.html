@@ -26,72 +26,72 @@ public class Once<T> {
 		return t;
 	}
 }
-单元测试"><title>在 Java 里如何让方法只执行一次？</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2023-04-02 13:18:00 +0800 +0800">2023-04-02</time></p></div><article><h1>在 Java 里如何让方法只执行一次？</h1><p>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。</p><p>正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 <code>Once</code> 功能。</p><blockquote><p><code>sync.Once</code> 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。</p><p><code>sync.Once</code> 类型有一个 <code>Do</code> 方法，该方法接收一个函数作为参数，并确保这个函数只会被执行一次，无论有多少个 goroutine 同时调用它。具体来说，第一个调用 Do 方法的 goroutine 会执行这个函数，而其他 goroutine 则会等待它完成，然后返回相同的结果。</p><p><code>sync.Once</code> 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。</p><p>&ndash; 来自 ChatGPT</p></blockquote><p>其实和<code>单例模式</code>差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#f92672>package</span> cn.typesafe.sync;
+单元测试"><title>在 Java 里如何让方法只执行一次？</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2023-04-02 13:18:00 +0800 +0800">2023-04-02</time></p></div><article><h1>在 Java 里如何让方法只执行一次？</h1><p>最近一年时间一直在写 Golang ，也算是对 Golang 有了初步的掌握，再次写 Java 的时候发现有点生疏了，写代码的时候也不自觉代入了写 Golang 的思维。</p><p>正如我想要在 Java 里面想让某一个方法只执行一次的时候，我第一时间想到了 Golang 里面的 <code>Once</code> 功能。</p><blockquote><p><code>sync.Once</code> 是 Golang 的一个并发原语，它提供了一种安全地在多个 goroutine 中执行某个函数（或代码块）一次的机制。</p><p><code>sync.Once</code> 类型有一个 <code>Do</code> 方法，该方法接收一个函数作为参数，并确保这个函数只会被执行一次，无论有多少个 goroutine 同时调用它。具体来说，第一个调用 Do 方法的 goroutine 会执行这个函数，而其他 goroutine 则会等待它完成，然后返回相同的结果。</p><p><code>sync.Once</code> 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。</p><p>&ndash; 来自 ChatGPT</p></blockquote><p>其实和<code>单例模式</code>差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#ff79c6>package</span> cn.typesafe.sync;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> lombok.SneakyThrows;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.concurrent.Callable;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> lombok.SneakyThrows;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.concurrent.Callable;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Once</span><span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> {
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>private</span> <span style=color:#66d9ef>volatile</span> T t <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd;font-style:italic>class</span> <span style=color:#50fa7b>Once</span><span style=color:#ff79c6>&lt;</span>T<span style=color:#ff79c6>&gt;</span> {
+</span></span><span style=display:flex><span>	<span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd;font-style:italic>volatile</span> T t <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>null</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>@SneakyThrows</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> T <span style=color:#a6e22e>doOnce</span>(Callable<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> action) {
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> (t <span style=color:#f92672>==</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>synchronized</span> (<span style=color:#66d9ef>this</span>) {
-</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span> (t <span style=color:#f92672>==</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>					t <span style=color:#f92672>=</span> action.<span style=color:#a6e22e>call</span>();
+</span></span><span style=display:flex><span>	@SneakyThrows
+</span></span><span style=display:flex><span>	<span style=color:#8be9fd;font-style:italic>public</span> T <span style=color:#50fa7b>doOnce</span>(Callable<span style=color:#ff79c6>&lt;</span>T<span style=color:#ff79c6>&gt;</span> action) {
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>if</span> (t <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>			<span style=color:#8be9fd;font-style:italic>synchronized</span> (<span style=color:#ff79c6>this</span>) {
+</span></span><span style=display:flex><span>				<span style=color:#ff79c6>if</span> (t <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>					t <span style=color:#ff79c6>=</span> action.<span style=color:#50fa7b>call</span>();
 </span></span><span style=display:flex><span>				}
 </span></span><span style=display:flex><span>			}
 </span></span><span style=display:flex><span>		}
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> t;
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>return</span> t;
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>单元测试</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#f92672>package</span> cn.typesafe.sync;
+</span></span></code></pre></div><p>单元测试</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#ff79c6>package</span> cn.typesafe.sync;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> cn.typesafe.sync.Once;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.junit.jupiter.api.Test;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.wildfly.common.Assert;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> cn.typesafe.sync.Once;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.junit.jupiter.api.Test;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.wildfly.common.Assert;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.concurrent.*;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.concurrent.atomic.AtomicInteger;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.concurrent.*;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.concurrent.atomic.AtomicInteger;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>OnceTest</span> {
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd;font-style:italic>class</span> <span style=color:#50fa7b>OnceTest</span> {
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>@Test</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>onceTest</span>() {
-</span></span><span style=display:flex><span>		Once<span style=color:#f92672>&lt;</span>Integer<span style=color:#f92672>&gt;</span> once <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Once<span style=color:#f92672>&lt;&gt;</span>();
-</span></span><span style=display:flex><span>		AtomicInteger count <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> AtomicInteger(0);
+</span></span><span style=display:flex><span>	@Test
+</span></span><span style=display:flex><span>	<span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>onceTest</span>() {
+</span></span><span style=display:flex><span>		Once<span style=color:#ff79c6>&lt;</span>Integer<span style=color:#ff79c6>&gt;</span> once <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Once<span style=color:#ff79c6>&lt;&gt;</span>();
+</span></span><span style=display:flex><span>		AtomicInteger count <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> AtomicInteger(0);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		Integer value1 <span style=color:#f92672>=</span> once.<span style=color:#a6e22e>doOnce</span>(count::incrementAndGet);
+</span></span><span style=display:flex><span>		Integer value1 <span style=color:#ff79c6>=</span> once.<span style=color:#50fa7b>doOnce</span>(count::incrementAndGet);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		Assert.<span style=color:#a6e22e>assertTrue</span>(value1.<span style=color:#a6e22e>equals</span>(1));
+</span></span><span style=display:flex><span>		Assert.<span style=color:#50fa7b>assertTrue</span>(value1.<span style=color:#50fa7b>equals</span>(1));
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		Integer value2 <span style=color:#f92672>=</span> once.<span style=color:#a6e22e>doOnce</span>(count::incrementAndGet);
+</span></span><span style=display:flex><span>		Integer value2 <span style=color:#ff79c6>=</span> once.<span style=color:#50fa7b>doOnce</span>(count::incrementAndGet);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		Assert.<span style=color:#a6e22e>assertTrue</span>(value2.<span style=color:#a6e22e>equals</span>(1));
+</span></span><span style=display:flex><span>		Assert.<span style=color:#50fa7b>assertTrue</span>(value2.<span style=color:#50fa7b>equals</span>(1));
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>@Test</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>onceConcurrentTest</span>() <span style=color:#66d9ef>throws</span> InterruptedException {
+</span></span><span style=display:flex><span>	@Test
+</span></span><span style=display:flex><span>	<span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>onceConcurrentTest</span>() <span style=color:#8be9fd;font-style:italic>throws</span> InterruptedException {
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		Once<span style=color:#f92672>&lt;</span>Integer<span style=color:#f92672>&gt;</span> once <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Once<span style=color:#f92672>&lt;&gt;</span>();
-</span></span><span style=display:flex><span>		AtomicInteger count <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> AtomicInteger(0);
+</span></span><span style=display:flex><span>		Once<span style=color:#ff79c6>&lt;</span>Integer<span style=color:#ff79c6>&gt;</span> once <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Once<span style=color:#ff79c6>&lt;&gt;</span>();
+</span></span><span style=display:flex><span>		AtomicInteger count <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> AtomicInteger(0);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>int</span> threadCount <span style=color:#f92672>=</span> Runtime.<span style=color:#a6e22e>getRuntime</span>().<span style=color:#a6e22e>availableProcessors</span>() <span style=color:#f92672>*</span> 2;
-</span></span><span style=display:flex><span>		ExecutorService executorService <span style=color:#f92672>=</span> Executors.<span style=color:#a6e22e>newFixedThreadPool</span>(threadCount);
-</span></span><span style=display:flex><span>		CountDownLatch countDownLatch <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> CountDownLatch(threadCount);
+</span></span><span style=display:flex><span>		<span style=color:#8be9fd>int</span> threadCount <span style=color:#ff79c6>=</span> Runtime.<span style=color:#50fa7b>getRuntime</span>().<span style=color:#50fa7b>availableProcessors</span>() <span style=color:#ff79c6>*</span> 2;
+</span></span><span style=display:flex><span>		ExecutorService executorService <span style=color:#ff79c6>=</span> Executors.<span style=color:#50fa7b>newFixedThreadPool</span>(threadCount);
+</span></span><span style=display:flex><span>		CountDownLatch countDownLatch <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> CountDownLatch(threadCount);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> 0; i <span style=color:#f92672>&lt;</span> threadCount; i<span style=color:#f92672>++</span>) {
-</span></span><span style=display:flex><span>			executorService.<span style=color:#a6e22e>execute</span>(() <span style=color:#f92672>-&gt;</span> {
-</span></span><span style=display:flex><span>				Integer value1 <span style=color:#f92672>=</span> once.<span style=color:#a6e22e>doOnce</span>(count::incrementAndGet);
+</span></span><span style=display:flex><span>		<span style=color:#ff79c6>for</span> (<span style=color:#8be9fd>int</span> i <span style=color:#ff79c6>=</span> 0; i <span style=color:#ff79c6>&lt;</span> threadCount; i<span style=color:#ff79c6>++</span>) {
+</span></span><span style=display:flex><span>			executorService.<span style=color:#50fa7b>execute</span>(() <span style=color:#ff79c6>-&gt;</span> {
+</span></span><span style=display:flex><span>				Integer value1 <span style=color:#ff79c6>=</span> once.<span style=color:#50fa7b>doOnce</span>(count::incrementAndGet);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>				Assert.<span style=color:#a6e22e>assertTrue</span>(value1.<span style=color:#a6e22e>equals</span>(1));
-</span></span><span style=display:flex><span>				countDownLatch.<span style=color:#a6e22e>countDown</span>();
+</span></span><span style=display:flex><span>				Assert.<span style=color:#50fa7b>assertTrue</span>(value1.<span style=color:#50fa7b>equals</span>(1));
+</span></span><span style=display:flex><span>				countDownLatch.<span style=color:#50fa7b>countDown</span>();
 </span></span><span style=display:flex><span>			});
 </span></span><span style=display:flex><span>		}
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		countDownLatch.<span style=color:#a6e22e>await</span>();
+</span></span><span style=display:flex><span>		countDownLatch.<span style=color:#50fa7b>await</span>();
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div></article></div></main></body></html>

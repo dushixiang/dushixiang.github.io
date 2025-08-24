@@ -40,106 +40,106 @@ Disk /dev/mapper/cl-swap: 2 GiB, 2147483648 bytes, 4194304 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
-可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。"><title>KVM 虚拟机磁盘扩容</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-05-31 19:20:00 +0800 +0800">2021-05-31</time></p></div><article><h1>KVM 虚拟机磁盘扩容</h1><h3 id=一镜像扩容>一、镜像扩容</h3><p>注意：需要先关闭虚拟机才能操作，<code>+</code>号前面有空格，后面没有空格。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>qemu-img resize test.qcow2 +80G
-</span></span></code></pre></div><p>原镜像磁盘大小20GB，扩容完成后可使用以下命令查看</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>qemu-img info test.qcow2
-</span></span></code></pre></div><p>输出</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>image: test.qcow2
+可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。"><title>KVM 虚拟机磁盘扩容</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-05-31 19:20:00 +0800 +0800">2021-05-31</time></p></div><article><h1>KVM 虚拟机磁盘扩容</h1><h3 id=一镜像扩容>一、镜像扩容</h3><p>注意：需要先关闭虚拟机才能操作，<code>+</code>号前面有空格，后面没有空格。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>qemu-img resize test.qcow2 +80G
+</span></span></code></pre></div><p>原镜像磁盘大小20GB，扩容完成后可使用以下命令查看</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>qemu-img info test.qcow2
+</span></span></code></pre></div><p>输出</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>image: test.qcow2
 </span></span><span style=display:flex><span>file format: qcow2
-</span></span><span style=display:flex><span>virtual size: 100G <span style=color:#f92672>(</span><span style=color:#ae81ff>107374182400</span> bytes<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>virtual size: 100G <span style=color:#ff79c6>(</span><span style=color:#bd93f9>107374182400</span> bytes<span style=color:#ff79c6>)</span>
 </span></span><span style=display:flex><span>disk size: 885M
-</span></span><span style=display:flex><span>cluster_size: <span style=color:#ae81ff>65536</span>
+</span></span><span style=display:flex><span>cluster_size: <span style=color:#bd93f9>65536</span>
 </span></span><span style=display:flex><span>Format specific information:
 </span></span><span style=display:flex><span>    compat: 1.1
-</span></span><span style=display:flex><span>    lazy refcounts: false
-</span></span><span style=display:flex><span>    refcount bits: <span style=color:#ae81ff>16</span>
-</span></span><span style=display:flex><span>    corrupt: false
-</span></span></code></pre></div><h3 id=二windows磁盘扩容>二、Windows磁盘扩容</h3><p>Windows磁盘扩容比较方便，进入 <strong>计算机管理>磁盘管理</strong> 找到新增的分区把它添加到需要的分区即可。</p><h3 id=三linux磁盘扩容>三、Linux磁盘扩容</h3><p>启动虚拟机后，进入虚拟机控制台，使用<code>fdisk -l</code>命令查看磁盘信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Disk /dev/vda: <span style=color:#ae81ff>100</span> GiB, <span style=color:#ae81ff>107374182400</span> bytes, <span style=color:#ae81ff>209715200</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
+</span></span><span style=display:flex><span>    lazy refcounts: <span style=color:#8be9fd;font-style:italic>false</span>
+</span></span><span style=display:flex><span>    refcount bits: <span style=color:#bd93f9>16</span>
+</span></span><span style=display:flex><span>    corrupt: <span style=color:#8be9fd;font-style:italic>false</span>
+</span></span></code></pre></div><h3 id=二windows磁盘扩容>二、Windows磁盘扩容</h3><p>Windows磁盘扩容比较方便，进入 <strong>计算机管理>磁盘管理</strong> 找到新增的分区把它添加到需要的分区即可。</p><h3 id=三linux磁盘扩容>三、Linux磁盘扩容</h3><p>启动虚拟机后，进入虚拟机控制台，使用<code>fdisk -l</code>命令查看磁盘信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Disk /dev/vda: <span style=color:#bd93f9>100</span> GiB, <span style=color:#bd93f9>107374182400</span> bytes, <span style=color:#bd93f9>209715200</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
 </span></span><span style=display:flex><span>Disklabel type: dos
 </span></span><span style=display:flex><span>Disk identifier: 0xe11f7f01
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>Device     Boot   Start      End  Sectors Size Id Type
-</span></span><span style=display:flex><span>/dev/vda1  *       <span style=color:#ae81ff>2048</span>  <span style=color:#ae81ff>2099199</span>  <span style=color:#ae81ff>2097152</span>   1G <span style=color:#ae81ff>83</span> Linux
-</span></span><span style=display:flex><span>/dev/vda2       <span style=color:#ae81ff>2099200</span> <span style=color:#ae81ff>41943039</span> <span style=color:#ae81ff>39843840</span>  19G 8e Linux LVM
+</span></span><span style=display:flex><span>/dev/vda1  *       <span style=color:#bd93f9>2048</span>  <span style=color:#bd93f9>2099199</span>  <span style=color:#bd93f9>2097152</span>   1G <span style=color:#bd93f9>83</span> Linux
+</span></span><span style=display:flex><span>/dev/vda2       <span style=color:#bd93f9>2099200</span> <span style=color:#bd93f9>41943039</span> <span style=color:#bd93f9>39843840</span>  19G 8e Linux LVM
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Disk /dev/mapper/cl-root: <span style=color:#ae81ff>17</span> GiB, <span style=color:#ae81ff>18249416704</span> bytes, <span style=color:#ae81ff>35643392</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
+</span></span><span style=display:flex><span>Disk /dev/mapper/cl-root: <span style=color:#bd93f9>17</span> GiB, <span style=color:#bd93f9>18249416704</span> bytes, <span style=color:#bd93f9>35643392</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Disk /dev/mapper/cl-swap: <span style=color:#ae81ff>2</span> GiB, <span style=color:#ae81ff>2147483648</span> bytes, <span style=color:#ae81ff>4194304</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span></code></pre></div><p>可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。</p><p>使用命令<code>fdisk /dev/vda</code>进行分区管理。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Welcome to fdisk <span style=color:#f92672>(</span>util-linux 2.32.1<span style=color:#f92672>)</span>.
-</span></span><span style=display:flex><span>Changes will remain in memory only, <span style=color:#66d9ef>until</span> you decide to write them.
+</span></span><span style=display:flex><span>Disk /dev/mapper/cl-swap: <span style=color:#bd93f9>2</span> GiB, <span style=color:#bd93f9>2147483648</span> bytes, <span style=color:#bd93f9>4194304</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span></code></pre></div><p>可以看到这台虚拟机的磁盘大小已经有100GB了，但分区大小还是没有变化，只有初始大小20GB。</p><p>使用命令<code>fdisk /dev/vda</code>进行分区管理。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Welcome to fdisk <span style=color:#ff79c6>(</span>util-linux 2.32.1<span style=color:#ff79c6>)</span>.
+</span></span><span style=display:flex><span>Changes will remain in memory only, <span style=color:#ff79c6>until</span> you decide to write them.
 </span></span><span style=display:flex><span>Be careful before using the write command.
-</span></span><span style=display:flex><span>Command <span style=color:#f92672>(</span>m <span style=color:#66d9ef>for</span> help<span style=color:#f92672>)</span>: n
-</span></span></code></pre></div><p>输入 <code>n</code> 创建一个新分区并回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Partition type
-</span></span><span style=display:flex><span>   p   primary <span style=color:#f92672>(</span><span style=color:#ae81ff>2</span> primary, <span style=color:#ae81ff>0</span> extended, <span style=color:#ae81ff>2</span> free<span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>   e   extended <span style=color:#f92672>(</span>container <span style=color:#66d9ef>for</span> logical partitions<span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>Select <span style=color:#f92672>(</span>default p<span style=color:#f92672>)</span>: p
-</span></span></code></pre></div><p>提示选择分区，输入 <code>p</code> 选择主分区并回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Partition number <span style=color:#f92672>(</span>3,4, default 3<span style=color:#f92672>)</span>:
-</span></span></code></pre></div><p>提示选择分区编号，直接回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>First sector <span style=color:#f92672>(</span>41943040-209715199, default 41943040<span style=color:#f92672>)</span>: 
-</span></span><span style=display:flex><span>Last sector, +sectors or +size<span style=color:#f92672>{</span>K,M,G,T,P<span style=color:#f92672>}</span> <span style=color:#f92672>(</span>41943040-209715199, default 209715199<span style=color:#f92672>)</span>: 
-</span></span><span style=display:flex><span>Created a new partition <span style=color:#ae81ff>3</span> of type <span style=color:#e6db74>&#39;Linux&#39;</span> and of size <span style=color:#ae81ff>80</span> GiB.
-</span></span><span style=display:flex><span>Command <span style=color:#f92672>(</span>m <span style=color:#66d9ef>for</span> help<span style=color:#f92672>)</span>: t
+</span></span><span style=display:flex><span>Command <span style=color:#ff79c6>(</span>m <span style=color:#ff79c6>for</span> <span style=color:#8be9fd;font-style:italic>help</span><span style=color:#ff79c6>)</span>: n
+</span></span></code></pre></div><p>输入 <code>n</code> 创建一个新分区并回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Partition <span style=color:#8be9fd;font-style:italic>type</span>
+</span></span><span style=display:flex><span>   p   primary <span style=color:#ff79c6>(</span><span style=color:#bd93f9>2</span> primary, <span style=color:#bd93f9>0</span> extended, <span style=color:#bd93f9>2</span> free<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>   e   extended <span style=color:#ff79c6>(</span>container <span style=color:#ff79c6>for</span> logical partitions<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>Select <span style=color:#ff79c6>(</span>default p<span style=color:#ff79c6>)</span>: p
+</span></span></code></pre></div><p>提示选择分区，输入 <code>p</code> 选择主分区并回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Partition number <span style=color:#ff79c6>(</span>3,4, default 3<span style=color:#ff79c6>)</span>:
+</span></span></code></pre></div><p>提示选择分区编号，直接回车。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>First sector <span style=color:#ff79c6>(</span>41943040-209715199, default 41943040<span style=color:#ff79c6>)</span>: 
+</span></span><span style=display:flex><span>Last sector, +sectors or +size<span style=color:#ff79c6>{</span>K,M,G,T,P<span style=color:#ff79c6>}</span> <span style=color:#ff79c6>(</span>41943040-209715199, default 209715199<span style=color:#ff79c6>)</span>: 
+</span></span><span style=display:flex><span>Created a new partition <span style=color:#bd93f9>3</span> of <span style=color:#8be9fd;font-style:italic>type</span> <span style=color:#f1fa8c>&#39;Linux&#39;</span> and of size <span style=color:#bd93f9>80</span> GiB.
+</span></span><span style=display:flex><span>Command <span style=color:#ff79c6>(</span>m <span style=color:#ff79c6>for</span> <span style=color:#8be9fd;font-style:italic>help</span><span style=color:#ff79c6>)</span>: t
 </span></span></code></pre></div><p>输入<code>t</code>修改磁盘格式。</p><pre tabindex=0><code>Partition number (1-3, default 3): 
 Hex code (type L to list all codes): 8e
 Changed type of partition &#39;Linux&#39; to &#39;Linux LVM&#39;.
 Command (m for help): w
-</code></pre><p>提示选择分区直接回车，提示选择十六进制编码，输入<code>8e</code>并回车，最后输入<code>w</code>保存并退出此流程。</p><p>再次输入<code>fdisk -l</code> 查看磁盘信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Disk /dev/vda: <span style=color:#ae81ff>100</span> GiB, <span style=color:#ae81ff>107374182400</span> bytes, <span style=color:#ae81ff>209715200</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
+</code></pre><p>提示选择分区直接回车，提示选择十六进制编码，输入<code>8e</code>并回车，最后输入<code>w</code>保存并退出此流程。</p><p>再次输入<code>fdisk -l</code> 查看磁盘信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>Disk /dev/vda: <span style=color:#bd93f9>100</span> GiB, <span style=color:#bd93f9>107374182400</span> bytes, <span style=color:#bd93f9>209715200</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
 </span></span><span style=display:flex><span>Disklabel type: dos
 </span></span><span style=display:flex><span>Disk identifier: 0xe11f7f01
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>Device     Boot    Start       End   Sectors Size Id Type
-</span></span><span style=display:flex><span>/dev/vda1  *        <span style=color:#ae81ff>2048</span>   <span style=color:#ae81ff>2099199</span>   <span style=color:#ae81ff>2097152</span>   1G <span style=color:#ae81ff>83</span> Linux
-</span></span><span style=display:flex><span>/dev/vda2        <span style=color:#ae81ff>2099200</span>  <span style=color:#ae81ff>41943039</span>  <span style=color:#ae81ff>39843840</span>  19G 8e Linux LVM
-</span></span><span style=display:flex><span>/dev/vda3       <span style=color:#ae81ff>41943040</span> <span style=color:#ae81ff>209715199</span> <span style=color:#ae81ff>167772160</span>  80G 8e Linux LVM
+</span></span><span style=display:flex><span>/dev/vda1  *        <span style=color:#bd93f9>2048</span>   <span style=color:#bd93f9>2099199</span>   <span style=color:#bd93f9>2097152</span>   1G <span style=color:#bd93f9>83</span> Linux
+</span></span><span style=display:flex><span>/dev/vda2        <span style=color:#bd93f9>2099200</span>  <span style=color:#bd93f9>41943039</span>  <span style=color:#bd93f9>39843840</span>  19G 8e Linux LVM
+</span></span><span style=display:flex><span>/dev/vda3       <span style=color:#bd93f9>41943040</span> <span style=color:#bd93f9>209715199</span> <span style=color:#bd93f9>167772160</span>  80G 8e Linux LVM
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Disk /dev/mapper/cl-root: <span style=color:#ae81ff>17</span> GiB, <span style=color:#ae81ff>18249416704</span> bytes, <span style=color:#ae81ff>35643392</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
+</span></span><span style=display:flex><span>Disk /dev/mapper/cl-root: <span style=color:#bd93f9>17</span> GiB, <span style=color:#bd93f9>18249416704</span> bytes, <span style=color:#bd93f9>35643392</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Disk /dev/mapper/cl-swap: <span style=color:#ae81ff>2</span> GiB, <span style=color:#ae81ff>2147483648</span> bytes, <span style=color:#ae81ff>4194304</span> sectors
-</span></span><span style=display:flex><span>Units: sectors of <span style=color:#ae81ff>1</span> * 512 <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>Sector size <span style=color:#f92672>(</span>logical/physical<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
-</span></span><span style=display:flex><span>I/O size <span style=color:#f92672>(</span>minimum/optimal<span style=color:#f92672>)</span>: <span style=color:#ae81ff>512</span> bytes / <span style=color:#ae81ff>512</span> bytes
+</span></span><span style=display:flex><span>Disk /dev/mapper/cl-swap: <span style=color:#bd93f9>2</span> GiB, <span style=color:#bd93f9>2147483648</span> bytes, <span style=color:#bd93f9>4194304</span> sectors
+</span></span><span style=display:flex><span>Units: sectors of <span style=color:#bd93f9>1</span> * <span style=color:#8be9fd;font-style:italic>512</span> <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>Sector size <span style=color:#ff79c6>(</span>logical/physical<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
+</span></span><span style=display:flex><span>I/O size <span style=color:#ff79c6>(</span>minimum/optimal<span style=color:#ff79c6>)</span>: <span style=color:#bd93f9>512</span> bytes / <span style=color:#bd93f9>512</span> bytes
 </span></span></code></pre></div><p>可以看到已经多了一个<code>/dev/vda3</code>分区，并且大小为80GB。</p><p>创建一个新的<code>pv</code>并添加到要扩容的<code>vg</code>中。</p><pre tabindex=0><code>[root@localhost ~]# pvcreate /dev/vda3
   Physical volume &#34;/dev/vda3&#34; successfully created.
 [root@localhost ~]# 
 [root@localhost ~]# vgextend  cl /dev/vda3
   Volume group &#34;cl&#34; successfully extended
 [root@localhost ~]# 
-</code></pre><p>使用<code>vgdisplay</code>可以查看到已经扩容。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># vgdisplay </span>
+</code></pre><p>使用<code>vgdisplay</code>可以查看到已经扩容。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># vgdisplay </span>
 </span></span><span style=display:flex><span>  --- Volume group ---
 </span></span><span style=display:flex><span>  VG Name               cl
 </span></span><span style=display:flex><span>  System ID             
 </span></span><span style=display:flex><span>  Format                lvm2
-</span></span><span style=display:flex><span>  Metadata Areas        <span style=color:#ae81ff>2</span>
-</span></span><span style=display:flex><span>  Metadata Sequence No  <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>  Metadata Areas        <span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>  Metadata Sequence No  <span style=color:#bd93f9>4</span>
 </span></span><span style=display:flex><span>  VG Access             read/write
 </span></span><span style=display:flex><span>  VG Status             resizable
-</span></span><span style=display:flex><span>  MAX LV                <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>  Cur LV                <span style=color:#ae81ff>2</span>
-</span></span><span style=display:flex><span>  Open LV               <span style=color:#ae81ff>2</span>
-</span></span><span style=display:flex><span>  Max PV                <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>  Cur PV                <span style=color:#ae81ff>2</span>
-</span></span><span style=display:flex><span>  Act PV                <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>  MAX LV                <span style=color:#bd93f9>0</span>
+</span></span><span style=display:flex><span>  Cur LV                <span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>  Open LV               <span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>  Max PV                <span style=color:#bd93f9>0</span>
+</span></span><span style=display:flex><span>  Cur PV                <span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>  Act PV                <span style=color:#bd93f9>2</span>
 </span></span><span style=display:flex><span>  VG Size               98.99 GiB
 </span></span><span style=display:flex><span>  PE Size               4.00 MiB
-</span></span><span style=display:flex><span>  Total PE              <span style=color:#ae81ff>25342</span>
-</span></span><span style=display:flex><span>  Alloc PE / Size       <span style=color:#ae81ff>4863</span> / &lt;19.00 GiB
-</span></span><span style=display:flex><span>  Free  PE / Size       <span style=color:#ae81ff>20479</span> / &lt;80.00 GiB
+</span></span><span style=display:flex><span>  Total PE              <span style=color:#bd93f9>25342</span>
+</span></span><span style=display:flex><span>  Alloc PE / Size       <span style=color:#bd93f9>4863</span> / &lt;19.00 GiB
+</span></span><span style=display:flex><span>  Free  PE / Size       <span style=color:#bd93f9>20479</span> / &lt;80.00 GiB
 </span></span><span style=display:flex><span>  VG UUID               DHf6m6-x6YZ-S9ZT-VMTw-ylo5-NnLT-ozpnjR
 </span></span></code></pre></div><p>使用 <code>df -TH</code> 查看文件信息。</p><pre tabindex=0><code>[root@localhost ~]# df -TH
 Filesystem          Type      Size  Used Avail Use% Mounted on

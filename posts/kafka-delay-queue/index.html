@@ -156,143 +156,143 @@ public class DelayQueueTest {
 
     }
 }
-这段程序是基于SpringBoot 2.4.4版本和 kafka-client 2.7.0版本编写的一个单元测试，需要修改私有变量servers为kafka broker的地址。'><title>基于kafka实现延迟队列</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-04-18 00:08:38 +0800 +0800">2021-04-18</time></p></div><article><h1>基于kafka实现延迟队列</h1><h1 id=基于kafka实现延迟队列>基于kafka实现延迟队列</h1><p>kafka作为一个使用广泛的消息队列，很多人都不会陌生，但当你在网上搜索“kafka 延迟队列”，出现的都是一些讲解时间轮或者只是提供了一些思路，并没有一份真实可用的代码实现，今天我们就来打破这个现象，提供一份可运行的代码，抛砖引玉，吸引更多的大神来分享。</p><h3 id=基于kafka如何实现延迟队列>基于kafka如何实现延迟队列？</h3><p>想要解决一个问题，我们需要先分解问题。kafka作为一个高性能的消息队列，只要消费能力足够，发出的消息都是会立刻收到的，因此我们需要想一个办法，让消息延迟发送出去。</p><p>网上已经有大神给出了如下方案：</p><ol><li>在发送延迟消息时不直接发送到目标topic，而是发送到一个用于处理延迟消息的topic，例如<code>delay-minutes-1</code></li><li>写一段代码拉取<code>delay-minutes-1</code>中的消息，将满足条件的消息发送到真正的目标主题里。</li></ol><p>就像画一匹马一样简单。</p><p><img src=https://oss.typesafe.cn/uPic/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg alt=怎样画马></p><p>方案是好的，但是我们还需要更多细节。</p><h3 id=完善细节>完善细节</h3><p><strong>问题出在哪里？</strong></p><p>问题出在延迟消息发出去之后，代码程序就会立刻收到延迟消息，要如何处理才能让延迟消息等待一段时间才发送到真正的topic里面。</p><p>可能有同学会觉得很简单嘛，在代码程序收到消息之后判断条件不满足，就调用<code>sleep</code>方法，过了一段时间我再进行下一个循环拉取消息。</p><p><strong>真的可行吗?</strong></p><p>一切好像都很美好，但这是不可行的。</p><p>这是因为在轮询kafka拉取消息的时候，它会返回由<code>max.poll.records</code>配置指定的一批消息，但是当程序代码不能在<code>max.poll.interval.ms</code>配置的期望时间内处理这些消息的话，kafka就会认为这个消费者已经挂了，会进行<code>rebalance</code>，同时你这个消费者就无法再拉取到任何消息了。</p><p>举个例子：当你需要一个24小时的延迟消息队列，在代码里面写下了<code>Thread.sleep(1000*60*60*24);</code>，为了不发生<code>rebalance</code>，你把<code>max.poll.interval.ms</code> 也改成了<code>1000*60*60*24</code>，这个时候你或许会感觉到一丝丝的怪异，我是谁？我在哪？我为什么要写出来这样的代码？</p><p><strong>其实我们可以更优雅的处理这个问题。</strong></p><p>KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换<code>sleep</code>。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。</p><p><img src=https://oss.typesafe.cn/uPic/kafka-delay-queue.png alt=kafka-delay-queue></p><h3 id=java代码实现>Java代码实现</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#f92672>import</span> com.fasterxml.jackson.core.JsonProcessingException;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> com.fasterxml.jackson.databind.JsonNode;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> com.fasterxml.jackson.databind.ObjectMapper;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.clients.consumer.*;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.clients.producer.KafkaProducer;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.clients.producer.ProducerConfig;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.clients.producer.ProducerRecord;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.common.TopicPartition;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.common.serialization.StringDeserializer;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.apache.kafka.common.serialization.StringSerializer;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.junit.jupiter.api.BeforeEach;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.junit.jupiter.api.Test;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.springframework.boot.test.context.SpringBootTest;
+这段程序是基于SpringBoot 2.4.4版本和 kafka-client 2.7.0版本编写的一个单元测试，需要修改私有变量servers为kafka broker的地址。'><title>基于kafka实现延迟队列</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-04-18 00:08:38 +0800 +0800">2021-04-18</time></p></div><article><h1>基于kafka实现延迟队列</h1><h1 id=基于kafka实现延迟队列>基于kafka实现延迟队列</h1><p>kafka作为一个使用广泛的消息队列，很多人都不会陌生，但当你在网上搜索“kafka 延迟队列”，出现的都是一些讲解时间轮或者只是提供了一些思路，并没有一份真实可用的代码实现，今天我们就来打破这个现象，提供一份可运行的代码，抛砖引玉，吸引更多的大神来分享。</p><h3 id=基于kafka如何实现延迟队列>基于kafka如何实现延迟队列？</h3><p>想要解决一个问题，我们需要先分解问题。kafka作为一个高性能的消息队列，只要消费能力足够，发出的消息都是会立刻收到的，因此我们需要想一个办法，让消息延迟发送出去。</p><p>网上已经有大神给出了如下方案：</p><ol><li>在发送延迟消息时不直接发送到目标topic，而是发送到一个用于处理延迟消息的topic，例如<code>delay-minutes-1</code></li><li>写一段代码拉取<code>delay-minutes-1</code>中的消息，将满足条件的消息发送到真正的目标主题里。</li></ol><p>就像画一匹马一样简单。</p><p><img src=https://oss.typesafe.cn/uPic/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg alt=怎样画马></p><p>方案是好的，但是我们还需要更多细节。</p><h3 id=完善细节>完善细节</h3><p><strong>问题出在哪里？</strong></p><p>问题出在延迟消息发出去之后，代码程序就会立刻收到延迟消息，要如何处理才能让延迟消息等待一段时间才发送到真正的topic里面。</p><p>可能有同学会觉得很简单嘛，在代码程序收到消息之后判断条件不满足，就调用<code>sleep</code>方法，过了一段时间我再进行下一个循环拉取消息。</p><p><strong>真的可行吗?</strong></p><p>一切好像都很美好，但这是不可行的。</p><p>这是因为在轮询kafka拉取消息的时候，它会返回由<code>max.poll.records</code>配置指定的一批消息，但是当程序代码不能在<code>max.poll.interval.ms</code>配置的期望时间内处理这些消息的话，kafka就会认为这个消费者已经挂了，会进行<code>rebalance</code>，同时你这个消费者就无法再拉取到任何消息了。</p><p>举个例子：当你需要一个24小时的延迟消息队列，在代码里面写下了<code>Thread.sleep(1000*60*60*24);</code>，为了不发生<code>rebalance</code>，你把<code>max.poll.interval.ms</code> 也改成了<code>1000*60*60*24</code>，这个时候你或许会感觉到一丝丝的怪异，我是谁？我在哪？我为什么要写出来这样的代码？</p><p><strong>其实我们可以更优雅的处理这个问题。</strong></p><p>KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换<code>sleep</code>。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。</p><p><img src=https://oss.typesafe.cn/uPic/kafka-delay-queue.png alt=kafka-delay-queue></p><h3 id=java代码实现>Java代码实现</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.core.JsonProcessingException;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.databind.JsonNode;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> com.fasterxml.jackson.databind.ObjectMapper;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.clients.consumer.*;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.clients.producer.KafkaProducer;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.clients.producer.ProducerConfig;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.clients.producer.ProducerRecord;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.common.TopicPartition;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.common.serialization.StringDeserializer;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.apache.kafka.common.serialization.StringSerializer;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.junit.jupiter.api.BeforeEach;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.junit.jupiter.api.Test;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> org.springframework.boot.test.context.SpringBootTest;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.time.Duration;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.*;
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> java.util.concurrent.ExecutionException;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.time.Duration;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.*;
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> java.util.concurrent.ExecutionException;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>@SpringBootTest</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>DelayQueueTest</span> {
+</span></span><span style=display:flex><span>@SpringBootTest
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd;font-style:italic>class</span> <span style=color:#50fa7b>DelayQueueTest</span> {
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> KafkaConsumer<span style=color:#f92672>&lt;</span>String, String<span style=color:#f92672>&gt;</span> consumer;
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> KafkaProducer<span style=color:#f92672>&lt;</span>String, String<span style=color:#f92672>&gt;</span> producer;
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>volatile</span> Boolean exit <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>final</span> Object lock <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Object();
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>final</span> String servers <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> KafkaConsumer<span style=color:#ff79c6>&lt;</span>String, String<span style=color:#ff79c6>&gt;</span> consumer;
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> KafkaProducer<span style=color:#ff79c6>&lt;</span>String, String<span style=color:#ff79c6>&gt;</span> producer;
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd;font-style:italic>volatile</span> Boolean exit <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>false</span>;
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd;font-style:italic>final</span> Object lock <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Object();
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>private</span> <span style=color:#8be9fd;font-style:italic>final</span> String servers <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;&#34;</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@BeforeEach</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>initConsumer</span>() {
-</span></span><span style=display:flex><span>        Properties props <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Properties();
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>BOOTSTRAP_SERVERS_CONFIG</span>, servers);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>GROUP_ID_CONFIG</span>, <span style=color:#e6db74>&#34;d&#34;</span>);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>ENABLE_AUTO_COMMIT_CONFIG</span>, <span style=color:#e6db74>&#34;false&#34;</span>);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>AUTO_OFFSET_RESET_CONFIG</span>, <span style=color:#e6db74>&#34;earliest&#34;</span>);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>ISOLATION_LEVEL_CONFIG</span>, <span style=color:#e6db74>&#34;read_committed&#34;</span>);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ConsumerConfig.<span style=color:#a6e22e>MAX_POLL_INTERVAL_MS_CONFIG</span>, <span style=color:#e6db74>&#34;5000&#34;</span>);
-</span></span><span style=display:flex><span>        consumer <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> KafkaConsumer<span style=color:#f92672>&lt;&gt;</span>(props, <span style=color:#66d9ef>new</span> StringDeserializer(), <span style=color:#66d9ef>new</span> StringDeserializer());
+</span></span><span style=display:flex><span>    @BeforeEach
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>initConsumer</span>() {
+</span></span><span style=display:flex><span>        Properties props <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Properties();
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>BOOTSTRAP_SERVERS_CONFIG</span>, servers);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>GROUP_ID_CONFIG</span>, <span style=color:#f1fa8c>&#34;d&#34;</span>);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>ENABLE_AUTO_COMMIT_CONFIG</span>, <span style=color:#f1fa8c>&#34;false&#34;</span>);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>AUTO_OFFSET_RESET_CONFIG</span>, <span style=color:#f1fa8c>&#34;earliest&#34;</span>);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>ISOLATION_LEVEL_CONFIG</span>, <span style=color:#f1fa8c>&#34;read_committed&#34;</span>);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ConsumerConfig.<span style=color:#50fa7b>MAX_POLL_INTERVAL_MS_CONFIG</span>, <span style=color:#f1fa8c>&#34;5000&#34;</span>);
+</span></span><span style=display:flex><span>        consumer <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> KafkaConsumer<span style=color:#ff79c6>&lt;&gt;</span>(props, <span style=color:#ff79c6>new</span> StringDeserializer(), <span style=color:#ff79c6>new</span> StringDeserializer());
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@BeforeEach</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>initProducer</span>() {
-</span></span><span style=display:flex><span>        Properties props <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Properties();
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ProducerConfig.<span style=color:#a6e22e>BOOTSTRAP_SERVERS_CONFIG</span>, servers);
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ProducerConfig.<span style=color:#a6e22e>VALUE_SERIALIZER_CLASS_CONFIG</span>, StringSerializer.<span style=color:#a6e22e>class</span>.<span style=color:#a6e22e>getName</span>());
-</span></span><span style=display:flex><span>        props.<span style=color:#a6e22e>put</span>(ProducerConfig.<span style=color:#a6e22e>KEY_SERIALIZER_CLASS_CONFIG</span>, StringSerializer.<span style=color:#a6e22e>class</span>.<span style=color:#a6e22e>getName</span>());
-</span></span><span style=display:flex><span>        producer <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> KafkaProducer<span style=color:#f92672>&lt;&gt;</span>(props);
+</span></span><span style=display:flex><span>    @BeforeEach
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>initProducer</span>() {
+</span></span><span style=display:flex><span>        Properties props <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Properties();
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ProducerConfig.<span style=color:#50fa7b>BOOTSTRAP_SERVERS_CONFIG</span>, servers);
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ProducerConfig.<span style=color:#50fa7b>VALUE_SERIALIZER_CLASS_CONFIG</span>, StringSerializer.<span style=color:#50fa7b>class</span>.<span style=color:#50fa7b>getName</span>());
+</span></span><span style=display:flex><span>        props.<span style=color:#50fa7b>put</span>(ProducerConfig.<span style=color:#50fa7b>KEY_SERIALIZER_CLASS_CONFIG</span>, StringSerializer.<span style=color:#50fa7b>class</span>.<span style=color:#50fa7b>getName</span>());
+</span></span><span style=display:flex><span>        producer <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> KafkaProducer<span style=color:#ff79c6>&lt;&gt;</span>(props);
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@Test</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>testDelayQueue</span>() <span style=color:#66d9ef>throws</span> JsonProcessingException, InterruptedException {
-</span></span><span style=display:flex><span>        String topic <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;delay-minutes-1&#34;</span>;
-</span></span><span style=display:flex><span>        List<span style=color:#f92672>&lt;</span>String<span style=color:#f92672>&gt;</span> topics <span style=color:#f92672>=</span> Collections.<span style=color:#a6e22e>singletonList</span>(topic);
-</span></span><span style=display:flex><span>        consumer.<span style=color:#a6e22e>subscribe</span>(topics);
+</span></span><span style=display:flex><span>    @Test
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>testDelayQueue</span>() <span style=color:#8be9fd;font-style:italic>throws</span> JsonProcessingException, InterruptedException {
+</span></span><span style=display:flex><span>        String topic <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#34;delay-minutes-1&#34;</span>;
+</span></span><span style=display:flex><span>        List<span style=color:#ff79c6>&lt;</span>String<span style=color:#ff79c6>&gt;</span> topics <span style=color:#ff79c6>=</span> Collections.<span style=color:#50fa7b>singletonList</span>(topic);
+</span></span><span style=display:flex><span>        consumer.<span style=color:#50fa7b>subscribe</span>(topics);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        Timer timer <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Timer();
-</span></span><span style=display:flex><span>        timer.<span style=color:#a6e22e>schedule</span>(<span style=color:#66d9ef>new</span> TimerTask() {
-</span></span><span style=display:flex><span>            <span style=color:#a6e22e>@Override</span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>run</span>() {
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>synchronized</span> (lock) {
-</span></span><span style=display:flex><span>                    consumer.<span style=color:#a6e22e>resume</span>(consumer.<span style=color:#a6e22e>paused</span>());
-</span></span><span style=display:flex><span>                    lock.<span style=color:#a6e22e>notify</span>();
+</span></span><span style=display:flex><span>        Timer timer <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Timer();
+</span></span><span style=display:flex><span>        timer.<span style=color:#50fa7b>schedule</span>(<span style=color:#ff79c6>new</span> TimerTask() {
+</span></span><span style=display:flex><span>            @Override
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>public</span> <span style=color:#8be9fd>void</span> <span style=color:#50fa7b>run</span>() {
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd;font-style:italic>synchronized</span> (lock) {
+</span></span><span style=display:flex><span>                    consumer.<span style=color:#50fa7b>resume</span>(consumer.<span style=color:#50fa7b>paused</span>());
+</span></span><span style=display:flex><span>                    lock.<span style=color:#50fa7b>notify</span>();
 </span></span><span style=display:flex><span>                }
 </span></span><span style=display:flex><span>            }
 </span></span><span style=display:flex><span>        }, 0, 1000);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>do</span> {
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>do</span> {
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>synchronized</span> (lock) {
-</span></span><span style=display:flex><span>                ConsumerRecords<span style=color:#f92672>&lt;</span>String, String<span style=color:#f92672>&gt;</span> consumerRecords <span style=color:#f92672>=</span> consumer.<span style=color:#a6e22e>poll</span>(Duration.<span style=color:#a6e22e>ofMillis</span>(200));
+</span></span><span style=display:flex><span>            <span style=color:#8be9fd;font-style:italic>synchronized</span> (lock) {
+</span></span><span style=display:flex><span>                ConsumerRecords<span style=color:#ff79c6>&lt;</span>String, String<span style=color:#ff79c6>&gt;</span> consumerRecords <span style=color:#ff79c6>=</span> consumer.<span style=color:#50fa7b>poll</span>(Duration.<span style=color:#50fa7b>ofMillis</span>(200));
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (consumerRecords.<span style=color:#a6e22e>isEmpty</span>()) {
-</span></span><span style=display:flex><span>                    lock.<span style=color:#a6e22e>wait</span>();
-</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>continue</span>;
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>if</span> (consumerRecords.<span style=color:#50fa7b>isEmpty</span>()) {
+</span></span><span style=display:flex><span>                    lock.<span style=color:#50fa7b>wait</span>();
+</span></span><span style=display:flex><span>                    <span style=color:#ff79c6>continue</span>;
 </span></span><span style=display:flex><span>                }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>boolean</span> timed <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span> (ConsumerRecord<span style=color:#f92672>&lt;</span>String, String<span style=color:#f92672>&gt;</span> consumerRecord : consumerRecords) {
-</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>long</span> timestamp <span style=color:#f92672>=</span> consumerRecord.<span style=color:#a6e22e>timestamp</span>();
-</span></span><span style=display:flex><span>                    TopicPartition topicPartition <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> TopicPartition(consumerRecord.<span style=color:#a6e22e>topic</span>(), consumerRecord.<span style=color:#a6e22e>partition</span>());
-</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> (timestamp <span style=color:#f92672>+</span> 60 <span style=color:#f92672>*</span> 1000 <span style=color:#f92672>&lt;</span> System.<span style=color:#a6e22e>currentTimeMillis</span>()) {
+</span></span><span style=display:flex><span>                <span style=color:#8be9fd>boolean</span> timed <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>false</span>;
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>for</span> (ConsumerRecord<span style=color:#ff79c6>&lt;</span>String, String<span style=color:#ff79c6>&gt;</span> consumerRecord : consumerRecords) {
+</span></span><span style=display:flex><span>                    <span style=color:#8be9fd>long</span> timestamp <span style=color:#ff79c6>=</span> consumerRecord.<span style=color:#50fa7b>timestamp</span>();
+</span></span><span style=display:flex><span>                    TopicPartition topicPartition <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> TopicPartition(consumerRecord.<span style=color:#50fa7b>topic</span>(), consumerRecord.<span style=color:#50fa7b>partition</span>());
+</span></span><span style=display:flex><span>                    <span style=color:#ff79c6>if</span> (timestamp <span style=color:#ff79c6>+</span> 60 <span style=color:#ff79c6>*</span> 1000 <span style=color:#ff79c6>&lt;</span> System.<span style=color:#50fa7b>currentTimeMillis</span>()) {
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                        String value <span style=color:#f92672>=</span> consumerRecord.<span style=color:#a6e22e>value</span>();
-</span></span><span style=display:flex><span>                        ObjectMapper objectMapper <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> ObjectMapper();
-</span></span><span style=display:flex><span>                        JsonNode jsonNode <span style=color:#f92672>=</span> objectMapper.<span style=color:#a6e22e>readTree</span>(value);
-</span></span><span style=display:flex><span>                        JsonNode jsonNodeTopic <span style=color:#f92672>=</span> jsonNode.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;topic&#34;</span>);
+</span></span><span style=display:flex><span>                        String value <span style=color:#ff79c6>=</span> consumerRecord.<span style=color:#50fa7b>value</span>();
+</span></span><span style=display:flex><span>                        ObjectMapper objectMapper <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> ObjectMapper();
+</span></span><span style=display:flex><span>                        JsonNode jsonNode <span style=color:#ff79c6>=</span> objectMapper.<span style=color:#50fa7b>readTree</span>(value);
+</span></span><span style=display:flex><span>                        JsonNode jsonNodeTopic <span style=color:#ff79c6>=</span> jsonNode.<span style=color:#50fa7b>get</span>(<span style=color:#f1fa8c>&#34;topic&#34;</span>);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                        String appTopic <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>, appKey <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>, appValue <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>;
+</span></span><span style=display:flex><span>                        String appTopic <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>null</span>, appKey <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>null</span>, appValue <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>null</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (jsonNodeTopic <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>                            appTopic <span style=color:#f92672>=</span> jsonNodeTopic.<span style=color:#a6e22e>asText</span>();
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>if</span> (jsonNodeTopic <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>                            appTopic <span style=color:#ff79c6>=</span> jsonNodeTopic.<span style=color:#50fa7b>asText</span>();
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (appTopic <span style=color:#f92672>==</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>                            <span style=color:#66d9ef>continue</span>;
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>if</span> (appTopic <span style=color:#ff79c6>==</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>                            <span style=color:#ff79c6>continue</span>;
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                        JsonNode jsonNodeKey <span style=color:#f92672>=</span> jsonNode.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;key&#34;</span>);
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (jsonNodeKey <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>                            appKey <span style=color:#f92672>=</span> jsonNode.<span style=color:#a6e22e>asText</span>();
+</span></span><span style=display:flex><span>                        JsonNode jsonNodeKey <span style=color:#ff79c6>=</span> jsonNode.<span style=color:#50fa7b>get</span>(<span style=color:#f1fa8c>&#34;key&#34;</span>);
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>if</span> (jsonNodeKey <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>                            appKey <span style=color:#ff79c6>=</span> jsonNode.<span style=color:#50fa7b>asText</span>();
 </span></span><span style=display:flex><span>                        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                        JsonNode jsonNodeValue <span style=color:#f92672>=</span> jsonNode.<span style=color:#a6e22e>get</span>(<span style=color:#e6db74>&#34;value&#34;</span>);
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (jsonNodeValue <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span>) {
-</span></span><span style=display:flex><span>                            appValue <span style=color:#f92672>=</span> jsonNodeValue.<span style=color:#a6e22e>asText</span>();
+</span></span><span style=display:flex><span>                        JsonNode jsonNodeValue <span style=color:#ff79c6>=</span> jsonNode.<span style=color:#50fa7b>get</span>(<span style=color:#f1fa8c>&#34;value&#34;</span>);
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>if</span> (jsonNodeValue <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>null</span>) {
+</span></span><span style=display:flex><span>                            appValue <span style=color:#ff79c6>=</span> jsonNodeValue.<span style=color:#50fa7b>asText</span>();
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                        <span style=color:#75715e>// send to application topic</span>
-</span></span><span style=display:flex><span>                        ProducerRecord<span style=color:#f92672>&lt;</span>String, String<span style=color:#f92672>&gt;</span> producerRecord <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> ProducerRecord<span style=color:#f92672>&lt;&gt;</span>(appTopic, appKey, appValue);
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>try</span> {
-</span></span><span style=display:flex><span>                            producer.<span style=color:#a6e22e>send</span>(producerRecord).<span style=color:#a6e22e>get</span>();
-</span></span><span style=display:flex><span>                            <span style=color:#75715e>// success. commit message</span>
-</span></span><span style=display:flex><span>                            OffsetAndMetadata offsetAndMetadata <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> OffsetAndMetadata(consumerRecord.<span style=color:#a6e22e>offset</span>() <span style=color:#f92672>+</span> 1);
-</span></span><span style=display:flex><span>                            HashMap<span style=color:#f92672>&lt;</span>TopicPartition, OffsetAndMetadata<span style=color:#f92672>&gt;</span> metadataHashMap <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> HashMap<span style=color:#f92672>&lt;&gt;</span>();
-</span></span><span style=display:flex><span>                            metadataHashMap.<span style=color:#a6e22e>put</span>(topicPartition, offsetAndMetadata);
-</span></span><span style=display:flex><span>                            consumer.<span style=color:#a6e22e>commitSync</span>(metadataHashMap);
-</span></span><span style=display:flex><span>                        } <span style=color:#66d9ef>catch</span> (ExecutionException e) {
-</span></span><span style=display:flex><span>                            consumer.<span style=color:#a6e22e>pause</span>(Collections.<span style=color:#a6e22e>singletonList</span>(topicPartition));
-</span></span><span style=display:flex><span>                            consumer.<span style=color:#a6e22e>seek</span>(topicPartition, consumerRecord.<span style=color:#a6e22e>offset</span>());
-</span></span><span style=display:flex><span>                            timed <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
-</span></span><span style=display:flex><span>                            <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>                        <span style=color:#6272a4>// send to application topic</span>
+</span></span><span style=display:flex><span>                        ProducerRecord<span style=color:#ff79c6>&lt;</span>String, String<span style=color:#ff79c6>&gt;</span> producerRecord <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> ProducerRecord<span style=color:#ff79c6>&lt;&gt;</span>(appTopic, appKey, appValue);
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>try</span> {
+</span></span><span style=display:flex><span>                            producer.<span style=color:#50fa7b>send</span>(producerRecord).<span style=color:#50fa7b>get</span>();
+</span></span><span style=display:flex><span>                            <span style=color:#6272a4>// success. commit message</span>
+</span></span><span style=display:flex><span>                            OffsetAndMetadata offsetAndMetadata <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> OffsetAndMetadata(consumerRecord.<span style=color:#50fa7b>offset</span>() <span style=color:#ff79c6>+</span> 1);
+</span></span><span style=display:flex><span>                            HashMap<span style=color:#ff79c6>&lt;</span>TopicPartition, OffsetAndMetadata<span style=color:#ff79c6>&gt;</span> metadataHashMap <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> HashMap<span style=color:#ff79c6>&lt;&gt;</span>();
+</span></span><span style=display:flex><span>                            metadataHashMap.<span style=color:#50fa7b>put</span>(topicPartition, offsetAndMetadata);
+</span></span><span style=display:flex><span>                            consumer.<span style=color:#50fa7b>commitSync</span>(metadataHashMap);
+</span></span><span style=display:flex><span>                        } <span style=color:#ff79c6>catch</span> (ExecutionException e) {
+</span></span><span style=display:flex><span>                            consumer.<span style=color:#50fa7b>pause</span>(Collections.<span style=color:#50fa7b>singletonList</span>(topicPartition));
+</span></span><span style=display:flex><span>                            consumer.<span style=color:#50fa7b>seek</span>(topicPartition, consumerRecord.<span style=color:#50fa7b>offset</span>());
+</span></span><span style=display:flex><span>                            timed <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>true</span>;
+</span></span><span style=display:flex><span>                            <span style=color:#ff79c6>break</span>;
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                    } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>                        consumer.<span style=color:#a6e22e>pause</span>(Collections.<span style=color:#a6e22e>singletonList</span>(topicPartition));
-</span></span><span style=display:flex><span>                        consumer.<span style=color:#a6e22e>seek</span>(topicPartition, consumerRecord.<span style=color:#a6e22e>offset</span>());
-</span></span><span style=display:flex><span>                        timed <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>                    } <span style=color:#ff79c6>else</span> {
+</span></span><span style=display:flex><span>                        consumer.<span style=color:#50fa7b>pause</span>(Collections.<span style=color:#50fa7b>singletonList</span>(topicPartition));
+</span></span><span style=display:flex><span>                        consumer.<span style=color:#50fa7b>seek</span>(topicPartition, consumerRecord.<span style=color:#50fa7b>offset</span>());
+</span></span><span style=display:flex><span>                        timed <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>true</span>;
+</span></span><span style=display:flex><span>                        <span style=color:#ff79c6>break</span>;
 </span></span><span style=display:flex><span>                    }
 </span></span><span style=display:flex><span>                }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> (timed) {
-</span></span><span style=display:flex><span>                    lock.<span style=color:#a6e22e>wait</span>();
+</span></span><span style=display:flex><span>                <span style=color:#ff79c6>if</span> (timed) {
+</span></span><span style=display:flex><span>                    lock.<span style=color:#50fa7b>wait</span>();
 </span></span><span style=display:flex><span>                }
 </span></span><span style=display:flex><span>            }
-</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>while</span> (<span style=color:#f92672>!</span>exit);
+</span></span><span style=display:flex><span>        } <span style=color:#ff79c6>while</span> (<span style=color:#ff79c6>!</span>exit);
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>这段程序是基于SpringBoot <code>2.4.4</code>版本和 kafka-client <code>2.7.0</code>版本编写的一个单元测试，需要修改私有变量<code>servers</code>为kafka broker的地址。</p><p>在启动程序后，向Topic <code>delay-minutes-</code>1 发送如以下格式的json字符串数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;topic&#34;</span>: <span style=color:#e6db74>&#34;target&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;key&#34;</span>: <span style=color:#e6db74>&#34;key1&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;value&#34;</span>: <span style=color:#e6db74>&#34;value1&#34;</span>
+</span></span></code></pre></div><p>这段程序是基于SpringBoot <code>2.4.4</code>版本和 kafka-client <code>2.7.0</code>版本编写的一个单元测试，需要修改私有变量<code>servers</code>为kafka broker的地址。</p><p>在启动程序后，向Topic <code>delay-minutes-</code>1 发送如以下格式的json字符串数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;topic&#34;</span>: <span style=color:#f1fa8c>&#34;target&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;key&#34;</span>: <span style=color:#f1fa8c>&#34;key1&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>&#34;value&#34;</span>: <span style=color:#f1fa8c>&#34;value1&#34;</span>
 </span></span><span style=display:flex><span>}
 </span></span></code></pre></div><p>同时启动一个消费者监听topic <code>target</code>，在一分钟后，将会收到一条 key=&ldquo;key1&rdquo;, value=&ldquo;value1"的数据。</p><p><a href=https://github.com/dushixiang/kafka-map/blob/master/src/test/java/cn/typesafe/km/DelayQueueTest.java>源代码地址</a></p><h3 id=还需要做什么>还需要做什么？</h3><p>创建多个topic用于处理不同时间的延迟消息，例如<code>delay-minutes-1</code> <code>delay-minutes-5 </code><code>delay-minutes-10</code> <code>delay-minutes-15</code>以提供指数级别的延迟时间，这样比一个topic要好很多，毕竟在顺序拉取消息的时候，有一条消息不满足条件，后面的将全部进行排队。</p></article></div></main></body></html>

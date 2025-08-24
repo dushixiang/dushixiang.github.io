@@ -6,24 +6,24 @@
 &lt;p>&lt;code>sync.Once&lt;/code> 可以用于一些需要全局初始化的场景，比如初始化配置信息、数据库连接等。使用 sync.Once 可以确保这些初始化只会被执行一次，并且可以安全地被多个 goroutine 共享使用。&lt;/p>
 &lt;p>&amp;ndash; 来自 ChatGPT&lt;/p>&lt;/blockquote>
 &lt;p>其实和&lt;code>单例模式&lt;/code>差不多，但我想要的是让方法只执行一次，我魔改了一下，直接上代码吧。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> cn.typesafe.sync;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">package&lt;/span> cn.typesafe.sync;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> lombok.SneakyThrows;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> java.util.concurrent.Callable;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> lombok.SneakyThrows;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> java.util.concurrent.Callable;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Once&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>T&lt;span style="color:#f92672">&amp;gt;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">volatile&lt;/span> T t &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Once&lt;/span>&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>T&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd;font-style:italic">private&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">volatile&lt;/span> T t &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#a6e22e">@SneakyThrows&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#66d9ef">public&lt;/span> T &lt;span style="color:#a6e22e">doOnce&lt;/span>(Callable&lt;span style="color:#f92672">&amp;lt;&lt;/span>T&lt;span style="color:#f92672">&amp;gt;&lt;/span> action) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">if&lt;/span> (t &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#66d9ef">synchronized&lt;/span> (&lt;span style="color:#66d9ef">this&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#66d9ef">if&lt;/span> (t &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>					t &lt;span style="color:#f92672">=&lt;/span> action.&lt;span style="color:#a6e22e">call&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	@SneakyThrows
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> T &lt;span style="color:#50fa7b">doOnce&lt;/span>(Callable&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>T&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> action) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">if&lt;/span> (t &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			&lt;span style="color:#8be9fd;font-style:italic">synchronized&lt;/span> (&lt;span style="color:#ff79c6">this&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				&lt;span style="color:#ff79c6">if&lt;/span> (t &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>					t &lt;span style="color:#ff79c6">=&lt;/span> action.&lt;span style="color:#50fa7b">call&lt;/span>();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>				}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>			}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#66d9ef">return&lt;/span> t;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#ff79c6">return&lt;/span> t;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>单元测试&lt;/p></description></item></channel></rss>

@@ -3,28 +3,28 @@
 &lt;p>Linux Bridge通常是搭配KVM、docker等虚拟化技术一起使用的，用于构建虚拟网络，因为此教程不涉及虚拟化技术，我们就使用前面学习过的netns来模拟虚拟设备。&lt;/p>
 &lt;h2 id="如何使用linux-bridge">如何使用Linux Bridge？&lt;/h2>
 &lt;p>操作网桥有多种方式，在这里我们介绍一下通过&lt;strong>bridge-utils&lt;/strong>来操作，由于它不是Linux系统自带的工具，因此需要我们手动来安装它。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># centos&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># centos&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>yum install -y bridge-utils
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># ubuntu&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># ubuntu&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt-get install -y bridge-utils
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用&lt;code>brctl help&lt;/code>查看使用帮助&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>never heard of command &lt;span style="color:#f92672">[&lt;/span>help&lt;span style="color:#f92672">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Usage: brctl &lt;span style="color:#f92672">[&lt;/span>commands&lt;span style="color:#f92672">]&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>never heard of &lt;span style="color:#8be9fd;font-style:italic">command&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span>help&lt;span style="color:#ff79c6">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Usage: brctl &lt;span style="color:#ff79c6">[&lt;/span>commands&lt;span style="color:#ff79c6">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>commands:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	addbr 	&amp;lt;bridge&amp;gt;		add bridge
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	delbr 	&amp;lt;bridge&amp;gt;		delete bridge
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	addif 	&amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	add interface to bridge
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	delif 	&amp;lt;bridge&amp;gt; &amp;lt;device&amp;gt;	delete interface from bridge
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	hairpin 	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &lt;span style="color:#f92672">{&lt;/span>on|off&lt;span style="color:#f92672">}&lt;/span>	turn hairpin on/off
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setageing 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set ageing time
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;		set bridge priority
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setfd 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set bridge forward delay
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	sethello 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set hello time
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setmaxage 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		set max message age
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	set path cost
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	set port priority
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	show 	&lt;span style="color:#f92672">[&lt;/span> &amp;lt;bridge&amp;gt; &lt;span style="color:#f92672">]&lt;/span>		show a list of bridges
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	hairpin 	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &lt;span style="color:#ff79c6">{&lt;/span>on|off&lt;span style="color:#ff79c6">}&lt;/span>	turn hairpin on/off
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setageing 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> ageing &lt;span style="color:#8be9fd;font-style:italic">time&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setbridgeprio	&amp;lt;bridge&amp;gt; &amp;lt;prio&amp;gt;		&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> bridge priority
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setfd 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> bridge forward delay
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	sethello 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> hello &lt;span style="color:#8be9fd;font-style:italic">time&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setmaxage 	&amp;lt;bridge&amp;gt; &amp;lt;time&amp;gt;		&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> max message age
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setpathcost	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;cost&amp;gt;	&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> path cost
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	setportprio	&amp;lt;bridge&amp;gt; &amp;lt;port&amp;gt; &amp;lt;prio&amp;gt;	&lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> port priority
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	show 	&lt;span style="color:#ff79c6">[&lt;/span> &amp;lt;bridge&amp;gt; &lt;span style="color:#ff79c6">]&lt;/span>		show a list of bridges
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	showmacs 	&amp;lt;bridge&amp;gt;		show a list of mac addrs
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	showstp 	&amp;lt;bridge&amp;gt;		show bridge stp info
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	stp 	&amp;lt;bridge&amp;gt; &lt;span style="color:#f92672">{&lt;/span>on|off&lt;span style="color:#f92672">}&lt;/span>	turn stp on/off
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	stp 	&amp;lt;bridge&amp;gt; &lt;span style="color:#ff79c6">{&lt;/span>on|off&lt;span style="color:#ff79c6">}&lt;/span>	turn stp on/off
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>常用命令如&lt;/p></description></item></channel></rss>

@@ -1,6 +1,6 @@
-<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='之前我们介绍Network Namespace（以下简称netns）和veth pair时说过docker是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下docker到底是如何做到的。
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='之前我们介绍 Network Namespace（以下简称 netns）和 veth pair 时说过 docker 是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下 docker 到底是如何做到的。
 启动一个无网络的容器
-首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了centos镜像。
+首先我们使用 --net=none 参数启动一个无网络的容器，为了方便调试，这里我们使用了 centos 镜像。
 docker run -itd --name centos-test --net=none centos
 启动成功之后我们进入容器内部确认一下是否无网卡。
 [root@localhost ~]# docker ps
@@ -12,73 +12,73 @@ CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          POR
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
-可以看到确实只有一个本地环回网卡。'><title>容器网络——如何为docker添加网卡？</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-05-23 13:37:00 +0800 +0800">2021-05-23</time></p></div><article><h1>容器网络——如何为docker添加网卡？</h1><p>之前我们介绍<code>Network Namespace</code>（以下简称<code>netns</code>）和<code>veth pair</code>时说过<code>docker</code>是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下<code>docker</code>到底是如何做到的。</p><h3 id=启动一个无网络的容器>启动一个无网络的容器</h3><p>首先我们使用 <code>--net=none</code> 参数启动一个无网络的容器，为了方便调试，这里我们使用了<code>centos</code>镜像。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker run -itd --name centos-test --net<span style=color:#f92672>=</span>none centos
-</span></span></code></pre></div><p>启动成功之后我们进入容器内部确认一下是否无网卡。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># docker ps</span>
+可以看到确实只有一个本地环回网卡。'><title>容器网络——如何为docker添加网卡？</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2021-05-23 13:37:00 +0800 +0800">2021-05-23</time></p></div><article><h1>容器网络——如何为docker添加网卡？</h1><p>之前我们介绍 Network Namespace（以下简称 netns）和 veth pair 时说过 docker 是使用这些技术来实现的网络隔离，今天我们就来一探究竟，看下 docker 到底是如何做到的。</p><h3 id=启动一个无网络的容器>启动一个无网络的容器</h3><p>首先我们使用 <code>--net=none</code> 参数启动一个无网络的容器，为了方便调试，这里我们使用了 centos 镜像。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>docker run -itd --name centos-test --net<span style=color:#ff79c6>=</span>none centos
+</span></span></code></pre></div><p>启动成功之后我们进入容器内部确认一下是否无网卡。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># docker ps</span>
 </span></span><span style=display:flex><span>CONTAINER ID   IMAGE          COMMAND       CREATED          STATUS          PORTS     NAMES
-</span></span><span style=display:flex><span>28dc2e8853df   centos         <span style=color:#e6db74>&#34;/bin/bash&#34;</span>   <span style=color:#ae81ff>24</span> seconds ago   Up <span style=color:#ae81ff>23</span> seconds             centos-test
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># docker exec -it 28dc2e8853df bash</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@28dc2e8853df /<span style=color:#f92672>]</span><span style=color:#75715e># ip a</span>
-</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span>28dc2e8853df   centos         <span style=color:#f1fa8c>&#34;/bin/bash&#34;</span>   <span style=color:#bd93f9>24</span> seconds ago   Up <span style=color:#bd93f9>23</span> seconds             centos-test
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># docker exec -it 28dc2e8853df bash</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@28dc2e8853df /<span style=color:#ff79c6>]</span><span style=color:#6272a4># ip a</span>
+</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#bd93f9>1000</span>
 </span></span><span style=display:flex><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 </span></span><span style=display:flex><span>    inet 127.0.0.1/8 scope host lo
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span></code></pre></div><p>可以看到确实只有一个本地环回网卡。</p><h3 id=如何查看docker对应的netns>如何查看docker对应的netns？</h3><p>当容器启动时，<code>docker</code>内部会自动为这个容器创建一个<code>netns</code>用于网络隔离，但当我们使用 <code>ip netns list</code> 查看时却看不到任何数据，这是因为<code>docker</code>把 <code>netns</code> 创建在了其他地方，而<code>ip netns list</code>命令只能读目录<code>/var/run/netns</code>下面的数据。</p><p>我们可以通过以下命令来解决这个问题，方便我们学习<code>docker</code>网络。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 得到容器对应的进程</span>
-</span></span><span style=display:flex><span>pid<span style=color:#f92672>=</span>docker inspect -f <span style=color:#e6db74>&#39;{{.State.Pid}}&#39;</span> <span style=color:#e6db74>&#34;</span>$container_id<span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 手动创建防止文件夹不存在</span>
+</span></span></code></pre></div><p>可以看到确实只有一个本地环回网卡。</p><h3 id=如何查看docker对应的netns>如何查看docker对应的netns？</h3><p>当容器启动时，docker 内部会自动为这个容器创建一个 netns 用于网络隔离，但当我们使用 <code>ip netns list</code> 查看时却看不到任何数据，这是因为 docker 把 netns 创建在了其他地方，而<code>ip netns list</code>命令只能读目录<code>/var/run/netns</code>下面的数据。</p><p>我们可以通过以下命令来解决这个问题，方便我们学习<code>docker</code>网络。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 得到容器对应的进程</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>pid</span><span style=color:#ff79c6>=</span>docker inspect -f <span style=color:#f1fa8c>&#39;{{.State.Pid}}&#39;</span> <span style=color:#f1fa8c>&#34;</span><span style=color:#8be9fd;font-style:italic>$container_id</span><span style=color:#f1fa8c>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 手动创建防止文件夹不存在</span>
 </span></span><span style=display:flex><span>mkdir -p /var/run/netns/
-</span></span><span style=display:flex><span><span style=color:#75715e># 建立软连接</span>
-</span></span><span style=display:flex><span>ln -s /proc/$pid/ns/net /var/run/netns/$container_id
-</span></span></code></pre></div><p>将上面的命令修改为和当前环境一致并验证netns中的网卡。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># docker inspect -f &#39;{{.State.Pid}}&#39; &#34;28dc2e8853df&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>123624</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># mkdir -p /var/run/netns/</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># ln -s /proc/123624/ns/net /var/run/netns/28dc2e8853df</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># ip netns list</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 建立软连接</span>
+</span></span><span style=display:flex><span>ln -s /proc/<span style=color:#8be9fd;font-style:italic>$pid</span>/ns/net /var/run/netns/<span style=color:#8be9fd;font-style:italic>$container_id</span>
+</span></span></code></pre></div><p>将上面的命令修改为和当前环境一致并验证netns中的网卡。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># docker inspect -f &#39;{{.State.Pid}}&#39; &#34;28dc2e8853df&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#bd93f9>123624</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># mkdir -p /var/run/netns/</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># ln -s /proc/123624/ns/net /var/run/netns/28dc2e8853df</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># ip netns list</span>
 </span></span><span style=display:flex><span>28dc2e8853df
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># ip netns exec 28dc2e8853df ip a</span>
-</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># ip netns exec 28dc2e8853df ip a</span>
+</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#bd93f9>1000</span>
 </span></span><span style=display:flex><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 </span></span><span style=display:flex><span>    inet 127.0.0.1/8 scope host lo
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span></code></pre></div><p>可以看到我们成功输出了<code>netns</code>中的网卡信息，并且此信息和从<code>docker</code>容器中看到的一致。</p><h3 id=给docker添加网卡>给docker添加网卡</h3><p>参考前面的<code>Linux Bridge</code>章节，我们首先创建一个网桥，然后创建一对<code>veth pair</code>，一端连接到网桥，一端移动到<code>docker</code>对应的<code>netns</code>中。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 添加网桥</span>
+</span></span></code></pre></div><p>可以看到我们成功输出了<code>netns</code>中的网卡信息，并且此信息和从<code>docker</code>容器中看到的一致。</p><h3 id=给docker添加网卡>给docker添加网卡</h3><p>参考前面的<code>Linux Bridge</code>章节，我们首先创建一个网桥，然后创建一对<code>veth pair</code>，一端连接到网桥，一端移动到<code>docker</code>对应的<code>netns</code>中。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 添加网桥</span>
 </span></span><span style=display:flex><span>brctl addbr br0
-</span></span><span style=display:flex><span><span style=color:#75715e># 启动网桥</span>
-</span></span><span style=display:flex><span>ip link set br0 up
-</span></span><span style=display:flex><span><span style=color:#75715e># 新增一对veth</span>
-</span></span><span style=display:flex><span>ip link add veth0-ns type veth peer name veth0-br
-</span></span><span style=display:flex><span><span style=color:#75715e># 将veth的一端移动到docker对应的netns中</span>
-</span></span><span style=display:flex><span>ip link set veth0-ns netns 28dc2e8853df
-</span></span><span style=display:flex><span><span style=color:#75715e># 将netns中的本地环回和veth启动并配置IP</span>
-</span></span><span style=display:flex><span>ip netns exec 28dc2e8853df ip link set lo up
-</span></span><span style=display:flex><span>ip netns exec 28dc2e8853df ip link set veth0-ns up
-</span></span><span style=display:flex><span>ip netns exec 28dc2e8853df ip addr add 10.0.0.1/24 dev veth0-ns
-</span></span><span style=display:flex><span><span style=color:#75715e># 将veth的另一端启动并挂载到网桥上</span>
-</span></span><span style=display:flex><span>ip link set veth0-br up
+</span></span><span style=display:flex><span><span style=color:#6272a4># 启动网桥</span>
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> br0 up
+</span></span><span style=display:flex><span><span style=color:#6272a4># 新增一对veth</span>
+</span></span><span style=display:flex><span>ip link add veth0-ns <span style=color:#8be9fd;font-style:italic>type</span> veth peer name veth0-br
+</span></span><span style=display:flex><span><span style=color:#6272a4># 将veth的一端移动到docker对应的netns中</span>
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> veth0-ns netns 28dc2e8853df
+</span></span><span style=display:flex><span><span style=color:#6272a4># 将netns中的本地环回和veth启动并配置IP</span>
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> 28dc2e8853df ip link <span style=color:#8be9fd;font-style:italic>set</span> lo up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> 28dc2e8853df ip link <span style=color:#8be9fd;font-style:italic>set</span> veth0-ns up
+</span></span><span style=display:flex><span>ip netns <span style=color:#8be9fd;font-style:italic>exec</span> 28dc2e8853df ip addr add 10.0.0.1/24 dev veth0-ns
+</span></span><span style=display:flex><span><span style=color:#6272a4># 将veth的另一端启动并挂载到网桥上</span>
+</span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> veth0-br up
 </span></span><span style=display:flex><span>brctl addif br0 veth0-br
-</span></span></code></pre></div><p>最后验证<code>netns</code>和<code>docker</code>容器中的网卡信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># ip netns exec 28dc2e8853df ip a</span>
-</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#ae81ff>1000</span>
+</span></span></code></pre></div><p>最后验证<code>netns</code>和<code>docker</code>容器中的网卡信息。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># ip netns exec 28dc2e8853df ip a</span>
+</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#bd93f9>1000</span>
 </span></span><span style=display:flex><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 </span></span><span style=display:flex><span>    inet 127.0.0.1/8 scope host lo
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span><span style=display:flex><span>91: veth0-ns@if90: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>1500</span> qdisc noqueue state UP group default qlen <span style=color:#ae81ff>1000</span>
-</span></span><span style=display:flex><span>    link/ether 86:29:e6:0a:2a:cb brd ff:ff:ff:ff:ff:ff link-netnsid <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>91: veth0-ns@if90: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>1500</span> qdisc noqueue state UP group default qlen <span style=color:#bd93f9>1000</span>
+</span></span><span style=display:flex><span>    link/ether 86:29:e6:0a:2a:cb brd ff:ff:ff:ff:ff:ff link-netnsid <span style=color:#bd93f9>0</span>
 </span></span><span style=display:flex><span>    inet 10.0.0.1/24 scope global veth0-ns
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@localhost ~<span style=color:#f92672>]</span><span style=color:#75715e># docker exec -it 28dc2e8853df bash</span>
-</span></span><span style=display:flex><span><span style=color:#f92672>[</span>root@28dc2e8853df /<span style=color:#f92672>]</span><span style=color:#75715e># ip a</span>
-</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@localhost ~<span style=color:#ff79c6>]</span><span style=color:#6272a4># docker exec -it 28dc2e8853df bash</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>[</span>root@28dc2e8853df /<span style=color:#ff79c6>]</span><span style=color:#6272a4># ip a</span>
+</span></span><span style=display:flex><span>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>65536</span> qdisc noqueue state UNKNOWN group default qlen <span style=color:#bd93f9>1000</span>
 </span></span><span style=display:flex><span>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 </span></span><span style=display:flex><span>    inet 127.0.0.1/8 scope host lo
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span><span style=display:flex><span>91: veth0-ns@if90: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style=color:#ae81ff>1500</span> qdisc noqueue state UP group default qlen <span style=color:#ae81ff>1000</span>
-</span></span><span style=display:flex><span>    link/ether 86:29:e6:0a:2a:cb brd ff:ff:ff:ff:ff:ff link-netnsid <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>91: veth0-ns@if90: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style=color:#bd93f9>1500</span> qdisc noqueue state UP group default qlen <span style=color:#bd93f9>1000</span>
+</span></span><span style=display:flex><span>    link/ether 86:29:e6:0a:2a:cb brd ff:ff:ff:ff:ff:ff link-netnsid <span style=color:#bd93f9>0</span>
 </span></span><span style=display:flex><span>    inet 10.0.0.1/24 scope global veth0-ns
 </span></span><span style=display:flex><span>       valid_lft forever preferred_lft forever
-</span></span></code></pre></div><p>可以看出我们在<code>netns</code>中添加的网卡在<code>docker</code>容器中也可以正确的显示出来，由此证明了此<code>netns</code>和<code>docker</code>容器的对应关系。当我们使用<code>docker</code>命令来创建容器时，<code>docker</code>为我们隐藏了大量细节，轻松使用几条命令便创建好了容器，但这种只知其然不知其所以然的方式对于我们掌握<code>docker</code>并不够，只有了解了底层原理之后才能对其功能掌握的更加深入。</p><h3 id=理解docker的几种网络模式>理解docker的几种网络模式</h3><p>了解了<code>docker</code>添加网卡的原理后再来理解<code>docker</code>的几种网络模式就十分简单明了了，主要区别就在于是否具有独立的<code>netns</code>。</p><table><thead><tr><th>网络模式</th><th>简介</th></tr></thead><tbody><tr><td>bridge</td><td>容器具有独立的<code>netns</code>，会将容器连接到 <code>docker0</code> 虚拟网桥，并配置IP地址，默认为该模式。</td></tr><tr><td>host</td><td>容器没有独立的<code>netns</code>，和宿主机共用网络。</td></tr><tr><td>none</td><td>容器具有独立的<code>netns</code>，但并没有对其进行任何网络设置。</td></tr><tr><td>container</td><td>容器和某一个已存在的容器共享<code>netns</code>。</td></tr></tbody></table><blockquote><p>新版docker新增了ipvlan、macvlan和overlay类型的网络，主要是为了多台宿主机器上面的docker容器隔离与通信，底层网络复杂了很多，之后我们会单独对其进行介绍。</p></blockquote><p>最后也不要忘记清理实验环境哦。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 删除网桥</span>
+</span></span></code></pre></div><p>可以看出我们在<code>netns</code>中添加的网卡在<code>docker</code>容器中也可以正确的显示出来，由此证明了此<code>netns</code>和<code>docker</code>容器的对应关系。当我们使用<code>docker</code>命令来创建容器时，<code>docker</code>为我们隐藏了大量细节，轻松使用几条命令便创建好了容器，但这种只知其然不知其所以然的方式对于我们掌握<code>docker</code>并不够，只有了解了底层原理之后才能对其功能掌握的更加深入。</p><h3 id=理解docker的几种网络模式>理解docker的几种网络模式</h3><p>了解了<code>docker</code>添加网卡的原理后再来理解<code>docker</code>的几种网络模式就十分简单明了了，主要区别就在于是否具有独立的<code>netns</code>。</p><table><thead><tr><th>网络模式</th><th>简介</th></tr></thead><tbody><tr><td>bridge</td><td>容器具有独立的<code>netns</code>，会将容器连接到 <code>docker0</code> 虚拟网桥，并配置IP地址，默认为该模式。</td></tr><tr><td>host</td><td>容器没有独立的<code>netns</code>，和宿主机共用网络。</td></tr><tr><td>none</td><td>容器具有独立的<code>netns</code>，但并没有对其进行任何网络设置。</td></tr><tr><td>container</td><td>容器和某一个已存在的容器共享<code>netns</code>。</td></tr></tbody></table><blockquote><p>新版docker新增了ipvlan、macvlan和overlay类型的网络，主要是为了多台宿主机器上面的docker容器隔离与通信，底层网络复杂了很多，之后我们会单独对其进行介绍。</p></blockquote><p>最后也不要忘记清理实验环境哦。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 删除网桥</span>
 </span></span><span style=display:flex><span>ip link del br0
-</span></span><span style=display:flex><span><span style=color:#75715e># 删除veth pair</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 删除veth pair</span>
 </span></span><span style=display:flex><span>ip link del veth0-br
-</span></span><span style=display:flex><span><span style=color:#75715e># 删除软连接</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 删除软连接</span>
 </span></span><span style=display:flex><span>rm -rf /var/run/netns/28dc2e8853df
-</span></span><span style=display:flex><span><span style=color:#75715e># 删除容器</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># 删除容器</span>
 </span></span><span style=display:flex><span>docker rm 28dc2e8853df -f
 </span></span></code></pre></div></article></div></main></body></html>

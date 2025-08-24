@@ -24,90 +24,90 @@ hello_linux: ELF 64-bit LSB executable
  Go BuildID=...
  with debug_info
  not stripped
-从上述命令的输出结果可知，main1 文件属于 64 位静态链接的 ELF 格式 可执行文件，适用于 x86-64 架构，包含了 调试信息，并且没有进行 剥离（即保留了调试符号）。"><title>Golang 二进制文件的静态和动态链接</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.51652302d3a998bf7887aed5c2cf89141bbebdf45a2c8f87b0717a3cf4f51c4e53c694c328fb1de78c3a625a1c01f80745bf1f2f42c040647a245cbbb6c2d1d7.css integrity="sha512-UWUjAtOpmL94h67Vws+JFBu+vfRaLI+HsHF6PPT1HE5TxpTDKPsd54w6YlocAfgHRb8fL0LAQGR6JFy7tsLR1w=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-01-07 00:00:00 +0800 +0800">2025-01-07</time></p></div><article><h1>Golang 二进制文件的静态和动态链接</h1><h2 id=概述>概述</h2><p>Golang 最大的优势之一就是支持跨平台编译，真正的实现了Java的梦想：一次编译，到处运行。</p><p>不过，在某些特定情况下，也会存在一些特殊之处。</p><h2 id=静态链接与动态链接>静态链接与动态链接</h2><p><strong>静态链接</strong>是是在编译时将程序与所依赖的所有库（通常是 <code>.a</code> 或 <code>.lib</code> 文件）一起打包，生成一个独立的可执行文件。也就是说，所有需要的函数和库代码在编译过程中就已经嵌入到可执行文件中。</p><p>因为这样编译出来的二进制更便携，它不需要在其运行的主机系统上存在库。因此，你的二进制文件可以在任何系统上运行，无论哪个发行版/版本，并且不依赖于任何系统库。</p><p><strong>动态链接</strong>是在程序运行时（即执行时）将程序与共享库（如 <code>.dll</code>、<code>.so</code> 或 <code>.dylib</code> 文件）链接。程序本身包含对这些库的引用，而不直接包含库的代码。程序启动时，操作系统会加载这些库文件并链接到程序。</p><p>这种方式的优点是比较灵活，如果依赖的库发生了更新，只要接口没变，程序不需要编译就可以使用最新版本的库，而且因为二进制包含对库的引用，不包含库代码，因此文件较小。</p><h2 id=静态链接程序>静态链接程序</h2><p>我们先来编写一个简单的 “Hello World” 程序，，经过打包后，它将成为一个静态链接的二进制文件。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>  
+从上述命令的输出结果可知，main1 文件属于 64 位静态链接的 ELF 格式 可执行文件，适用于 x86-64 架构，包含了 调试信息，并且没有进行 剥离（即保留了调试符号）。"><title>Golang 二进制文件的静态和动态链接</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-01-07 00:00:00 +0800 +0800">2025-01-07</time></p></div><article><h1>Golang 二进制文件的静态和动态链接</h1><h2 id=概述>概述</h2><p>Golang 最大的优势之一就是支持跨平台编译，真正的实现了Java的梦想：一次编译，到处运行。</p><p>不过，在某些特定情况下，也会存在一些特殊之处。</p><h2 id=静态链接与动态链接>静态链接与动态链接</h2><p><strong>静态链接</strong>是是在编译时将程序与所依赖的所有库（通常是 <code>.a</code> 或 <code>.lib</code> 文件）一起打包，生成一个独立的可执行文件。也就是说，所有需要的函数和库代码在编译过程中就已经嵌入到可执行文件中。</p><p>因为这样编译出来的二进制更便携，它不需要在其运行的主机系统上存在库。因此，你的二进制文件可以在任何系统上运行，无论哪个发行版/版本，并且不依赖于任何系统库。</p><p><strong>动态链接</strong>是在程序运行时（即执行时）将程序与共享库（如 <code>.dll</code>、<code>.so</code> 或 <code>.dylib</code> 文件）链接。程序本身包含对这些库的引用，而不直接包含库的代码。程序启动时，操作系统会加载这些库文件并链接到程序。</p><p>这种方式的优点是比较灵活，如果依赖的库发生了更新，只要接口没变，程序不需要编译就可以使用最新版本的库，而且因为二进制包含对库的引用，不包含库代码，因此文件较小。</p><h2 id=静态链接程序>静态链接程序</h2><p>我们先来编写一个简单的 “Hello World” 程序，，经过打包后，它将成为一个静态链接的二进制文件。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> main  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {  
-</span></span><span style=display:flex><span>    println(<span style=color:#e6db74>&#34;hello world!&#34;</span>)  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {  
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>println</span>(<span style=color:#f1fa8c>&#34;hello world!&#34;</span>)  
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>接着编译这个 Go 文件：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go build -o main1 main.go
-</span></span></code></pre></div><p>然后使用 <code>file</code> 命令来检查文件类型：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ file main1 | tr , <span style=color:#e6db74>&#39;\n&#39;</span> 
+</span></span></code></pre></div><p>接着编译这个 Go 文件：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go build -o main1 main.go
+</span></span></code></pre></div><p>然后使用 <code>file</code> 命令来检查文件类型：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ file main1 | tr , <span style=color:#f1fa8c>&#39;\n&#39;</span> 
 </span></span><span style=display:flex><span>hello_linux: ELF 64-bit LSB executable
 </span></span><span style=display:flex><span> x86-64
-</span></span><span style=display:flex><span> version <span style=color:#ae81ff>1</span> <span style=color:#f92672>(</span>SYSV<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span> version <span style=color:#bd93f9>1</span> <span style=color:#ff79c6>(</span>SYSV<span style=color:#ff79c6>)</span>
 </span></span><span style=display:flex><span> statically linked
-</span></span><span style=display:flex><span> Go BuildID<span style=color:#f92672>=</span>...
+</span></span><span style=display:flex><span> Go <span style=color:#8be9fd;font-style:italic>BuildID</span><span style=color:#ff79c6>=</span>...
 </span></span><span style=display:flex><span> with debug_info
 </span></span><span style=display:flex><span> not stripped
-</span></span></code></pre></div><p>从上述命令的输出结果可知，<code>main1</code> 文件属于 <strong>64 位静态链接的 ELF 格式</strong> 可执行文件，适用于 <strong>x86-64</strong> 架构，包含了 <strong>调试信息</strong>，并且没有进行 <strong>剥离</strong>（即保留了调试符号）。</p><p>另外，还有 Linux 程序 <code>ldd</code> 能够帮助我们判断二进制文件是静态链接还是动态链接，执行以下命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ ldd main1
+</span></span></code></pre></div><p>从上述命令的输出结果可知，<code>main1</code> 文件属于 <strong>64 位静态链接的 ELF 格式</strong> 可执行文件，适用于 <strong>x86-64</strong> 架构，包含了 <strong>调试信息</strong>，并且没有进行 <strong>剥离</strong>（即保留了调试符号）。</p><p>另外，还有 Linux 程序 <code>ldd</code> 能够帮助我们判断二进制文件是静态链接还是动态链接，执行以下命令：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ ldd main1
 </span></span><span style=display:flex><span>not a dynamic executable
-</span></span></code></pre></div><h2 id=动态链接程序>动态链接程序</h2><p>在 Golang 中，有一种名为 CGO 的机制，它可以用来调用 C 代码，就连 Go 的标准库也在使用这一机制，例如 <code>net</code> 包（<a href=https://pkg.go.dev/net>https://pkg.go.dev/net</a>），其就借助了 C 库来处理 DNS。以下是相关示例代码：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>  
+</span></span></code></pre></div><h2 id=动态链接程序>动态链接程序</h2><p>在 Golang 中，有一种名为 CGO 的机制，它可以用来调用 C 代码，就连 Go 的标准库也在使用这一机制，例如 <code>net</code> 包（<a href=https://pkg.go.dev/net>https://pkg.go.dev/net</a>），其就借助了 C 库来处理 DNS。以下是相关示例代码：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#ff79c6>package</span> main  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (  
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;fmt&#34;</span>  
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;log&#34;</span>    
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> (  
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;fmt&#34;</span>  
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;log&#34;</span>    
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;net&#34;</span>
 </span></span><span style=display:flex><span>)  
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {  
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ns</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>LookupNS</span>(<span style=color:#e6db74>&#34;typesafe.cn&#34;</span>)  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatal</span>(<span style=color:#a6e22e>err</span>)  
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>func</span> <span style=color:#50fa7b>main</span>() {  
+</span></span><span style=display:flex><span>    ns, err <span style=color:#ff79c6>:=</span> net.<span style=color:#50fa7b>LookupNS</span>(<span style=color:#f1fa8c>&#34;typesafe.cn&#34;</span>)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> err <span style=color:#ff79c6>!=</span> <span style=color:#ff79c6>nil</span> {  
+</span></span><span style=display:flex><span>       log.<span style=color:#50fa7b>Fatal</span>(err)  
 </span></span><span style=display:flex><span>    }  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>n</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>ns</span> {  
-</span></span><span style=display:flex><span>       <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%+v\n&#34;</span>, <span style=color:#a6e22e>n</span>)  
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>for</span> _, n <span style=color:#ff79c6>:=</span> <span style=color:#ff79c6>range</span> ns {  
+</span></span><span style=display:flex><span>       fmt.<span style=color:#50fa7b>Printf</span>(<span style=color:#f1fa8c>&#34;%+v\n&#34;</span>, n)  
 </span></span><span style=display:flex><span>    }  
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>同样需要编译这个 Go 文件：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go build -o main2 main2.go
-</span></span></code></pre></div><p>之后，我们再次利用 <code>file</code> 和 <code>ldd</code> 程序来检查第二个二进制文件，操作及结果如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ file main2 | tr , <span style=color:#e6db74>&#39;\n&#39;</span>
+</span></span></code></pre></div><p>同样需要编译这个 Go 文件：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go build -o main2 main2.go
+</span></span></code></pre></div><p>之后，我们再次利用 <code>file</code> 和 <code>ldd</code> 程序来检查第二个二进制文件，操作及结果如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ file main2 | tr , <span style=color:#f1fa8c>&#39;\n&#39;</span>
 </span></span><span style=display:flex><span>main2: ELF 64-bit LSB executable
 </span></span><span style=display:flex><span> x86-64
-</span></span><span style=display:flex><span> version <span style=color:#ae81ff>1</span> <span style=color:#f92672>(</span>SYSV<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span> version <span style=color:#bd93f9>1</span> <span style=color:#ff79c6>(</span>SYSV<span style=color:#ff79c6>)</span>
 </span></span><span style=display:flex><span> dynamically linked
 </span></span><span style=display:flex><span> interpreter /lib64/ld-linux-x86-64.so.2
-</span></span><span style=display:flex><span> Go BuildID<span style=color:#f92672>=</span>...
+</span></span><span style=display:flex><span> Go <span style=color:#8be9fd;font-style:italic>BuildID</span><span style=color:#ff79c6>=</span>...
 </span></span><span style=display:flex><span> with debug_info
 </span></span><span style=display:flex><span> not stripped
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ ldd main2
-</span></span><span style=display:flex><span>        linux-vdso.so.1 <span style=color:#f92672>(</span>0x00007ffc09ec8000<span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>        libc.so.6 <span style=color:#f92672>=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span style=color:#f92672>(</span>0x00007f3651936000<span style=color:#f92672>)</span>
-</span></span><span style=display:flex><span>        /lib64/ld-linux-x86-64.so.2 <span style=color:#f92672>(</span>0x00007f3651b21000<span style=color:#f92672>)</span>
-</span></span></code></pre></div><p>由此可以看出，<code>main2</code> 是一个 <strong>64 位动态链接的 ELF 可执行文件</strong>，其运行依赖于 <strong>glibc</strong>（<code>libc.so.6</code>）以及 <strong>动态链接器</strong>（<code>ld-linux-x86-64.so.2</code>），并且包含 <strong>调试信息</strong>，未进行剥离操作。在运行时，会通过 <strong>动态链接器</strong> 来加载这些共享库。</p><h2 id=将动态链接转为静态链接>将动态链接转为静态链接</h2><p>有意思的是，Go 的 <code>net</code> 包提供了纯 Go 实现，这使得我们在编译时可以禁用 <code>cgo</code>。具体而言，可以通过指定构建标签或者设置 <strong>CGO_ENABLED=0</strong> 来彻底禁用 <code>cgo</code>。示例如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ CGO_ENABLED<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span> go build -o main2 main2.go
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ ldd main2
+</span></span><span style=display:flex><span>        linux-vdso.so.1 <span style=color:#ff79c6>(</span>0x00007ffc09ec8000<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>        libc.so.6 <span style=color:#ff79c6>=</span>&gt; /lib/x86_64-linux-gnu/libc.so.6 <span style=color:#ff79c6>(</span>0x00007f3651936000<span style=color:#ff79c6>)</span>
+</span></span><span style=display:flex><span>        /lib64/ld-linux-x86-64.so.2 <span style=color:#ff79c6>(</span>0x00007f3651b21000<span style=color:#ff79c6>)</span>
+</span></span></code></pre></div><p>由此可以看出，<code>main2</code> 是一个 <strong>64 位动态链接的 ELF 可执行文件</strong>，其运行依赖于 <strong>glibc</strong>（<code>libc.so.6</code>）以及 <strong>动态链接器</strong>（<code>ld-linux-x86-64.so.2</code>），并且包含 <strong>调试信息</strong>，未进行剥离操作。在运行时，会通过 <strong>动态链接器</strong> 来加载这些共享库。</p><h2 id=将动态链接转为静态链接>将动态链接转为静态链接</h2><p>有意思的是，Go 的 <code>net</code> 包提供了纯 Go 实现，这使得我们在编译时可以禁用 <code>cgo</code>。具体而言，可以通过指定构建标签或者设置 <strong>CGO_ENABLED=0</strong> 来彻底禁用 <code>cgo</code>。示例如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ <span style=color:#8be9fd;font-style:italic>CGO_ENABLED</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>0</span> go build -o main2 main2.go
 </span></span><span style=display:flex><span>$ ldd main2
 </span></span><span style=display:flex><span>not a dynamic executable
-</span></span></code></pre></div><p>从上述输出结果能够证实，通过这两种方式操作后，最终都能得到一个静态二进制文件。</p><h2 id=交叉编译>交叉编译</h2><p>如文章开头所提到的，交叉编译是 Golang 的一大显著优势，它能够让代码在各种不同的平台与架构上运行。以下是一些常见的交叉编译命令示例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 编译为 macOS 上的 amd64 架构</span>
-</span></span><span style=display:flex><span>GOOS<span style=color:#f92672>=</span>darwin GOARCH<span style=color:#f92672>=</span>amd64 go build -o main2_darwin_amd64 main2.go
+</span></span></code></pre></div><p>从上述输出结果能够证实，通过这两种方式操作后，最终都能得到一个静态二进制文件。</p><h2 id=交叉编译>交叉编译</h2><p>如文章开头所提到的，交叉编译是 Golang 的一大显著优势，它能够让代码在各种不同的平台与架构上运行。以下是一些常见的交叉编译命令示例：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 编译为 macOS 上的 amd64 架构</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>GOOS</span><span style=color:#ff79c6>=</span>darwin <span style=color:#8be9fd;font-style:italic>GOARCH</span><span style=color:#ff79c6>=</span>amd64 go build -o main2_darwin_amd64 main2.go
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 编译为 macOS 上的 arm64 架构</span>
-</span></span><span style=display:flex><span>GOOS<span style=color:#f92672>=</span>darwin GOARCH<span style=color:#f92672>=</span>arm64 go build -o main2_darwin_arm64 main2.go
+</span></span><span style=display:flex><span><span style=color:#6272a4># 编译为 macOS 上的 arm64 架构</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>GOOS</span><span style=color:#ff79c6>=</span>darwin <span style=color:#8be9fd;font-style:italic>GOARCH</span><span style=color:#ff79c6>=</span>arm64 go build -o main2_darwin_arm64 main2.go
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 编译为 Linux 上的 amd64 架构</span>
-</span></span><span style=display:flex><span>GOOS<span style=color:#f92672>=</span>linux GOARCH<span style=color:#f92672>=</span>amd64 go build -o main2_linux_amd64 main2.go
+</span></span><span style=display:flex><span><span style=color:#6272a4># 编译为 Linux 上的 amd64 架构</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>GOOS</span><span style=color:#ff79c6>=</span>linux <span style=color:#8be9fd;font-style:italic>GOARCH</span><span style=color:#ff79c6>=</span>amd64 go build -o main2_linux_amd64 main2.go
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 编译为 Linux 上的 arm64 架构</span>
-</span></span><span style=display:flex><span>GOOS<span style=color:#f92672>=</span>linux GOARCH<span style=color:#f92672>=</span>arm64 go build -o main2_linux_arm64 main2.go
+</span></span><span style=display:flex><span><span style=color:#6272a4># 编译为 Linux 上的 arm64 架构</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>GOOS</span><span style=color:#ff79c6>=</span>linux <span style=color:#8be9fd;font-style:italic>GOARCH</span><span style=color:#ff79c6>=</span>arm64 go build -o main2_linux_arm64 main2.go
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 编译为 Linux 上的 386 架构 (32-bit)</span>
-</span></span><span style=display:flex><span>GOOS<span style=color:#f92672>=</span>linux GOARCH<span style=color:#f92672>=</span><span style=color:#ae81ff>386</span> go build -o main2_linux_386 main2.g
+</span></span><span style=display:flex><span><span style=color:#6272a4># 编译为 Linux 上的 386 架构 (32-bit)</span>
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>GOOS</span><span style=color:#ff79c6>=</span>linux <span style=color:#8be9fd;font-style:italic>GOARCH</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>386</span> go build -o main2_linux_386 main2.g
 </span></span><span style=display:flex><span>...
-</span></span></code></pre></div><p>需要注意的是，前提是没有使用 CGO，一旦使用了 CGO，那么运行平台基本就会和开发平台绑定起来了。</p><h2 id=减少二进制大小>减少二进制大小</h2><p>或许你已经留意到，在上述 <code>file</code> 命令输出结果中出现了 “with debug_info not stripped” 这样的提示，这意味着二进制文件包含了调试信息。通常情况下，我们并不需要这些调试信息，将其删除能够有效减小二进制文件的大小，示例操作及结果如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ CGO_ENABLED<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span> go build -o main2 main.go
+</span></span></code></pre></div><p>需要注意的是，前提是没有使用 CGO，一旦使用了 CGO，那么运行平台基本就会和开发平台绑定起来了。</p><h2 id=减少二进制大小>减少二进制大小</h2><p>或许你已经留意到，在上述 <code>file</code> 命令输出结果中出现了 “with debug_info not stripped” 这样的提示，这意味着二进制文件包含了调试信息。通常情况下，我们并不需要这些调试信息，将其删除能够有效减小二进制文件的大小，示例操作及结果如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ <span style=color:#8be9fd;font-style:italic>CGO_ENABLED</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>0</span> go build -o main2 main.go
 </span></span><span style=display:flex><span>$ ll -h main2 
-</span></span><span style=display:flex><span>-rwxr-xr-x <span style=color:#ae81ff>1</span> root root 2.9M  1月 5日 15:32 main2
-</span></span><span style=display:flex><span>$ file main2 | tr , <span style=color:#e6db74>&#39;\n&#39;</span>
+</span></span><span style=display:flex><span>-rwxr-xr-x <span style=color:#bd93f9>1</span> root root 2.9M  1月 5日 15:32 main2
+</span></span><span style=display:flex><span>$ file main2 | tr , <span style=color:#f1fa8c>&#39;\n&#39;</span>
 </span></span><span style=display:flex><span>main2: ELF 64-bit LSB executable
 </span></span><span style=display:flex><span> x86-64
-</span></span><span style=display:flex><span> version <span style=color:#ae81ff>1</span> <span style=color:#f92672>(</span>SYSV<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span> version <span style=color:#bd93f9>1</span> <span style=color:#ff79c6>(</span>SYSV<span style=color:#ff79c6>)</span>
 </span></span><span style=display:flex><span> statically linked
-</span></span><span style=display:flex><span> Go BuildID<span style=color:#f92672>=</span>...
+</span></span><span style=display:flex><span> Go <span style=color:#8be9fd;font-style:italic>BuildID</span><span style=color:#ff79c6>=</span>...
 </span></span><span style=display:flex><span> with debug_info
 </span></span><span style=display:flex><span> not stripped
-</span></span><span style=display:flex><span>$ CGO_ENABLED<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span> go build -ldflags <span style=color:#e6db74>&#34;-s -w&#34;</span> -o main2 main.go
+</span></span><span style=display:flex><span>$ <span style=color:#8be9fd;font-style:italic>CGO_ENABLED</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>0</span> go build -ldflags <span style=color:#f1fa8c>&#34;-s -w&#34;</span> -o main2 main.go
 </span></span><span style=display:flex><span>$ ll -h main2 
-</span></span><span style=display:flex><span>-rwxr-xr-x <span style=color:#ae81ff>1</span> root root 2.0M  1月 5日 15:33 main2
-</span></span><span style=display:flex><span>$ file main2 | tr , <span style=color:#e6db74>&#39;\n&#39;</span>
+</span></span><span style=display:flex><span>-rwxr-xr-x <span style=color:#bd93f9>1</span> root root 2.0M  1月 5日 15:33 main2
+</span></span><span style=display:flex><span>$ file main2 | tr , <span style=color:#f1fa8c>&#39;\n&#39;</span>
 </span></span><span style=display:flex><span>main2: ELF 64-bit LSB executable
 </span></span><span style=display:flex><span> x86-64
-</span></span><span style=display:flex><span> version <span style=color:#ae81ff>1</span> <span style=color:#f92672>(</span>SYSV<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span> version <span style=color:#bd93f9>1</span> <span style=color:#ff79c6>(</span>SYSV<span style=color:#ff79c6>)</span>
 </span></span><span style=display:flex><span> statically linked
-</span></span><span style=display:flex><span> Go BuildID<span style=color:#f92672>=</span>...
+</span></span><span style=display:flex><span> Go <span style=color:#8be9fd;font-style:italic>BuildID</span><span style=color:#ff79c6>=</span>...
 </span></span><span style=display:flex><span> stripped
 </span></span></code></pre></div><h2 id=结语>结语</h2><p>静态链接和动态链接各有千秋，根据自身的业务选择合适的方案即可。</p></article></div></main></body></html>
