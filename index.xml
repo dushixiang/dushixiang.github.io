@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>整点Bug</title><link>https://www.typesafe.cn/</link><description>Recent content on 整点Bug</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 22 Aug 2025 13:15:30 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>《关于优秀系统设计我所知道的一切》的总结</title><link>https://www.typesafe.cn/posts/good-system-design-summary/</link><pubDate>Fri, 22 Aug 2025 13:15:30 +0800</pubDate><guid>https://www.typesafe.cn/posts/good-system-design-summary/</guid><description>&lt;p>今天看到 GitHub 高级工程师写的一篇文章《Everything I know about good system design》，写的很好。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>杜世翔</title><link>https://www.typesafe.cn/</link><description>Recent content on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 24 Aug 2025 16:19:09 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>“氛围编程”：别把你的大脑外包给 AI</title><link>https://www.typesafe.cn/posts/vibe-coding/</link><pubDate>Sun, 24 Aug 2025 16:19:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/vibe-coding/</guid><description>&lt;h4 id="氛围编程-的定义">“氛围编程” 的定义&lt;/h4>
+&lt;p>你还记得最开始使用 AI 协助编程的样子吗？&lt;/p>
+&lt;p>将本应输入搜索引擎的错误信息，直接粘贴到 AI 对话框让其提供解决方案，从而省去自己寻找和筛选答案的步骤。&lt;/p>
+&lt;p>又或者像使用 Copilot 那样，在 IDE 中只输入寥寥数个字符，便让 AI 补全剩下的代码。&lt;/p>
+&lt;p>现在编码助手早就更进一步了，直接在输入框输入你的需求，&lt;code>Agent&lt;/code> 会自动创建文件、写入代码、编译测试，直到你满意为止。&lt;/p>
+&lt;p>而你，不需要写入一行代码，甚至不需要去看 AI 生成的代码。&lt;/p>
+&lt;p>这就是 “氛围编程” 。&lt;/p>
+&lt;h4 id="优秀的工程师需要理解自己的代码">优秀的工程师需要理解自己的代码&lt;/h4>
+&lt;p>“氛围编程” 的优点是你不需要“写”代码，但坏处也是你不需要“写”代码。&lt;/p>
+&lt;ol>
+&lt;li>不“写”代码，就无法真正理解代码。&lt;/li>
+&lt;li>不理解的代码会导致不可预测的行为。&lt;/li>
+&lt;li>不可预测的行为就会导致Bug或者漏洞。&lt;/li>
+&lt;/ol>
+&lt;p>当你点击 “接受全部” 的时候，就无异于玩一场代码的俄罗斯轮盘赌。&lt;/p>
+&lt;p>上一个相信人工智能的人已经付出了惨痛的代价。&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/prev-trust-ai.png" alt="">&lt;/p>
+&lt;h4 id="虚假的生产力和技术债">虚假的生产力和技术债&lt;/h4>
+&lt;p>每一个正在运行的项目在新人看来都是一座“屎山”，区别在于之前是人工去拉，现在则是 AI 去拉，关键在于 AI 拉的又快又多。&lt;/p>
+&lt;p>“氛围编程”在初期看起来效率惊人，以往需要数天才能完成的功能，现在几小时就能实现。然而，由于开发者对代码缺乏理解，一旦出现问题便难以修复，只能再次求助于 AI，从而陷入恶性循环，最终导致这份代码几乎没有“人”能维护。&lt;/p>
+&lt;h4 id="ai-应该是辅助而不是替代">AI 应该是辅助，而不是替代&lt;/h4>
+&lt;p>实际上，我本人也是 AI 的重度用户，并尝试过用“氛围编程”模式开发了两个项目。&lt;/p>
+&lt;p>说实话，我对于这些项目没有信心，比我用 Python 开发项目还要虚的多。&lt;/p>
+&lt;p>虽然我是项目的创建者，但是你问我输入 xx 应该会输出什么？我不知道。内部的计算逻辑？我不知道。&lt;/p>
+&lt;p>经过这段时间的“氛围编程”实践，我发现一种更好的协作方式：自己规划好项目框架与核心逻辑，然后将增删改查（CRUD）这类模式化的部分交给 AI 实现。这样，项目才不至于偏离预期太远。&lt;/p>
+&lt;hr>
+&lt;p>&lt;strong>总结一下&lt;/strong>&lt;/p>
+&lt;p>可以偷懒让 AI 去干苦力活，但是不要外包自己的思维，让 AI 替你去思考。&lt;/p></description></item><item><title>《关于优秀系统设计我所知道的一切》的总结</title><link>https://www.typesafe.cn/posts/good-system-design-summary/</link><pubDate>Fri, 22 Aug 2025 13:15:30 +0800</pubDate><guid>https://www.typesafe.cn/posts/good-system-design-summary/</guid><description>&lt;p>今天看到 GitHub 高级工程师写的一篇文章《Everything I know about good system design》，写的很好。&lt;/p>
 &lt;p>链接地址：&lt;/p>
 &lt;p>&lt;a href="https://www.seangoedecke.com/good-system-design/">https://www.seangoedecke.com/good-system-design/&lt;/a>&lt;/p>
 &lt;p>总结一下。&lt;/p>
