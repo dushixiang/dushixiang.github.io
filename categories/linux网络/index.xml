@@ -91,41 +91,54 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 将虚拟网卡tap0，tap1分别移动到ns0和ns1中&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap0 netns ns0
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link &lt;span style="color:#8be9fd;font-style:italic">set&lt;/span> tap1 netns ns1
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在宿主机器上使用&lt;code>ping 10.0.0.1&lt;/code>测试与tap0的网络连通性&lt;/p></description></item><item><title>Linux tun/tap 详解</title><link>https://www.typesafe.cn/posts/linux-tun-tap/</link><pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-tun-tap/</guid><description>&lt;blockquote>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在宿主机器上使用&lt;code>ping 10.0.0.1&lt;/code>测试与tap0的网络连通性&lt;/p></description></item><item><title>深入理解 Linux 虚拟网络设备 tun/tap</title><link>https://www.typesafe.cn/posts/linux-tun-tap/</link><pubDate>Sun, 08 Nov 2020 22:11:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-tun-tap/</guid><description>&lt;p>在探索Linux网络虚拟化的世界时，你一定会遇到tun和tap这两个关键概念。它们是理解VPN、虚拟机网络、容器网络等技术的基础。本文将带你深入了解tun/tap是什么，它们是如何工作的，以及如何在实践中使用它们。&lt;/p>
+&lt;blockquote>
 &lt;p>在计算机网络中，&lt;strong>tun&lt;/strong>与&lt;strong>tap&lt;/strong>是操作系统内核中的虚拟网络设备。不同于普通靠硬件网络适配器实现的设备，这些虚拟的网络设备全部用软件实现，并向运行于操作系统上的软件提供与硬件的网络设备完全相同的功能。&lt;/p>&lt;/blockquote>
 &lt;h3 id="tuntap是什么">tun/tap是什么？&lt;/h3>
-&lt;p>tun是网络层的虚拟网络设备，可以收发第三层数据报文包，如IP封包，因此常用于一些点对点IP隧道，例如OpenVPN，IPSec等。&lt;/p>
-&lt;p>tap是链路层的虚拟网络设备，等同于一个以太网设备，它可以收发第二层数据报文包，如以太网数据帧。Tap最常见的用途就是做为虚拟机的网卡，因为它和普通的物理网卡更加相近，也经常用作普通机器的虚拟网卡。&lt;/p>
-&lt;h3 id="如何操作tuntap">如何操作tun/tap？&lt;/h3>
-&lt;p>Linux tun/tap可以通过网络接口和字符设备两种方式进行操作。&lt;/p>
-&lt;p>当应用程序使用标准网络接口socket API操作tun/tap设备时，和操作一个真实网卡无异。&lt;/p>
-&lt;p>当应用程序使用字符设备操作tun/tap设备时，字符设备即充当了用户空间和内核空间的桥梁直接读写二层或三层的数据报文。在 Linux 内核 2.6.x 之后的版本中，tun/tap 对应的字符设备文件分别为：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tun：/dev/net/tun
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tap：/dev/tap0
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当应用程序打开字符设备时，系统会自动创建对应的虚拟设备接口，一般以tunX和tapX方式命名，虚拟设备接口创建成功后，可以为其配置IP、MAC地址、路由等。当一切配置完毕，应用程序通过此字符文件设备写入IP封包或以太网数据帧，tun/tap的驱动程序会将数据报文直接发送到内核空间，内核空间收到数据后再交给系统的网络协议栈进行处理，最后网络协议栈选择合适的物理网卡将其发出，到此发送流程完成。而物理网卡收到数据报文时会交给网络协议栈进行处理，网络协议栈匹配判断之后通过tun/tap的驱动程序将数据报文原封不动的写入到字符设备上，应用程序从字符设备上读取到IP封包或以太网数据帧，最后进行相应的处理，收取流程完成。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>tun&lt;/strong> (tunnel的缩写) 是一个虚拟的点对点网络设备，工作在网络层（OSI模型的第三层）。它处理的是IP数据包，所以你可以把它看作是一个虚拟的网卡，但它没有物理的MAC地址。tun设备常用于实现各种IP隧道，例如OpenVPN和IPSec。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>tap&lt;/strong> (network tap的缩写) 是一个虚拟的以太网设备，工作在数据链路层（OSI模型的第二层）。它处理的是以太网帧，因此它拥有一个MAC地址，行为上更像一个真实的以太网卡。tap设备最常见的用途是作为虚拟机的网卡（如QEMU/KVM），或者用于创建网络桥接，将虚拟机接入物理局域网。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="tuntap-的工作原理">tun/tap 的工作原理&lt;/h3>
+&lt;p>Linux中的tun/tap设备提供了一种能力，让用户空间的应用程序能够像读写文件一样，直接向内核网络协议栈注入数据包，或者从协议栈中接收数据包。&lt;/p>
+&lt;p>操作tun/tap设备主要通过一个特殊的字符设备文件 &lt;code>/dev/net/tun&lt;/code>。当一个应用程序打开这个文件时，内核会创建一个与该文件描述符关联的虚拟网络接口（如 &lt;code>tun0&lt;/code> 或 &lt;code>tap0&lt;/code>）。&lt;/p>
+&lt;p>数据流动的过程可以用下图来概括：&lt;/p>
+&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">graph TD
+ subgraph &amp;#34;用户空间 (User Space)&amp;#34;
+ App(&amp;#34;应用程序 (e.g., VPN, QEMU)&amp;#34;)
+ end
+
+ subgraph &amp;#34;内核空间 (Kernel Space)&amp;#34;
+ DevFile(&amp;#34;/dev/net/tun&amp;#34;)
+ Driver(&amp;#34;TUN/TAP 驱动&amp;#34;)
+ NetStack(&amp;#34;网络协议栈&amp;#34;)
+ PhyDriver(&amp;#34;物理网卡驱动&amp;#34;)
+ end
+ 
+ PHY(&amp;#34;物理网卡&amp;#34;)
+
+ App &amp;lt;--&amp;gt;|经由文件描述符&amp;lt;br/&amp;gt;read()/write()| DevFile
+ DevFile &amp;lt;--&amp;gt; Driver
+ Driver &amp;lt;--&amp;gt; NetStack
+ NetStack &amp;lt;--&amp;gt; PhyDriver
+ PhyDriver &amp;lt;--&amp;gt; PHY
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>数据发送流程 (Outbound):&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>用户空间的应用程序（例如VPN客户端）通过文件描述符向 &lt;code>/dev/net/tun&lt;/code> 写入一个IP包（对于tun设备）或以太网帧（对于tap设备）。&lt;/li>
+&lt;li>tun/tap驱动接收到数据，并将其作为一个数据包注入到内核网络协议栈中，就像数据是从一个真实的物理网卡传来一样。&lt;/li>
+&lt;li>网络协议栈根据其路由表等信息对数据包进行处理（例如，路由选择、NAT转换）。&lt;/li>
+&lt;li>最终，协议栈将数据包通过真实的物理网卡发送出去。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>数据接收流程 (Inbound):&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>物理网卡接收到一个数据包。&lt;/li>
+&lt;li>内核网络协议栈处理这个数据包。&lt;/li>
+&lt;li>如果路由规则指示这个数据包应该被发送到tun/tap虚拟接口，协议栈就会将它交给tun/tap驱动。&lt;/li>
+&lt;li>驱动程序将该数据包放入一个队列，等待用户空间的应用程序通过文件描述符从 &lt;code>/dev/net/tun&lt;/code> 中读取。&lt;/li>
+&lt;/ol>
 &lt;blockquote>
-&lt;p>注意：当应用程序关闭字符设备时，系统也会自动删除对应的虚拟设备接口，并且会删除掉创建的路由等信息。&lt;/p>&lt;/blockquote>
-&lt;h3 id="tuntap的区别">tun/tap的区别&lt;/h3>
-&lt;p>tun/tap 虽然工作原理一致，但是工作的层次不一样。&lt;/p>
-&lt;p>tun是三层网络设备，收发的是IP层数据包，无法处理以太网数据帧，例如OpenVPN的路由模式就是使用了tun网络设备，OpenVPN Server重新规划了一个网段，所有的客户端都会获取到该网段下的一个IP，并且会添加对应的路由规则，而客户端与目标机器产生的数据报文都要经过OpenVPN网关才能转发。&lt;/p>
-&lt;p>tap是二层网络设备，收发以太网数据帧，拥有MAC层的功能，可以和物理网卡通过网桥相连，组成一个二层网络。例如OpenVPN的桥接模式可以从外部打一条隧道到本地网络。进来的机器就像本地的机器一样参与通讯，丝毫看不出这些机器是在远程。如果你有使用过虚拟机的经验，桥接模式也是一种十分常见的网络方案，虚拟机会分配到和宿主机器同网段的IP，其他同网段的机器也可以通过网络访问到这台虚拟机。&lt;/p>
-&lt;h3 id="使用方式">使用方式&lt;/h3>
-&lt;p>Linux 提供了一些命令行程序方便我们来创建持久化的tun/tap设备，但是如果没有应用程序打开对应的文件描述符，tun/tap的状态一直会是DOWN，还好的是这并不会影响我们把它当作普通网卡去使用。&lt;/p>
-&lt;p>使用&lt;code>ip tuntap help&lt;/code>查看使用帮助&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Usage: ip tuntap &lt;span style="color:#ff79c6">{&lt;/span> add | del | show | list | lst | &lt;span style="color:#8be9fd;font-style:italic">help&lt;/span> &lt;span style="color:#ff79c6">}&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> dev PHYS_DEV &lt;span style="color:#ff79c6">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">[&lt;/span> mode &lt;span style="color:#ff79c6">{&lt;/span> tun | tap &lt;span style="color:#ff79c6">}&lt;/span> &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> user USER &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> group GROUP &lt;span style="color:#ff79c6">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	&lt;span style="color:#ff79c6">[&lt;/span> one_queue &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> pi &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> vnet_hdr &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> multi_queue &lt;span style="color:#ff79c6">]&lt;/span> &lt;span style="color:#ff79c6">[&lt;/span> name NAME &lt;span style="color:#ff79c6">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Where:	USER :&lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">{&lt;/span> STRING | NUMBER &lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	GROUP :&lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#ff79c6">{&lt;/span> STRING | NUMBER &lt;span style="color:#ff79c6">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="示例">示例&lt;/h3>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 创建 tap &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tap0 mode tap 
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 创建 tun&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tun0 mode tun 
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 删除 tap&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap del dev tap0 mode tap
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 删除 tun&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap del dev tun0 mode tun 
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>tun/tap 设备创建成功后可以当作普通的网卡一样使用，因此我们也可以通过&lt;code>ip link&lt;/code>命令来操作它。&lt;/p></description></item></channel></rss>
+&lt;p>&lt;strong>注意&lt;/strong>：当应用程序关闭该文件描述符时，对应的虚拟网络接口以及相关的路由等信息也会被内核自动删除。&lt;/p></description></item></channel></rss>
