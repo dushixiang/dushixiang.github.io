@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 24 Aug 2025 16:19:09 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>“氛围编程”：别把你的大脑外包给 AI</title><link>https://www.typesafe.cn/posts/vibe-coding/</link><pubDate>Sun, 24 Aug 2025 16:19:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/vibe-coding/</guid><description>&lt;h4 id="氛围编程-的定义">“氛围编程” 的定义&lt;/h4>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 05 Sep 2025 17:03:53 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx 二级目录单页应用的正确配置方式</title><link>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</link><pubDate>Fri, 05 Sep 2025 17:03:53 +0800</pubDate><guid>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</guid><description>&lt;p>今天配置了一个 Nginx 的二级目录单页应用，搞了好久才配置好，记录一下。&lt;/p>
+&lt;p>正确的配置方式示例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 子应用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>location /subapp/ &lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd;font-style:italic">alias&lt;/span> /opt/app/subapp/; 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> index index.html;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> try_files &lt;span style="color:#8be9fd;font-style:italic">$uri&lt;/span> /subapp/index.html;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 根应用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>location / &lt;span style="color:#ff79c6">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> root /opt/app/web;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> index index.html index.htm;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> try_files &lt;span style="color:#8be9fd;font-style:italic">$uri&lt;/span> /index.html;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="坑1-使用-alias-而不是-root">坑1: 使用 &lt;code>alias&lt;/code> 而不是 &lt;code>root&lt;/code>&lt;/h3>
+&lt;p>Nginx 的 root 会把 location 的匹配部分也拼接进去，所以访问：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>https://yourdomain/subapp/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>实际会去找：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/opt/app/subapp/subapp/index.html
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这就多了一层 &lt;code>subapp&lt;/code> 目录，通常会 404。&lt;/p>
+&lt;p>注意 alias 最后必须加 &lt;code>/&lt;/code> 。&lt;/p>
+&lt;h3 id="坑2-try_files-地址要写-subappindexhtml">坑2: try_files 地址要写 &lt;code>/subapp/index.html&lt;/code>&lt;/h3>
+&lt;p>之前写的 &lt;code>/index.html&lt;/code> 让我误以为是被 &lt;code>/&lt;/code> 根应用拦截了，实际上是找错 html 了。&lt;/p></description></item><item><title>“氛围编程”：别把你的大脑外包给 AI</title><link>https://www.typesafe.cn/posts/vibe-coding/</link><pubDate>Sun, 24 Aug 2025 16:19:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/vibe-coding/</guid><description>&lt;h4 id="氛围编程-的定义">“氛围编程” 的定义&lt;/h4>
 &lt;p>你还记得最开始使用 AI 协助编程的样子吗？&lt;/p>
 &lt;p>将本应输入搜索引擎的错误信息，直接粘贴到 AI 对话框让其提供解决方案，从而省去自己寻找和筛选答案的步骤。&lt;/p>
 &lt;p>又或者像使用 Copilot 那样，在 IDE 中只输入寥寥数个字符，便让 AI 补全剩下的代码。&lt;/p>
