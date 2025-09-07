@@ -1,0 +1,19 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。
+可惜想要验证，得自己搭建环境，门槛不低。
+于是我又做了一个平台，把漏洞环境封装成 Docker 镜像。用户只需点一下，就能在几秒内启动环境，直接验证。
+第一个版本很快上线，我陆续封装了十几个漏洞环境。但后来越做越复杂，加了虚拟机管理和分布式网络，结果部署维护麻烦到连我自己都不想搞了，再加上我了解到的 Golang 漏洞就那么多，平台没人用，项目也就搁置了。
+最近我做了一个违背祖宗的决定：去掉多余的东西，只保留容器化的漏洞环境，并把平台和漏洞环境全部开源。
+项目和漏洞环境都是用 Golang 写的，配置要求很低，开箱即用。
+如果你觉得有用，欢迎点个 star：
+
+漏洞环境：https://github.com/dushixiang/vulnerable-code
+验证平台：https://github.com/dushixiang/cyberpoc
+测试地址：https://cyberpoc.typesafe.cn
+
+附上几张截图
+
+
+"><title>我为什么开源了三年前写的漏洞验证平台？</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-09-06 00:00:00 +0800 +0800">2025-09-06</time></p></div><article><h1>我为什么开源了三年前写的漏洞验证平台？</h1><p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。</p><p>可惜想要验证，得自己搭建环境，门槛不低。</p><p>于是我又做了一个平台，把漏洞环境封装成 Docker 镜像。用户只需点一下，就能在几秒内启动环境，直接验证。</p><p>第一个版本很快上线，我陆续封装了十几个漏洞环境。但后来越做越复杂，加了虚拟机管理和分布式网络，结果部署维护麻烦到连我自己都不想搞了，再加上我了解到的 Golang 漏洞就那么多，平台没人用，项目也就搁置了。</p><p>最近我做了一个违背祖宗的决定：去掉多余的东西，只保留容器化的漏洞环境，并把平台和漏洞环境全部开源。</p><p>项目和漏洞环境都是用 Golang 写的，配置要求很低，开箱即用。
+如果你觉得有用，欢迎点个 star：</p><ul><li>漏洞环境：https://github.com/dushixiang/vulnerable-code</li><li>验证平台：https://github.com/dushixiang/cyberpoc</li><li>测试地址：https://cyberpoc.typesafe.cn</li></ul><p>附上几张截图</p><p><img src=/images/cyberpoc_vuln.png alt>
+<img src=/images/cyberpoc_0.png alt>
+<img src=/images/cyberpoc_1.png alt></p></article></div></main></body></html>

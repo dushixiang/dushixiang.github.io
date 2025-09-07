@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 05 Sep 2025 17:03:53 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Nginx 二级目录单页应用的正确配置方式</title><link>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</link><pubDate>Fri, 05 Sep 2025 17:03:53 +0800</pubDate><guid>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</guid><description>&lt;p>今天配置了一个 Nginx 的二级目录单页应用，搞了好久才配置好，记录一下。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 06 Sep 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>我为什么开源了三年前写的漏洞验证平台？</title><link>https://www.typesafe.cn/posts/cyberpoc/</link><pubDate>Sat, 06 Sep 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/cyberpoc/</guid><description>&lt;p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。&lt;/p>
+&lt;p>可惜想要验证，得自己搭建环境，门槛不低。&lt;/p>
+&lt;p>于是我又做了一个平台，把漏洞环境封装成 Docker 镜像。用户只需点一下，就能在几秒内启动环境，直接验证。&lt;/p>
+&lt;p>第一个版本很快上线，我陆续封装了十几个漏洞环境。但后来越做越复杂，加了虚拟机管理和分布式网络，结果部署维护麻烦到连我自己都不想搞了，再加上我了解到的 Golang 漏洞就那么多，平台没人用，项目也就搁置了。&lt;/p>
+&lt;p>最近我做了一个违背祖宗的决定：去掉多余的东西，只保留容器化的漏洞环境，并把平台和漏洞环境全部开源。&lt;/p>
+&lt;p>项目和漏洞环境都是用 Golang 写的，配置要求很低，开箱即用。
+如果你觉得有用，欢迎点个 star：&lt;/p>
+&lt;ul>
+&lt;li>漏洞环境：https://github.com/dushixiang/vulnerable-code&lt;/li>
+&lt;li>验证平台：https://github.com/dushixiang/cyberpoc&lt;/li>
+&lt;li>测试地址：https://cyberpoc.typesafe.cn&lt;/li>
+&lt;/ul>
+&lt;p>附上几张截图&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/cyberpoc_vuln.png" alt="">
+&lt;img src="https://www.typesafe.cn/images/cyberpoc_0.png" alt="">
+&lt;img src="https://www.typesafe.cn/images/cyberpoc_1.png" alt="">&lt;/p></description></item><item><title>Nginx 二级目录单页应用的正确配置方式</title><link>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</link><pubDate>Fri, 05 Sep 2025 17:03:53 +0800</pubDate><guid>https://www.typesafe.cn/posts/nginx-subdirectory-spa-config/</guid><description>&lt;p>今天配置了一个 Nginx 的二级目录单页应用，搞了好久才配置好，记录一下。&lt;/p>
 &lt;p>正确的配置方式示例：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 子应用&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>location /subapp/ &lt;span style="color:#ff79c6">{&lt;/span>
