@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 06 Sep 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>我为什么开源了三年前写的漏洞验证平台？</title><link>https://www.typesafe.cn/posts/cyberpoc/</link><pubDate>Sat, 06 Sep 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/cyberpoc/</guid><description>&lt;p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 27 Sep 2025 12:00:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Next Terminal v2.6.0 更新日志</title><link>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</link><pubDate>Sat, 27 Sep 2025 12:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</guid><description>&lt;h2 id="版本概览">版本概览&lt;/h2>
+&lt;p>&lt;strong>发布日期&lt;/strong>: 2025年9月27日&lt;br>
+&lt;strong>版本号&lt;/strong>: v2.6.0&lt;br>
+&lt;strong>更新类型&lt;/strong>: 功能增强版本&lt;/p>
+&lt;hr>
+&lt;h2 id="新增功能">新增功能&lt;/h2>
+&lt;h3 id="身份认证增强">身份认证增强&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>企业微信认证&lt;/strong>: 新增企业微信单点登录，为企业用户提供无缝、安全的登录体验&lt;/li>
+&lt;li>&lt;strong>OIDC认证&lt;/strong>: 集成 OpenID Connect (OIDC) 协议，扩展了对第三方身份提供商的支持&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img.png" alt="企业微信认证配置">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_1.png" alt="OIDC认证设置">&lt;/p>
+&lt;h3 id="资产管理优化">资产管理优化&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Web资产分组&lt;/strong>: 新增Web资产分组功能，便于批量管理和组织&lt;/li>
+&lt;li>&lt;strong>WOL网络唤醒&lt;/strong>: SSH、RDP、VNC 及 Telnet 资产现已支持 Wake-on-LAN (WOL) 功能，可远程唤醒离线设备&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_2.png" alt="Web资产分组功能">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_3.png" alt="WOL网络唤醒配置">&lt;/p>
+&lt;h3 id="ai-智能助手">AI 智能助手&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>AI Shell助手&lt;/strong>: 集成 AI 助手，可在 Shell 环境中提供智能命令建议与操作指导&lt;/li>
+&lt;li>&lt;strong>终端内搜索&lt;/strong>: 新增终端内容搜索，支持在会话中快速定位历史命令及输出&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_4.png" alt="AI Shell助手界面">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_5.png" alt="AI助手交互示例">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_6.png" alt="终端内搜索功能">&lt;/p>
+&lt;h3 id="组织架构调整">组织架构调整&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>部门管理&lt;/strong>: 用户组功能已升级为部门管理，支持更精细化的多层级组织架构&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_7.png" alt="部门管理界面">&lt;/p>
+&lt;hr>
+&lt;h2 id="功能优化">功能优化&lt;/h2>
+&lt;h3 id="权限管理改进">权限管理改进&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>资产授权优化&lt;/strong>: 重新设计资产授权方式与展示界面，操作更直观&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>优化前&lt;/strong>:
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_8.png" alt="旧版授权界面">&lt;/p>
+&lt;p>&lt;strong>优化后&lt;/strong>:
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_9.png" alt="新版授权界面">&lt;/p>
+&lt;h3 id="网络与系统优化">网络与系统优化&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>IP获取优化&lt;/strong>: 改进了系统获取 IP 的方式，现可自动信任 &lt;code>0.0.0.0&lt;/code> 地址，简化了特殊网络环境下的配置&lt;/li>
+&lt;li>&lt;strong>操作系统识别&lt;/strong>: 优化了操作系统自动识别功能，显著提升了识别准确率&lt;/li>
+&lt;li>&lt;strong>地理位置服务&lt;/strong>: IP 地理位置服务已切换至 GeoIP，提供更精准的定位（专业版功能）&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_10.png" alt="操作系统自动识别">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_11.png" alt="GEOIP地理位置服务">&lt;/p>
+&lt;h3 id="配置与安全">配置与安全&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>反向代理配置&lt;/strong>: 反向代理设置已迁移至配置文件，简化了批量部署与自动化运维&lt;/li>
+&lt;li>&lt;strong>安全设置免费化&lt;/strong>: 安全设置已对所有用户免费开放&lt;/li>
+&lt;li>&lt;strong>TLS兼容性&lt;/strong>: 放宽了反向代理的 TLS 验证，以兼容使用旧版 TLS 证书的系统&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_12.png" alt="反向代理配置">
+&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/img_13.png" alt="安全设置界面">&lt;/p></description></item><item><title>我为什么开源了三年前写的漏洞验证平台？</title><link>https://www.typesafe.cn/posts/cyberpoc/</link><pubDate>Sat, 06 Sep 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/cyberpoc/</guid><description>&lt;p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。&lt;/p>
 &lt;p>可惜想要验证，得自己搭建环境，门槛不低。&lt;/p>
 &lt;p>于是我又做了一个平台，把漏洞环境封装成 Docker 镜像。用户只需点一下，就能在几秒内启动环境，直接验证。&lt;/p>
 &lt;p>第一个版本很快上线，我陆续封装了十几个漏洞环境。但后来越做越复杂，加了虚拟机管理和分布式网络，结果部署维护麻烦到连我自己都不想搞了，再加上我了解到的 Golang 漏洞就那么多，平台没人用，项目也就搁置了。&lt;/p>
