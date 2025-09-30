@@ -278,7 +278,7 @@ Accept: */*
 Proxy-Connection: Keep-Alive
 &lt;/code>&lt;/pre>&lt;p>第一行是 &lt;code>ncat&lt;/code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。&lt;/p></description></item><item><title>about</title><link>https://www.typesafe.cn/about/</link><pubDate>Wed, 01 Jan 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/about/</guid><description>&lt;p>你好，我是杜世翔，软件开发工程师。&lt;/p>
 &lt;p>我主要使用 Golang，对 Java、JavaScript、Python 也比较熟悉。&lt;/p>
-&lt;p>目前在奇安信从事安全开发工作。&lt;/p>
+&lt;p>目前在奇安信从事安全开发工作，可以加我微信 type-safe 并备注来意。&lt;/p>
 &lt;hr>
 &lt;p>我开发了 &lt;a href="https://github.com/dushixiang/next-terminal">Next Terminal&lt;/a> ，一个简洁、安全、易用的运维审计系统，支持多种远程访问协议，包括 RDP、SSH、VNC、Telnet、HTTP 等，适用于企业级运维场景。&lt;/p>
 &lt;hr>
