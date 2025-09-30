@@ -8,7 +8,7 @@ draft: false
 
 我主要使用 Golang，对 Java、JavaScript、Python 也比较熟悉。
 
-目前在奇安信从事安全开发工作。
+目前在奇安信从事安全开发工作，可以加我微信 type-safe 并备注来意。
 
 ----
 
