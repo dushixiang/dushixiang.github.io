@@ -1,4 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>杜世翔</title><link>https://www.typesafe.cn/</link><description>Recent content on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 27 Sep 2025 12:00:00 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>Next Terminal v2.6.0 更新日志</title><link>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</link><pubDate>Sat, 27 Sep 2025 12:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</guid><description>&lt;h2 id="版本概览">版本概览&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>杜世翔</title><link>https://www.typesafe.cn/</link><description>Recent content on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 07 Nov 2025 21:26:09 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>不瞒您说，我今天才学会划分子网</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
+&lt;p>所以我作为一个程序员了解一些计算机网络相关的知识不过分吧，在几年前我也写过不少 Linux 网络和OVS的教程。&lt;/p>
+&lt;p>但是，我今天发现自己不会子网划分。&lt;/p>
+&lt;p>事情还要从明天开始说起，因为明天就要软考了，而我，为了抵扣个税，选择了初级的网络管理员这个科目进行报考。&lt;/p>
+&lt;p>今天在刷题的时候发现有很多划分子网类型的题目（别问我为什么今天才开始刷，问就是在努力工作），但是我不会，我也不可能去百度一个 CIDR 计算器啊，这是考试。&lt;/p>
+&lt;p>你先别急着笑话我，你以为你给家里路由器配置一个 &amp;ldquo;192.168.1.1/24&amp;rdquo; 就算会了吗？&lt;/p>
+&lt;p>大错特错！❌&lt;/p>
+&lt;p>下面请听第一题，已知路由器的CIDR是 &amp;ldquo;192.168.1.1/24&amp;rdquo;，请问它的子网掩码是多少？第一个IP地址是多少？最后一个IP地址是多少？有多少个可用的IP地址？&lt;/p>
+&lt;p>是不是张口就来，子网掩码是 &amp;ldquo;255.255.255.0&amp;rdquo;，第一个IP地址是 &amp;ldquo;192.168.1.1&amp;rdquo;，最后一个IP地址是 &amp;ldquo;192.168.1.254&amp;rdquo;，有 254 个可用的IP地址。&lt;/p>
+&lt;p>很好，很有精神。&lt;/p>
+&lt;p>请听第二题，假设路由器的CIDR是 &amp;ldquo;192.168.31.19/19&amp;rdquo;，请问它的子网掩码是多少？第一个IP地址是多少？最后一个IP地址是多少？有多少个可用的IP地址？&lt;/p>
+&lt;p>是不是有些懵逼？&lt;/p>
+&lt;hr>
+&lt;p>我今天就来把我刚学会的计算方式教给你。&lt;/p>
+&lt;h3 id="步骤1计算子网掩码">步骤1，计算子网掩码：&lt;/h3>
+&lt;p>首先，你要理解CIDR中的 &amp;ldquo;/19&amp;rdquo; 的含义。&lt;/p>
+&lt;p>&amp;ldquo;/19&amp;rdquo; 代表网络前缀的长度是 19位，主机位 = &lt;code>32 - 19 = 13&lt;/code> 位。&lt;/p>
+&lt;p>子网掩码二进制（32 位）按 8 位块分：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>11111111.11111111.11100000.00000000
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>简单理解就是 19 个 1，13 个 0。&lt;/p>
+&lt;p>把每八位换成十进制：&lt;/p>
+&lt;ul>
+&lt;li>11111111 = 255&lt;/li>
+&lt;li>11111111 = 255&lt;/li>
+&lt;li>11100000 = 128+64+32 = 224&lt;/li>
+&lt;li>00000000 = 0&lt;/li>
+&lt;/ul>
+&lt;p>子网掩码（换成十进制） = &lt;code>255.255.224.0&lt;/code>&lt;/p>
+&lt;h3 id="步骤2计算网络地址">步骤2，计算网络地址&lt;/h3>
+&lt;p>把 192.168.31.19 转换为二进制是 &lt;code>11000000.10101000.00011111.00010011&lt;/code>&lt;/p></description></item><item><title>Next Terminal v2.6.0 更新日志</title><link>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</link><pubDate>Sat, 27 Sep 2025 12:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</guid><description>&lt;h2 id="版本概览">版本概览&lt;/h2>
 &lt;p>&lt;strong>发布日期&lt;/strong>: 2025年9月27日&lt;br>
 &lt;strong>版本号&lt;/strong>: v2.6.0&lt;br>
 &lt;strong>更新类型&lt;/strong>: 功能增强版本&lt;/p>
