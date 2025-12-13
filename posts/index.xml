@@ -1,4 +1,52 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 07 Nov 2025 21:26:09 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>不瞒您说，我今天才学会划分子网</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 13 Dec 2025 21:33:35 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>30 元成本搞定 GiffGaff 短信转发与自动保活</title><link>https://www.typesafe.cn/posts/air780e-giffgaff/</link><pubDate>Sat, 13 Dec 2025 21:33:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/air780e-giffgaff/</guid><description>&lt;p>先说明一点：&lt;strong>这个项目并不是重复造轮子。&lt;/strong>
+如果你搜索过「&lt;strong>air780e 短信转发&lt;/strong>」，大概能看到目前主要有两种方案：&lt;/p>
+&lt;p>&lt;strong>方案一：使用 air780e 自带流量进行转发&lt;/strong>
+实现简单，但问题也很明显——像 GiffGaff 这种卡流量价格非常离谱，长期使用成本太高，直接 Pass。&lt;/p>
+&lt;p>&lt;strong>方案二：air780e + ESP32，通过 WiFi 转发&lt;/strong>
+这种方式在技术上是可行的，但需要自己焊接 ESP32。
+奈何我属于那种&lt;strong>一拿电烙铁手就开始手抖&lt;/strong>的人，焊精密元件基本等于劝退 😅。&lt;/p>
+&lt;hr>
+&lt;p>基于以上原因，我最终选择了一条&lt;strong>完全不需要焊接&lt;/strong>的路线：&lt;/p>
+&lt;h2 id="串口控制-air780e--golang-后端">串口控制 air780e + Golang 后端&lt;/h2>
+&lt;p>通过串口直接控制 air780e，把短信的收发能力保留出来，后端使用 &lt;strong>Golang&lt;/strong> 来实现统一的服务层。&lt;/p>
+&lt;p>目前这个方案的特点是：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>即插即用，无需焊接&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>硬件成本极低，理论上 air780e xx系列的硬件都支持&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>移动 / 联通版本：约 &lt;strong>30 元&lt;/strong>&lt;/li>
+&lt;li>全网通版本：约 &lt;strong>50 元&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>部署简单&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>只需要一台能插 USB 的小型设备&lt;/li>
+&lt;li>比如 N1 盒子、软路由、迷你主机等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>功能已经可用&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>短信接收&lt;/li>
+&lt;li>短信发送&lt;/li>
+&lt;li>消息推送&lt;/li>
+&lt;li>自动发送 / 自动回复&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>插上 air780e，运行我写的程序，完事。&lt;/p>
+&lt;p>项目地址：https://github.com/dushixiang/uart_sms_forwarder&lt;/p>
+&lt;p>截图如下：&lt;/p>
+&lt;p>&lt;img src="../../static/images/sms1.png" alt="sms1.png">&lt;/p>
+&lt;p>&lt;img src="../../static/images/sms2.png" alt="sms2.png">&lt;/p>
+&lt;h2 id="其他补充说明">其他补充说明&lt;/h2>
+&lt;p>合宙 air780 系列型号极多，刚开始搞的时候我也是一脸懵逼，后面看到一张对比图才了解到它们之间的区别。&lt;/p>
+&lt;p>&lt;a href="https://docs.openluat.com/air780epm/">https://docs.openluat.com/air780epm/&lt;/a>&lt;/p>
+&lt;p>&lt;img src="../../static/images/air780e.png" alt="air780e.png">&lt;/p></description></item><item><title>不瞒您说，我今天才学会子网划分</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
 &lt;p>所以我作为一个程序员了解一些计算机网络相关的知识不过分吧，在几年前我也写过不少 Linux 网络和OVS的教程。&lt;/p>
 &lt;p>但是，我今天发现自己不会子网划分。&lt;/p>
 &lt;p>事情还要从明天开始说起，因为明天就要软考了，而我，为了抵扣个税，选择了初级的网络管理员这个科目进行报考。&lt;/p>
