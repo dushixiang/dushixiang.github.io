@@ -45,9 +45,9 @@ draft: false
 
 截图如下：
 
-![sms1.png](static/images/sms1.png)
+![sms1.png](/images/sms1.png)
 
-![sms2.png](static/images/sms2.png)
+![sms2.png](/images/sms2.png)
 
 ## 其他补充说明
 
@@ -55,4 +55,4 @@ draft: false
 
 https://docs.openluat.com/air780epm/
 
-![air780e.png](static/images/air780e.png)
+![air780e.png](/images/air780e.png)
