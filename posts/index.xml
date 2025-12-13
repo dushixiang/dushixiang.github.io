@@ -41,12 +41,12 @@
 &lt;p>插上 air780e，运行我写的程序，完事。&lt;/p>
 &lt;p>项目地址：https://github.com/dushixiang/uart_sms_forwarder&lt;/p>
 &lt;p>截图如下：&lt;/p>
-&lt;p>&lt;img src="../../static/images/sms1.png" alt="sms1.png">&lt;/p>
-&lt;p>&lt;img src="../../static/images/sms2.png" alt="sms2.png">&lt;/p>
+&lt;p>&lt;img src="static/images/sms1.png" alt="sms1.png">&lt;/p>
+&lt;p>&lt;img src="static/images/sms2.png" alt="sms2.png">&lt;/p>
 &lt;h2 id="其他补充说明">其他补充说明&lt;/h2>
 &lt;p>合宙 air780 系列型号极多，刚开始搞的时候我也是一脸懵逼，后面看到一张对比图才了解到它们之间的区别。&lt;/p>
 &lt;p>&lt;a href="https://docs.openluat.com/air780epm/">https://docs.openluat.com/air780epm/&lt;/a>&lt;/p>
-&lt;p>&lt;img src="../../static/images/air780e.png" alt="air780e.png">&lt;/p></description></item><item><title>不瞒您说，我今天才学会子网划分</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
+&lt;p>&lt;img src="static/images/air780e.png" alt="air780e.png">&lt;/p></description></item><item><title>不瞒您说，我今天才学会子网划分</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
 &lt;p>所以我作为一个程序员了解一些计算机网络相关的知识不过分吧，在几年前我也写过不少 Linux 网络和OVS的教程。&lt;/p>
 &lt;p>但是，我今天发现自己不会子网划分。&lt;/p>
 &lt;p>事情还要从明天开始说起，因为明天就要软考了，而我，为了抵扣个税，选择了初级的网络管理员这个科目进行报考。&lt;/p>
