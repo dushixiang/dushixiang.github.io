@@ -1,6 +1,6 @@
 <!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="先说明一点：这个项目并不是重复造轮子。
 如果你搜索过「air780e 短信转发」，大概能看到目前主要有两种方案：
-方案一：使用 air780e 卡自带流量进行转发
+方案一：使用 air780e SIM卡自带流量进行转发
 实现简单，但问题也很明显——像 GiffGaff 这种卡流量价格非常离谱，长期使用成本太高，直接 Pass。
 方案二：air780e + ESP32，通过 WiFi 转发
 这种方式在技术上是可行的，但需要自己焊接 ESP32。
@@ -47,7 +47,7 @@
 合宙 air780 系列型号极多，刚开始搞的时候我也是一脸懵逼，后面看到一张对比图才了解到它们之间的区别。
 https://docs.openluat.com/air780epm/
 "><title>30 元成本搞定 GiffGaff 短信转发与自动保活</title><link rel="shortcut icon" type=image/x-icon href=/><link rel=stylesheet href=/css/main.0568d3f70e9896300444ff10565468b82c2dace6b1b82bc72fba6ae51bfb0849887e0eb4ccb3cdb1c915fbe68c7000fbea631be9322fd5d0bcab56732ce7293f.css integrity="sha512-BWjT9w6YljAERP8QVlRouCwtrOaxuCvHL7pq5Rv7CEmIfg60zLPNsckV++aMcAD76mMb6TIv1dC8q1ZzLOcpPw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><div class=post-meta><a href=/>..</a><p><time datetime="2025-12-13 21:33:35 +0800 +0800">2025-12-13</time></p></div><article><h1>30 元成本搞定 GiffGaff 短信转发与自动保活</h1><p>先说明一点：<strong>这个项目并不是重复造轮子。</strong>
-如果你搜索过「<strong>air780e 短信转发</strong>」，大概能看到目前主要有两种方案：</p><p><strong>方案一：使用 air780e 卡自带流量进行转发</strong>
+如果你搜索过「<strong>air780e 短信转发</strong>」，大概能看到目前主要有两种方案：</p><p><strong>方案一：使用 air780e SIM卡自带流量进行转发</strong>
 实现简单，但问题也很明显——像 GiffGaff 这种卡流量价格非常离谱，长期使用成本太高，直接 Pass。</p><p><strong>方案二：air780e + ESP32，通过 WiFi 转发</strong>
 这种方式在技术上是可行的，但需要自己焊接 ESP32。
 奈何我属于那种<strong>一拿电烙铁手就开始手抖</strong>的人，焊精密元件基本等于劝退 😅。</p><hr><p>基于以上原因，我最终选择了一条<strong>完全不需要焊接</strong>的路线：</p><h2 id=串口控制-air780e--golang-后端>串口控制 air780e + Golang 后端</h2><p>通过串口直接控制 air780e，把短信的收发能力保留出来，后端使用 <strong>Golang</strong> 来实现统一的服务层。</p><p>目前这个方案的特点是：</p><ul><li><p><strong>即插即用，无需焊接</strong></p></li><li><p><strong>硬件成本极低，理论上 air780e xx系列的硬件都支持</strong></p><ul><li>移动 / 联通版本：约 <strong>30 元</strong></li><li>全网通版本：约 <strong>50 元</strong></li></ul></li><li><p><strong>部署简单</strong></p><ul><li>只需要一台能插 USB 的小型设备</li><li>比如 N1 盒子、软路由、迷你主机等</li></ul></li><li><p><strong>功能已经可用</strong></p><ul><li>短信接收</li><li>短信发送</li><li>消息推送</li><li>自动发送 / 自动回复</li></ul></li></ul><p>插上 air780e，运行我写的程序，完事。</p><p>项目地址：https://github.com/dushixiang/uart_sms_forwarder</p><p>截图如下：</p><p><img src=../../static/images/sms1.png alt=sms1.png></p><p><img src=../../static/images/sms2.png alt=sms2.png></p><h2 id=其他补充说明>其他补充说明</h2><p>合宙 air780 系列型号极多，刚开始搞的时候我也是一脸懵逼，后面看到一张对比图才了解到它们之间的区别。</p><p><a href=https://docs.openluat.com/air780epm/>https://docs.openluat.com/air780epm/</a></p><p><img src=../../static/images/air780e.png alt=air780e.png></p></article></div></main></body></html>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 13 Dec 2025 21:33:35 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>30 元成本搞定 GiffGaff 短信转发与自动保活</title><link>https://www.typesafe.cn/posts/air780e-giffgaff/</link><pubDate>Sat, 13 Dec 2025 21:33:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/air780e-giffgaff/</guid><description>&lt;p>先说明一点：&lt;strong>这个项目并不是重复造轮子。&lt;/strong>
 如果你搜索过「&lt;strong>air780e 短信转发&lt;/strong>」，大概能看到目前主要有两种方案：&lt;/p>
-&lt;p>&lt;strong>方案一：使用 air780e 卡自带流量进行转发&lt;/strong>
+&lt;p>&lt;strong>方案一：使用 air780e SIM卡自带流量进行转发&lt;/strong>
 实现简单，但问题也很明显——像 GiffGaff 这种卡流量价格非常离谱，长期使用成本太高，直接 Pass。&lt;/p>
 &lt;p>&lt;strong>方案二：air780e + ESP32，通过 WiFi 转发&lt;/strong>
 这种方式在技术上是可行的，但需要自己焊接 ESP32。
