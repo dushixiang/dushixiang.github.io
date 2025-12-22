@@ -8,7 +8,7 @@
 &lt;hr>
 &lt;p>基于以上原因，我最终选择了一条&lt;strong>完全不需要焊接&lt;/strong>的路线：&lt;/p>
 &lt;h2 id="串口控制-air780e--golang-后端">串口控制 air780e + Golang 后端&lt;/h2>
-&lt;p>通过串口直接控制 air780e，把短信的收发能力保留出来，后端使用 &lt;strong>Golang&lt;/strong> 来实现统一的服务层。&lt;/p>
+&lt;p>通过串口直接控制 air780e，把短信的收发能力暴露出来，后端使用 &lt;strong>Golang&lt;/strong> 来实现统一的服务层。&lt;/p>
 &lt;p>目前这个方案的特点是：&lt;/p>
 &lt;ul>
 &lt;li>
