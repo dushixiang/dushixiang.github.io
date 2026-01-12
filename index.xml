@@ -1,4 +1,46 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>杜世翔</title><link>https://www.typesafe.cn/</link><description>Recent content on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 13 Dec 2025 21:33:35 +0800</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>30 元成本搞定 GiffGaff 短信转发与自动保活</title><link>https://www.typesafe.cn/posts/air780e-giffgaff/</link><pubDate>Sat, 13 Dec 2025 21:33:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/air780e-giffgaff/</guid><description>&lt;p>先说明一点：&lt;strong>这个项目并不是重复造轮子。&lt;/strong>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>杜世翔</title><link>https://www.typesafe.cn/</link><description>Recent content on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 12 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>做副业的两年：我的项目 NextTerminal 拿到了 300+ 付费用户，但赚钱却很难</title><link>https://www.typesafe.cn/posts/next-terminal-2026/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-2026/</guid><description>&lt;h2 id="起因一次义无反顾的裸辞">起因：一次“义无反顾”的裸辞&lt;/h2>
+&lt;p>2024 年刚过完年，我正忙着装修新房。按照常理，这应该是人生的高光时刻，但我的工作状态却糟透了。每天早上醒来，想到要去公司就感到窒息。成都冬日的早晨，迎着惨淡的日光和冷风，给人一种特别压抑的感觉。就像被困在一个无法逃脱的循环里，每一天都在重复，直到让我开始怀疑：这样下去，我会被彻底耗尽。&lt;/p>
+&lt;p>终于，某个周五的上午，我做了一个或许并不理智的决定——&lt;strong>裸辞&lt;/strong>。&lt;/p>
+&lt;p>我没有找到下家，甚至连详细的计划都没有，连房贷都还在还。但是，我知道，如果不做出改变，我可能会在这种压抑中把自己拖垮。&lt;/p>
+&lt;p>离职后的第一周，我过得有些迷茫。每天都在问自己：接下来应该做什么？是继续找工作，还是勇敢地试试别的可能性？&lt;/p>
+&lt;p>就在这个时候，我突然想到 &lt;strong>NextTerminal&lt;/strong> —— 这个我一直在业余时间维护的开源项目。它是一个堡垒机系统，已经积累了一些用户。虽然一直是免费开源，但偶尔有企业用户问是否有商业版本或技术支持服务。&lt;/p>
+&lt;p>“也许，这就是机会？”我在心里默默想着。&lt;/p>
+&lt;p>决定了就行动。我决定尝试将 NextTerminal 商业化，看看能不能靠它养活自己。定价策略也很简单：&lt;strong>499 元，授权 5 个用户，支持无限制的资产数量，首发立减 100，只要 399元&lt;/strong>。这个价格不会吓跑小企业，也足够覆盖我的基本开发成本。&lt;/p>
+&lt;p>结果，第一个月居然卖出了 50 份授权。大多数购买者是那些一直关注这个项目的朋友和用户，他们的支持让我看到了希望。那一刻，我的心情复杂极了，也许，这个决定并没有那么疯狂。&lt;/p>
+&lt;p>然而，好景不长。&lt;/p>
+&lt;p>第二个月，销售额暴跌。热情过去后，现实给了我狠狠的一巴掌。我开始明白，靠一个开源项目养活自己，远比我想象中的困难。&lt;/p>
+&lt;p>这时，恰巧，我收到了业内某安全公司的安全开发 Offer。面对不断下降的收入和眼前稳定的工作机会，我做出了选择：继续工作。&lt;/p>
+&lt;p>但我没有放弃 NextTerminal。过去两年，我一直在业余时间维护和发展这个项目，尝试不同的商业化策略，探索个人开源项目的盈利可能性。&lt;/p>
+&lt;hr>
+&lt;h2 id="现状看似不错的数据背后的困境">现状：看似不错的数据，背后的困境&lt;/h2>
+&lt;p>快两年过去了，尽管白天在公司忙于写代码，我依然没有放弃对 NextTerminal 的投入。每个晚上和周末，我都在修复 Bug、迭代功能、回复用户反馈。&lt;/p>
+&lt;p>来看看这两年我在业余时间“折腾”出来的一些“硬核”数据：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>GitHub Star 数：5000+&lt;/strong>
+这个数字让我感到自豪，说明项目确实解决了一些人的痛点。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>付费用户数：300+&lt;/strong>
+两年来，累计 300 多个付费客户，平均每月新增 10 多个。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>总收入：约 6 万元&lt;/strong>
+听起来还不错，但这只是流水而已。&lt;/p>
+&lt;/li>
+&lt;li>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/wednesday.png" alt="wednesday.png">&lt;/p>
+&lt;p>乍一看，这些数字似乎还行。一个个人开源项目，能够获得 5k Star 和 300+ 付费用户，应该算是小有成就吧？&lt;/p>
+&lt;p>但现实是：&lt;strong>我仍然没有实现财务自给。&lt;/strong>&lt;/p>
+&lt;p>6 万元的流水，平均分摊到两年，每月不到 2500 元。扣除服务器成本、域名费用、各种工具订阅，偶尔购买的第三方服务，实际到手的收入甚至不如我现在的工资零头。&lt;/p>
+&lt;p>更重要的是，增长曲线已经开始平缓。转化率在不断下降，流量虽有，但真正愿意付费的用户越来越少。&lt;/p>
+&lt;p>这就是我目前面临的“盈利困境”：&lt;strong>有用户、有关注度、有口碑，但就是赚不到足够的钱。&lt;/strong>&lt;/p>
+&lt;hr>
+&lt;h2 id="反思为什么转化率这么低">反思：为什么转化率这么低？&lt;/h2>
+&lt;p>这两年，我一直在复盘：为什么 NextTerminal 的转化率始终无法突破？我从几个方面拆解了一下，发现了一些很有意思的悖论。&lt;/p>
+&lt;h3 id="1-定价是太贵了还是便宜得让人不敢买">1. 定价：是太贵了，还是便宜得让人不敢买？&lt;/h3>
+&lt;p>最初的定价：399 元，5 用户，听起来其实挺便宜的。尤其是与市面上同类商业产品相比，这个价格无疑非常有吸引力。但问题来了：&lt;strong>定价太便宜，反而让一些企业用户产生了疑虑&lt;/strong>。在他们眼里，便宜的东西未必有好货，尤其是在安全领域，企业用户往往会更看重产品的品牌和背后的保障。&lt;/p></description></item><item><title>30 元成本搞定 GiffGaff 短信转发与自动保活</title><link>https://www.typesafe.cn/posts/air780e-giffgaff/</link><pubDate>Sat, 13 Dec 2025 21:33:35 +0800</pubDate><guid>https://www.typesafe.cn/posts/air780e-giffgaff/</guid><description>&lt;p>先说明一点：&lt;strong>这个项目并不是重复造轮子。&lt;/strong>
 如果你搜索过「&lt;strong>air780e 短信转发&lt;/strong>」，大概能看到目前主要有两种方案：&lt;/p>
 &lt;p>&lt;strong>方案一：使用 air780e SIM卡自带流量进行转发&lt;/strong>
 实现简单，但问题也很明显——像 GiffGaff 这种卡流量价格非常离谱，长期使用成本太高，直接 Pass。&lt;/p>
