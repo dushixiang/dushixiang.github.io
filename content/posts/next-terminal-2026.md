@@ -41,15 +41,18 @@ date: "2026-01-12 00:00:00"
 来看看这两年我在业余时间“折腾”出来的一些“硬核”数据：
 
 * **GitHub Star 数：5000+**
+
   这个数字让我感到自豪，说明项目确实解决了一些人的痛点。
 
 * **付费用户数：300+**
+
   两年来，累计 300 多个付费客户，平均每月新增 10 多个。
 
 * **总收入：约 6 万元**
+
   听起来还不错，但这只是流水而已。
-* 
-![wednesday.png](/images/next-terminal/wednesday.png)
+
+![wednesday.png](https://www.typesafe.cn/images/next-terminal/wednesday.png)
 
 乍一看，这些数字似乎还行。一个个人开源项目，能够获得 5k Star 和 300+ 付费用户，应该算是小有成就吧？
 
