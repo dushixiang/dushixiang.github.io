@@ -1,4 +1,30 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 12 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>做副业的两年：我的项目 NextTerminal 拿到了 300+ 付费用户，但赚钱却很难</title><link>https://www.typesafe.cn/posts/next-terminal-2026/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-2026/</guid><description>&lt;h2 id="起因一次义无反顾的裸辞">起因：一次“义无反顾”的裸辞&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 杜世翔</title><link>https://www.typesafe.cn/posts/</link><description>Recent content in Posts on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Tue, 13 Jan 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Pika Monitor SSH 登录监控原理</title><link>https://www.typesafe.cn/posts/pika-ssh-pam/</link><pubDate>Tue, 13 Jan 2026 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/pika-ssh-pam/</guid><description>&lt;h2 id="引言">引言&lt;/h2>
+&lt;p>对于服务器管理员来说，监控 SSH 登录行为是安全运维的基础需求。传统方案通常依赖定期解析 &lt;code>/var/log/auth.log&lt;/code> 或 &lt;code>/var/log/secure&lt;/code> 等日志文件，但这种方式存在明显的局限性：需要不断轮询文件、日志格式因发行版而异、无法实时响应异常登录。&lt;/p>
+&lt;p>Pika Monitor 采用了一种更优雅的方案：基于 Linux PAM（Pluggable Authentication Modules）机制，实现了毫秒级的 SSH 登录实时监控。当有用户登录时，系统能立即感知并触发告警，无需任何轮询操作。&lt;/p>
+&lt;h2 id="核心原理">核心原理&lt;/h2>
+&lt;h3 id="pam-是什么">PAM 是什么&lt;/h3>
+&lt;p>PAM 是 Linux 系统的插件式认证框架，几乎所有需要身份验证的程序（包括 SSH）都会调用 PAM。PAM 将认证过程分为四个阶段：&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>auth&lt;/strong>：身份验证（检查密码、密钥等）&lt;/li>
+&lt;li>&lt;strong>account&lt;/strong>：账户检查（账户是否过期、是否被锁定等）&lt;/li>
+&lt;li>&lt;strong>password&lt;/strong>：密码管理&lt;/li>
+&lt;li>&lt;strong>session&lt;/strong>：会话管理（登录成功后的环境配置）&lt;/li>
+&lt;/ul>
+&lt;p>PAM 提供了 &lt;code>pam_exec.so&lt;/code> 模块，允许在认证流程的任何阶段执行外部程序。这是我们实现监控的关键切入点。&lt;/p>
+&lt;h3 id="监控流程">监控流程&lt;/h3>
+&lt;p>整个监控流程可以用一条简洁的链路表示：&lt;/p>
+&lt;pre tabindex="0">&lt;code>SSH 登录 → PAM 认证 → pam_exec.so → pika-ssh-login-hook → Unix Socket → pika-agent → 告警/记录
+&lt;/code>&lt;/pre>&lt;p>具体步骤如下：&lt;/p>
+&lt;ol>
+&lt;li>用户通过 SSH 登录服务器&lt;/li>
+&lt;li>SSH 服务器调用 PAM 进行身份认证&lt;/li>
+&lt;li>认证成功后，PAM 进入 session 阶段（会话打开）&lt;/li>
+&lt;li>此时 &lt;code>pam_exec.so&lt;/code> 模块被触发，执行 &lt;code>pika-ssh-login-hook&lt;/code> 程序&lt;/li>
+&lt;li>&lt;code>pika-ssh-login-hook&lt;/code> 从 PAM 提供的环境变量中读取登录信息（用户名、客户端 IP、端口、终端类型等）&lt;/li>
+&lt;li>将这些信息封装成 JSON 格式，通过 Unix Domain Socket 发送给 &lt;code>pika-agent&lt;/code>&lt;/li>
+&lt;li>&lt;code>pika-agent&lt;/code> 收到事件后，立即进行处理（记录日志、发送告警等）&lt;/li>
+&lt;/ol>
+&lt;p>整个过程在毫秒级别完成，对用户登录体验没有任何影响。&lt;/p></description></item><item><title>做副业的两年：我的项目 NextTerminal 拿到了 300+ 付费用户，但赚钱却很难</title><link>https://www.typesafe.cn/posts/next-terminal-2026/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-2026/</guid><description>&lt;h2 id="起因一次义无反顾的裸辞">起因：一次“义无反顾”的裸辞&lt;/h2>
 &lt;p>2024 年刚过完年，我正忙着装修新房。按照常理，这应该是人生的高光时刻，但我的工作状态却糟透了。每天早上醒来，想到要去公司就感到窒息。成都冬日的早晨，迎着惨淡的日光和冷风，给人一种特别压抑的感觉。就像被困在一个无法逃脱的循环里，每一天都在重复，直到让我开始怀疑：这样下去，我会被彻底耗尽。&lt;/p>
 &lt;p>终于，某个周五的上午，我做了一个或许并不理智的决定——&lt;strong>裸辞&lt;/strong>。&lt;/p>
 &lt;p>我没有找到下家，甚至连详细的计划都没有，连房贷都还在还。但是，我知道，如果不做出改变，我可能会在这种压抑中把自己拖垮。&lt;/p>
