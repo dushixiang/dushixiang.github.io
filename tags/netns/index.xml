@@ -12,7 +12,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns list-id
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始实验">开始实验&lt;/h3>
 &lt;p>我们将要构建如下图的网络&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/netns.png?t=2" alt="https://oss.typesafe.cn/netns.png">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/netns.png" alt="https://oss.typesafe.cn/netns.png">&lt;/p>
 &lt;p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加并启动虚拟网卡tap设备&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tap0 mode tap 

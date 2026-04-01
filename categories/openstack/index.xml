@@ -49,11 +49,11 @@
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#8be9fd;font-style:italic">enable&lt;/span> openvswitch &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> systemctl start openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建虚拟机">创建虚拟机&lt;/h3>
 &lt;p>使用 virt-manager 创建三台虚拟机&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vm-nodes.png" alt="image-20210604140054913">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vm-nodes.png" alt="image-20210604140054913">&lt;/p>
 &lt;h3 id="配置网络">配置网络&lt;/h3>
 &lt;h4 id="配置管理网卡">配置管理网卡&lt;/h4>
 &lt;p>给虚拟机配置桥接网络，参考&lt;a href="https://typesafe.cn/posts/linux-kvm/">Linux虚拟化技术KVM&lt;/a>，效果如图&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vm-manage-port-config.png" alt="">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vm-manage-port-config.png" alt="">&lt;/p>
 &lt;h4 id="配置trunk网卡">配置trunk网卡&lt;/h4>
 &lt;p>使用ovs创建一个虚拟网桥。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-vlan

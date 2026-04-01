@@ -1080,11 +1080,11 @@ Object obj = context.lookup(&amp;#34;rmi://localhost:1099/Object&amp;#34;);
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>systemctl &lt;span style="color:#8be9fd;font-style:italic">enable&lt;/span> openvswitch &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> systemctl start openvswitch
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="创建虚拟机">创建虚拟机&lt;/h3>
 &lt;p>使用 virt-manager 创建三台虚拟机&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vm-nodes.png" alt="image-20210604140054913">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vm-nodes.png" alt="image-20210604140054913">&lt;/p>
 &lt;h3 id="配置网络">配置网络&lt;/h3>
 &lt;h4 id="配置管理网卡">配置管理网卡&lt;/h4>
 &lt;p>给虚拟机配置桥接网络，参考&lt;a href="https://typesafe.cn/posts/linux-kvm/">Linux虚拟化技术KVM&lt;/a>，效果如图&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vm-manage-port-config.png" alt="">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vm-manage-port-config.png" alt="">&lt;/p>
 &lt;h4 id="配置trunk网卡">配置trunk网卡&lt;/h4>
 &lt;p>使用ovs创建一个虚拟网桥。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ovs-vsctl add-br br-vlan
@@ -1248,7 +1248,7 @@ cp ifcfg-enp134s0f0 ifcfg-br0
 &lt;li>写一段代码拉取&lt;code>delay-minutes-1&lt;/code>中的消息，将满足条件的消息发送到真正的目标主题里。&lt;/li>
 &lt;/ol>
 &lt;p>就像画一匹马一样简单。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/uPic/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg" alt="怎样画马">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg" alt="怎样画马">&lt;/p>
 &lt;p>方案是好的，但是我们还需要更多细节。&lt;/p>
 &lt;h3 id="完善细节">完善细节&lt;/h3>
 &lt;p>&lt;strong>问题出在哪里？&lt;/strong>&lt;/p>
@@ -1260,7 +1260,7 @@ cp ifcfg-enp134s0f0 ifcfg-br0
 &lt;p>举个例子：当你需要一个24小时的延迟消息队列，在代码里面写下了&lt;code>Thread.sleep(1000*60*60*24);&lt;/code>，为了不发生&lt;code>rebalance&lt;/code>，你把&lt;code>max.poll.interval.ms&lt;/code> 也改成了&lt;code>1000*60*60*24&lt;/code>，这个时候你或许会感觉到一丝丝的怪异，我是谁？我在哪？我为什么要写出来这样的代码？&lt;/p>
 &lt;p>&lt;strong>其实我们可以更优雅的处理这个问题。&lt;/strong>&lt;/p>
 &lt;p>KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换&lt;code>sleep&lt;/code>。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/uPic/kafka-delay-queue.png" alt="kafka-delay-queue">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/kafka-delay-queue.png" alt="kafka-delay-queue">&lt;/p>
 &lt;h3 id="java代码实现">Java代码实现&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.core.JsonProcessingException;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.databind.JsonNode;
@@ -1496,13 +1496,13 @@ ulimit -n 655350
 &lt;/ul>
 &lt;h1 id="vxlan网络如何工作">VXLAN网络如何工作？&lt;/h1>
 &lt;p>VXLAN隧道协议将二层以太网帧封装在三层UDP数据包中，使用户能够创建跨物理三层网络的虚拟化二层子网或网段。每个二层子网使用VXLAN网络标识符（VNI）作为唯一标识。报文格式如下图：&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan_packet_header.png" alt="VXLAN报文格式">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vxlan_packet_header.png" alt="VXLAN报文格式">&lt;/p>
 &lt;p>执行数据包封装和解封装的实体称为VXLAN隧道终结点（VTEP）。VTEP主要分为两类：硬件VTEP和软件VTEP。硬件VTEP我接触较少，这里就不再介绍了。&lt;/p>
 &lt;p>软件VTEP如下图所示：VTEP在数据包到达虚拟机之前进行了封装和解封装，使得虚拟机完全不需要知道VXLAN隧道以及它们之间的三层网络。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan01.png" alt="vxlan网络">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vxlan01.png" alt="vxlan网络">&lt;/p>
 &lt;h1 id="简单vxlan实验">简单VXLAN实验&lt;/h1>
 &lt;p>我们参照下图完成实验。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vxlan_topo.png" alt="VXLAN实验">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vxlan_topo.png" alt="VXLAN实验">&lt;/p>
 &lt;h3 id="主机a">主机A&lt;/h3>
 &lt;pre tabindex="0">&lt;code># 创建隧道网桥
 ovs-vsctl add-br br-tun
@@ -1636,7 +1636,7 @@ if (流表匹配条件){
 &lt;/ol>
 &lt;blockquote>
 &lt;p>需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为&lt;code>trunk&lt;/code>模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为&lt;code>仅主机模式&lt;/code>。&lt;/p>&lt;/blockquote>
-&lt;p>&lt;img src="https://oss.typesafe.cn/ovs-di-network0.png?t=2" alt="分布式无隔离网络">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/ovs-di-network0.png" alt="分布式无隔离网络">&lt;/p>
 &lt;h3 id="配置">配置&lt;/h3>
 &lt;ul>
 &lt;li>配置环境 &lt;code>主机A&lt;/code>&lt;/li>
@@ -1861,14 +1861,14 @@ if (流表匹配条件){
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>	stp 	&amp;lt;bridge&amp;gt; &lt;span style="color:#ff79c6">{&lt;/span>on|off&lt;span style="color:#ff79c6">}&lt;/span>	turn stp on/off
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>常用命令如&lt;/p></description></item><item><title>Linux veth pair 详解</title><link>https://www.typesafe.cn/posts/linux-veth-pair/</link><pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-veth-pair/</guid><description>&lt;h1 id="linux-veth-pair-详解">Linux veth pair 详解&lt;/h1>
 &lt;p>veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/virtual-device-veth-1.png" alt="virtual-device-veth-1">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/virtual-device-veth-1.png" alt="virtual-device-veth-1">&lt;/p>
 &lt;p>由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。&lt;/p>
 &lt;h2 id="如何使用">如何使用？&lt;/h2>
 &lt;p>创建一对veth&lt;/p>
 &lt;pre tabindex="0">&lt;code>ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;gt;
 &lt;/code>&lt;/pre>&lt;h2 id="实验">实验&lt;/h2>
 &lt;p>我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vethpair.png" alt="https://oss.typesafe.cn/vethpair.png">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vethpair.png" alt="/images/external/vethpair.png">&lt;/p>
 &lt;p>我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 创建一对veth&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link add veth0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> veth peer name veth1
@@ -1893,7 +1893,7 @@ if (流表匹配条件){
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ip netns list-id
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="开始实验">开始实验&lt;/h3>
 &lt;p>我们将要构建如下图的网络&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/netns.png?t=2" alt="https://oss.typesafe.cn/netns.png">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/netns.png" alt="https://oss.typesafe.cn/netns.png">&lt;/p>
 &lt;p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 添加并启动虚拟网卡tap设备&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip tuntap add dev tap0 mode tap 

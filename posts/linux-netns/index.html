@@ -37,7 +37,7 @@ ip link set tap1 netns ns1
 </span></span><span style=display:flex><span>       ip <span style=color:#ff79c6>[</span>-all<span style=color:#ff79c6>]</span> netns <span style=color:#8be9fd;font-style:italic>exec</span> <span style=color:#ff79c6>[</span>NAME<span style=color:#ff79c6>]</span> cmd ...
 </span></span><span style=display:flex><span>       ip netns monitor
 </span></span><span style=display:flex><span>       ip netns list-id
-</span></span></code></pre></div><h3 id=开始实验>开始实验</h3><p>我们将要构建如下图的网络</p><p><img src="https://oss.typesafe.cn/netns.png?t=2" alt=https://oss.typesafe.cn/netns.png></p><p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 添加并启动虚拟网卡tap设备</span>
+</span></span></code></pre></div><h3 id=开始实验>开始实验</h3><p>我们将要构建如下图的网络</p><p><img src=/images/external/netns.png alt=https://oss.typesafe.cn/netns.png></p><p>首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#6272a4># 添加并启动虚拟网卡tap设备</span>
 </span></span><span style=display:flex><span>ip tuntap add dev tap0 mode tap 
 </span></span><span style=display:flex><span>ip tuntap add dev tap1 mode tap 
 </span></span><span style=display:flex><span>ip link <span style=color:#8be9fd;font-style:italic>set</span> tap0 up

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Veth Pair on 杜世翔</title><link>https://www.typesafe.cn/tags/veth-pair/</link><description>Recent content in Veth Pair on 杜世翔</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 09 Nov 2020 22:45:00 +0000</lastBuildDate><atom:link href="https://www.typesafe.cn/tags/veth-pair/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux veth pair 详解</title><link>https://www.typesafe.cn/posts/linux-veth-pair/</link><pubDate>Mon, 09 Nov 2020 22:45:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/linux-veth-pair/</guid><description>&lt;h1 id="linux-veth-pair-详解">Linux veth pair 详解&lt;/h1>
 &lt;p>veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/virtual-device-veth-1.png" alt="virtual-device-veth-1">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/virtual-device-veth-1.png" alt="virtual-device-veth-1">&lt;/p>
 &lt;p>由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。&lt;/p>
 &lt;h2 id="如何使用">如何使用？&lt;/h2>
 &lt;p>创建一对veth&lt;/p>
 &lt;pre tabindex="0">&lt;code>ip link add &amp;lt;veth name&amp;gt; type veth peer name &amp;lt;peer name&amp;gt;
 &lt;/code>&lt;/pre>&lt;h2 id="实验">实验&lt;/h2>
 &lt;p>我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/vethpair.png" alt="https://oss.typesafe.cn/vethpair.png">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/vethpair.png" alt="/images/external/vethpair.png">&lt;/p>
 &lt;p>我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4"># 创建一对veth&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ip link add veth0 &lt;span style="color:#8be9fd;font-style:italic">type&lt;/span> veth peer name veth1

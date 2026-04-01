@@ -8,7 +8,7 @@
 &lt;li>写一段代码拉取&lt;code>delay-minutes-1&lt;/code>中的消息，将满足条件的消息发送到真正的目标主题里。&lt;/li>
 &lt;/ol>
 &lt;p>就像画一匹马一样简单。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/uPic/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg" alt="怎样画马">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/%E6%80%8E%E6%A0%B7%E7%94%BB%E9%A9%AC.jpeg" alt="怎样画马">&lt;/p>
 &lt;p>方案是好的，但是我们还需要更多细节。&lt;/p>
 &lt;h3 id="完善细节">完善细节&lt;/h3>
 &lt;p>&lt;strong>问题出在哪里？&lt;/strong>&lt;/p>
@@ -20,7 +20,7 @@
 &lt;p>举个例子：当你需要一个24小时的延迟消息队列，在代码里面写下了&lt;code>Thread.sleep(1000*60*60*24);&lt;/code>，为了不发生&lt;code>rebalance&lt;/code>，你把&lt;code>max.poll.interval.ms&lt;/code> 也改成了&lt;code>1000*60*60*24&lt;/code>，这个时候你或许会感觉到一丝丝的怪异，我是谁？我在哪？我为什么要写出来这样的代码？&lt;/p>
 &lt;p>&lt;strong>其实我们可以更优雅的处理这个问题。&lt;/strong>&lt;/p>
 &lt;p>KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换&lt;code>sleep&lt;/code>。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。&lt;/p>
-&lt;p>&lt;img src="https://oss.typesafe.cn/uPic/kafka-delay-queue.png" alt="kafka-delay-queue">&lt;/p>
+&lt;p>&lt;img src="https://www.typesafe.cn/images/external/kafka-delay-queue.png" alt="kafka-delay-queue">&lt;/p>
 &lt;h3 id="java代码实现">Java代码实现&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.core.JsonProcessingException;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">import&lt;/span> com.fasterxml.jackson.databind.JsonNode;
