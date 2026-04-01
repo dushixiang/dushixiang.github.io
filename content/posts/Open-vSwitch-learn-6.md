@@ -27,20 +27,20 @@ VXLAN是一种隧道封装协议，在三层网络上封装二层网络数据报
 
 VXLAN隧道协议将二层以太网帧封装在三层UDP数据包中，使用户能够创建跨物理三层网络的虚拟化二层子网或网段。每个二层子网使用VXLAN网络标识符（VNI）作为唯一标识。报文格式如下图：
 
-![VXLAN报文格式](https://oss.typesafe.cn/vxlan_packet_header.png)
+![VXLAN报文格式](/images/external/vxlan_packet_header.png)
 
 执行数据包封装和解封装的实体称为VXLAN隧道终结点（VTEP）。VTEP主要分为两类：硬件VTEP和软件VTEP。硬件VTEP我接触较少，这里就不再介绍了。
 
 软件VTEP如下图所示：VTEP在数据包到达虚拟机之前进行了封装和解封装，使得虚拟机完全不需要知道VXLAN隧道以及它们之间的三层网络。
 
 
-![vxlan网络](https://oss.typesafe.cn/vxlan01.png)
+![vxlan网络](/images/external/vxlan01.png)
 
 # 简单VXLAN实验
 
 我们参照下图完成实验。
 
-![VXLAN实验](https://oss.typesafe.cn/vxlan_topo.png)
+![VXLAN实验](/images/external/vxlan_topo.png)
 
 ### 主机A
 ```

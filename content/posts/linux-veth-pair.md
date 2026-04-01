@@ -13,7 +13,7 @@ date: "2020-11-09 22:45:00"
 veth pair是成对出现的一种虚拟网络设备接口，一端连着网络协议栈，一端彼此相连。如下图所示：
 
 
-![virtual-device-veth-1](https://oss.typesafe.cn/virtual-device-veth-1.png)
+![virtual-device-veth-1](/images/external/virtual-device-veth-1.png)
 
 
 由于它的这个特性，常常被用于构建虚拟网络拓扑。例如连接两个不同的网络命名空间(netns)，连接docker容器，连接网桥(Bridge)等，其中一个很常见的案例就是OpenStack Neutron底层用它来构建非常复杂的网络拓扑。
@@ -34,7 +34,7 @@ ip link add <veth name> type veth peer name <peer name>
 我们改造上一节完成的netns实验，使用veth pair将两个的隔离netns连接起来。如下图所示：
 
 
-![https://oss.typesafe.cn/vethpair.png](https://oss.typesafe.cn/vethpair.png)
+![/images/external/vethpair.png](/images/external/vethpair.png)
 
 
 我们首先创建一对veth设备，将veth设备分别移动到两个netns中并启动。
@@ -161,11 +161,11 @@ rtt min/avg/max/mdev = 0.027/0.041/0.051/0.012 ms
 但是这样的网络拓扑存在一个弊端，随着网络设备的增多，网络连线的复杂度将成倍增长。
 如果连接三个netns时，网络连线就成了下图的样子
 
-![veth1](https://oss.typesafe.cn/veth-pair1.png)
+![veth1](/images/external/veth-pair1.png)
 
 而如果连接四个netns时，网络连线就成了下图的样子
 
-![veth2](https://oss.typesafe.cn/veth-pair2.png)
+![veth2](/images/external/veth-pair2.png)
 
 如果有五台设备。。。
 

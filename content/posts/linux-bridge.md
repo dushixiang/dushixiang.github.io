@@ -95,7 +95,7 @@ ip link del <bridge>
 
 那么，想要让某一台设备和很多网络设备都可以通信需要如何去做呢？在我们的日常生活中，除了手机和电脑，最常见的网络设备就是路由器了，我们的手机连上WI-FI，电脑插到路由器上，等待从路由器的DHCP服务器上获取到IP，他们就可以相互通信了，这便是路由器的二层交换功能在工作。Linux Bridge最主要的功能就是二层交换，是对现实世界二层交换机的模拟，我们稍微改动一下网络拓扑，如下图：
 
-![bridge](https://oss.typesafe.cn/bridge0.png)
+![bridge](/images/external/bridge0.png)
 
 我们建立了一个网桥，三个netns，三对veth pair，分别一端在netns中，另一端连接在网桥上，为了简化拓扑，我去除了netns中的tap设备，将IP直接配置在veth上。
 

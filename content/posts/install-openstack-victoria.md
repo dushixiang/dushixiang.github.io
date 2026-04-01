@@ -56,7 +56,7 @@ systemctl enable openvswitch && systemctl start openvswitch
 
 使用 virt-manager 创建三台虚拟机
 
-![image-20210604140054913](https://oss.typesafe.cn/vm-nodes.png)
+![image-20210604140054913](/images/external/vm-nodes.png)
 
 ### 配置网络
 
@@ -64,7 +64,7 @@ systemctl enable openvswitch && systemctl start openvswitch
 
 给虚拟机配置桥接网络，参考[Linux虚拟化技术KVM](https://typesafe.cn/posts/linux-kvm/)，效果如图
 
-![](https://oss.typesafe.cn/vm-manage-port-config.png)
+![](/images/external/vm-manage-port-config.png)
 
 #### 配置trunk网卡
 
@@ -76,7 +76,7 @@ ovs-vsctl add-br br-vlan
 
 此时网桥`br-vlan`上是没有任何虚拟网卡的，然后关闭虚拟机，在`virt-manager`上添加一个网络设备
 
-![](https://oss.typesafe.cn/kvm-ovs-trunk-port-config.png)
+![](/images/external/kvm-ovs-trunk-port-config.png)
 
 使用命令找到虚拟机并编辑虚拟机XML文件。
 
@@ -93,7 +93,7 @@ virsh edit controller
 
 然后保存退出，启动虚拟机，启动成功之后会 `virtualport` 中间生成一个新的元素。
 
-![](https://oss.typesafe.cn/kvm-ovs-trunk-port-xml.png)
+![](/images/external/kvm-ovs-trunk-port-xml.png)
 
 确认是否添加成功。
 

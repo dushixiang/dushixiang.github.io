@@ -21,7 +21,7 @@ date: "2020-12-27 11:38:00"
 
 > 需要注意的是，如果是使用物理环境搭建网络拓扑，需要把业务网卡对应的交换机端口配置为`trunk`模式。如果是使用VmWare搭建网络拓扑，业务网卡需要配置网络类型为`仅主机模式`。
 
-![分布式无隔离网络](https://oss.typesafe.cn/ovs-di-network0.png?t=2)
+![分布式无隔离网络](/images/external/ovs-di-network0.png)
 
 ### 配置
 - 配置环境 `主机A`
@@ -114,7 +114,7 @@ ip netns exec ns1 ping 10.0.0.2
 
 构建分布式隔离网络和单节点的操作方法一致，即给对应的端口配置VLAN tag。如下图所示，我们分别给主机A、B上的端口配置VLAN tag为100和200。
 
-![分布式无隔离网络](https://oss.typesafe.cn/ovs-di-network1.png?t=2)
+![分布式无隔离网络](/images/external/ovs-di-network1.png)
 
 ### 配置
 

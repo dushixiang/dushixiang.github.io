@@ -30,7 +30,7 @@ Usage: ip netns list
 
 我们将要构建如下图的网络
 
-![https://oss.typesafe.cn/netns.png](https://oss.typesafe.cn/netns.png?t=2)
+![https://oss.typesafe.cn/netns.png](/images/external/netns.png)
 
 首先我们添加两个tap设备并配置上IP信息，然后添加两个netns，最后将tap设备移动到netns中
 

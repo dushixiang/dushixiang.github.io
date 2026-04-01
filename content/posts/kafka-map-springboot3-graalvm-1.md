@@ -35,15 +35,15 @@ spring:
 
 打包原生二进制还是最折腾的，刚开始参考[GraalVM Native Image Support](https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/native-image.html#native-image.developing-your-first-application.buildpacks) 把打包 `springboot:build-image` 当成了打包原生二进制了，而且打包的过程中还遇到了 `UnsupportedFeatureException: No instances of ch.qos.logback.classic.Logger` 这个问题，找了一圈也没找到解决方案。
 
-![image.png](https://oss.typesafe.cn/k5.png)
+![image.png](/images/external/k5.png)
 
 无奈，还是从 hello world 开始学起吧，我重新创建了一个 SpringBoot3.0.0 项目，并添加了 GraalVM Native Support 和我用到的一些组件。
 
-![image.png](https://oss.typesafe.cn/k6.png)
+![image.png](/images/external/k6.png)
 
 然后我就发现了新的大陆，我之前的方向错了，果然是方向错了再努力也没用啊。
 
-![image.png](https://oss.typesafe.cn/k4.png)
+![image.png](/images/external/k4.png)
 
 我在这个hello world程序中试了一下果然能行，当然是需要手动安装 GraalVM 并且配置环境变量的，切换到 graalvm 环境的jdk 。请参考 https://www.graalvm.org/downloads/ 的教程。
 
@@ -65,13 +65,13 @@ mvn clean native:compile -Pnative -Dmaven.test.skip=true
 
 然后时长达十几分钟的等待。
 
-![image.png](https://oss.typesafe.cn/k1.png)
+![image.png](/images/external/k1.png)
 
 运行成功？不，我又失败了。当然，我失败的很快，87毫秒。
 
-![image.png](https://oss.typesafe.cn/k2.png)
+![image.png](/images/external/k2.png)
 
-![image.png](https://oss.typesafe.cn/k3.png)
+![image.png](/images/external/k3.png)
 
 查看原因，原来是找不到我的 sqlite 方言类，此时我突然想到 [GraalVM Native Image Support](https://docs.spring.io/spring-boot/docs/3.0.0/reference/html/native-image.html#native-image.developing-your-first-application.buildpacks) 其中一段话。
 

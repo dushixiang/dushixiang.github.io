@@ -52,7 +52,7 @@ date: "2026-01-12 00:00:00"
 
   听起来还不错，但这只是流水而已。
 
-![wednesday.png](https://www.typesafe.cn/images/next-terminal/wednesday.png)
+![wednesday.png](/images/next-terminal/wednesday.png)
 
 乍一看，这些数字似乎还行。一个个人开源项目，能够获得 5k Star 和 300+ 付费用户，应该算是小有成就吧？
 

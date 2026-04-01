@@ -24,7 +24,7 @@ kafka作为一个使用广泛的消息队列，很多人都不会陌生，但当
 
 就像画一匹马一样简单。
 
-![怎样画马](https://oss.typesafe.cn/uPic/怎样画马.jpeg)
+![怎样画马](/images/external/怎样画马.jpeg)
 
 方案是好的，但是我们还需要更多细节。
 
@@ -48,7 +48,7 @@ kafka作为一个使用广泛的消息队列，很多人都不会陌生，但当
 
 KafkaConsumer 提供了暂停和恢复的API函数，调用消费者的暂停方法后就无法再拉取到新的消息，同时长时间不消费kafka也不会认为这个消费者已经挂掉了。另外为了能够更加优雅，我们会启动一个定时器来替换`sleep`。，完整流程如下图，当消费者发现消息不满足条件时，我们就暂停消费者，并把偏移量seek到上一次消费的位置以便等待下一个周期再次消费这条消息。
 
-![kafka-delay-queue](https://oss.typesafe.cn/uPic/kafka-delay-queue.png)
+![kafka-delay-queue](/images/external/kafka-delay-queue.png)
 
 ### Java代码实现
 
