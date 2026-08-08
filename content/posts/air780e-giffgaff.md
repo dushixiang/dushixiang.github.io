@@ -2,6 +2,8 @@
 title: 30 元成本搞定 GiffGaff 短信转发与自动保活
 date: 2025-12-13T21:33:35+08:00
 draft: false
+build:
+  list: never
 ---
 
 先说明一点：**这个项目并不是重复造轮子。**
