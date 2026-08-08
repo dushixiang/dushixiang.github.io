@@ -24,48 +24,7 @@
 &lt;li>将这些信息封装成 JSON 格式，通过 Unix Domain Socket 发送给 &lt;code>pika-agent&lt;/code>&lt;/li>
 &lt;li>&lt;code>pika-agent&lt;/code> 收到事件后，立即进行处理（记录日志、发送告警等）&lt;/li>
 &lt;/ol>
-&lt;p>整个过程在毫秒级别完成，对用户登录体验没有任何影响。&lt;/p></description></item><item><title>做副业的两年：我的项目 NextTerminal 拿到了 300+ 付费用户，但赚钱却很难</title><link>https://www.typesafe.cn/posts/next-terminal-2026/</link><pubDate>Mon, 12 Jan 2026 00:00:00 +0000</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-2026/</guid><description>&lt;h2 id="起因一次义无反顾的裸辞">起因：一次“义无反顾”的裸辞&lt;/h2>
-&lt;p>2024 年刚过完年，我正忙着装修新房。按照常理，这应该是人生的高光时刻，但我的工作状态却糟透了。每天早上醒来，想到要去公司就感到窒息。成都冬日的早晨，迎着惨淡的日光和冷风，给人一种特别压抑的感觉。就像被困在一个无法逃脱的循环里，每一天都在重复，直到让我开始怀疑：这样下去，我会被彻底耗尽。&lt;/p>
-&lt;p>终于，某个周五的上午，我做了一个或许并不理智的决定——&lt;strong>裸辞&lt;/strong>。&lt;/p>
-&lt;p>我没有找到下家，甚至连详细的计划都没有，连房贷都还在还。但是，我知道，如果不做出改变，我可能会在这种压抑中把自己拖垮。&lt;/p>
-&lt;p>离职后的第一周，我过得有些迷茫。每天都在问自己：接下来应该做什么？是继续找工作，还是勇敢地试试别的可能性？&lt;/p>
-&lt;p>就在这个时候，我突然想到 &lt;strong>NextTerminal&lt;/strong> —— 这个我一直在业余时间维护的开源项目。它是一个堡垒机系统，已经积累了一些用户。虽然一直是免费开源，但偶尔有企业用户问是否有商业版本或技术支持服务。&lt;/p>
-&lt;p>“也许，这就是机会？”我在心里默默想着。&lt;/p>
-&lt;p>决定了就行动。我决定尝试将 NextTerminal 商业化，看看能不能靠它养活自己。定价策略也很简单：&lt;strong>499 元，授权 5 个用户，支持无限制的资产数量，首发立减 100，只要 399元&lt;/strong>。这个价格不会吓跑小企业，也足够覆盖我的基本开发成本。&lt;/p>
-&lt;p>结果，第一个月居然卖出了 50 份授权。大多数购买者是那些一直关注这个项目的朋友和用户，他们的支持让我看到了希望。那一刻，我的心情复杂极了，也许，这个决定并没有那么疯狂。&lt;/p>
-&lt;p>然而，好景不长。&lt;/p>
-&lt;p>第二个月，销售额暴跌。热情过去后，现实给了我狠狠的一巴掌。我开始明白，靠一个开源项目养活自己，远比我想象中的困难。&lt;/p>
-&lt;p>这时，恰巧，我收到了业内某安全公司的安全开发 Offer。面对不断下降的收入和眼前稳定的工作机会，我做出了选择：继续工作。&lt;/p>
-&lt;p>但我没有放弃 NextTerminal。过去两年，我一直在业余时间维护和发展这个项目，尝试不同的商业化策略，探索个人开源项目的盈利可能性。&lt;/p>
-&lt;hr>
-&lt;h2 id="现状看似不错的数据背后的困境">现状：看似不错的数据，背后的困境&lt;/h2>
-&lt;p>快两年过去了，尽管白天在公司忙于写代码，我依然没有放弃对 NextTerminal 的投入。每个晚上和周末，我都在修复 Bug、迭代功能、回复用户反馈。&lt;/p>
-&lt;p>来看看这两年我在业余时间“折腾”出来的一些“硬核”数据：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>GitHub Star 数：5000+&lt;/strong>&lt;/p>
-&lt;p>这个数字让我感到自豪，说明项目确实解决了一些人的痛点。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>付费用户数：300+&lt;/strong>&lt;/p>
-&lt;p>两年来，累计 300 多个付费客户，平均每月新增 10 多个。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>总收入：约 6 万元&lt;/strong>&lt;/p>
-&lt;p>听起来还不错，但这只是流水而已。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/wednesday.png" alt="wednesday.png">&lt;/p>
-&lt;p>乍一看，这些数字似乎还行。一个个人开源项目，能够获得 5k Star 和 300+ 付费用户，应该算是小有成就吧？&lt;/p>
-&lt;p>但现实是：&lt;strong>我仍然没有实现财务自给。&lt;/strong>&lt;/p>
-&lt;p>6 万元的流水，平均分摊到两年，每月不到 2500 元。扣除服务器成本、域名费用、各种工具订阅，偶尔购买的第三方服务，实际到手的收入甚至不如我现在的工资零头。&lt;/p>
-&lt;p>更重要的是，增长曲线已经开始平缓。转化率在不断下降，流量虽有，但真正愿意付费的用户越来越少。&lt;/p>
-&lt;p>这就是我目前面临的“盈利困境”：&lt;strong>有用户、有关注度、有口碑，但就是赚不到足够的钱。&lt;/strong>&lt;/p>
-&lt;hr>
-&lt;h2 id="反思为什么转化率这么低">反思：为什么转化率这么低？&lt;/h2>
-&lt;p>这两年，我一直在复盘：为什么 NextTerminal 的转化率始终无法突破？我从几个方面拆解了一下，发现了一些很有意思的悖论。&lt;/p>
-&lt;h3 id="1-定价是太贵了还是便宜得让人不敢买">1. 定价：是太贵了，还是便宜得让人不敢买？&lt;/h3>
-&lt;p>最初的定价：399 元，5 用户，听起来其实挺便宜的。尤其是与市面上同类商业产品相比，这个价格无疑非常有吸引力。但问题来了：&lt;strong>定价太便宜，反而让一些企业用户产生了疑虑&lt;/strong>。在他们眼里，便宜的东西未必有好货，尤其是在安全领域，企业用户往往会更看重产品的品牌和背后的保障。&lt;/p></description></item><item><title>不瞒您说，我今天才学会子网划分</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
+&lt;p>整个过程在毫秒级别完成，对用户登录体验没有任何影响。&lt;/p></description></item><item><title>不瞒您说，我今天才学会子网划分</title><link>https://www.typesafe.cn/posts/subnet/</link><pubDate>Fri, 07 Nov 2025 21:26:09 +0800</pubDate><guid>https://www.typesafe.cn/posts/subnet/</guid><description>&lt;p>众所周知，我是一个程序员，写过不少开源项目。&lt;/p>
 &lt;p>所以我作为一个程序员了解一些计算机网络相关的知识不过分吧，在几年前我也写过不少 Linux 网络和OVS的教程。&lt;/p>
 &lt;p>但是，我今天发现自己不会子网划分。&lt;/p>
 &lt;p>事情还要从明天开始说起，因为明天就要软考了，而我，为了抵扣个税，选择了初级的网络管理员这个科目进行报考。&lt;/p>
@@ -94,65 +53,7 @@
 &lt;/ul>
 &lt;p>子网掩码（换成十进制） = &lt;code>255.255.224.0&lt;/code>&lt;/p>
 &lt;h3 id="步骤2计算网络地址">步骤2，计算网络地址&lt;/h3>
-&lt;p>把 192.168.31.19 转换为二进制是 &lt;code>11000000.10101000.00011111.00010011&lt;/code>&lt;/p></description></item><item><title>Next Terminal v2.6.0 更新日志</title><link>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</link><pubDate>Sat, 27 Sep 2025 12:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/next-terminal-v2_6_0/</guid><description>&lt;h2 id="版本概览">版本概览&lt;/h2>
-&lt;p>&lt;strong>发布日期&lt;/strong>: 2025年9月27日&lt;br>
-&lt;strong>版本号&lt;/strong>: v2.6.0&lt;br>
-&lt;strong>更新类型&lt;/strong>: 功能增强版本&lt;/p>
-&lt;hr>
-&lt;h2 id="新增功能">新增功能&lt;/h2>
-&lt;h3 id="身份认证增强">身份认证增强&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>企业微信认证&lt;/strong>: 新增企业微信单点登录，为企业用户提供无缝、安全的登录体验&lt;/li>
-&lt;li>&lt;strong>OIDC认证&lt;/strong>: 集成 OpenID Connect (OIDC) 协议，扩展了对第三方身份提供商的支持&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/wecom-auth-config.png" alt="企业微信认证配置">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/oidc-auth-config.png" alt="OIDC认证设置">&lt;/p>
-&lt;h3 id="资产管理优化">资产管理优化&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>Web资产分组&lt;/strong>: 新增Web资产分组功能，便于批量管理和组织&lt;/li>
-&lt;li>&lt;strong>WOL网络唤醒&lt;/strong>: SSH、RDP、VNC 及 Telnet 资产现已支持 Wake-on-LAN (WOL) 功能，可远程唤醒离线设备&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/web-asset-groups.png" alt="Web资产分组功能">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/wol-config.png" alt="WOL网络唤醒配置">&lt;/p>
-&lt;h3 id="ai-智能助手">AI 智能助手&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>AI Shell助手&lt;/strong>: 集成 AI 助手，可在 Shell 环境中提供智能命令建议与操作指导&lt;/li>
-&lt;li>&lt;strong>终端内搜索&lt;/strong>: 新增终端内容搜索，支持在会话中快速定位历史命令及输出&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/ai-shell-assistant.png" alt="AI Shell助手界面">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/ai-assistant-interaction-demo.png" alt="AI助手交互示例">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/terminal-search.png" alt="终端内搜索功能">&lt;/p>
-&lt;h3 id="组织架构调整">组织架构调整&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>部门管理&lt;/strong>: 用户组功能已升级为部门管理，支持更精细化的多层级组织架构&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/department-management.png" alt="部门管理界面">&lt;/p>
-&lt;hr>
-&lt;h2 id="功能优化">功能优化&lt;/h2>
-&lt;h3 id="权限管理改进">权限管理改进&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>资产授权优化&lt;/strong>: 重新设计资产授权方式与展示界面，操作更直观&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>优化前&lt;/strong>:
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/asset-authorization-before.png" alt="旧版授权界面">&lt;/p>
-&lt;p>&lt;strong>优化后&lt;/strong>:
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/asset-authorization-after.png" alt="新版授权界面">&lt;/p>
-&lt;h3 id="网络与系统优化">网络与系统优化&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>IP获取优化&lt;/strong>: 改进了系统获取 IP 的方式，现可自动信任 &lt;code>0.0.0.0&lt;/code> 地址，简化了特殊网络环境下的配置&lt;/li>
-&lt;li>&lt;strong>操作系统识别&lt;/strong>: 优化了操作系统自动识别功能，显著提升了识别准确率&lt;/li>
-&lt;li>&lt;strong>地理位置服务&lt;/strong>: IP 地理位置服务已切换至 GeoIP，提供更精准的定位（专业版功能）&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/os-auto-detection.png" alt="操作系统自动识别">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/geoip-service.png" alt="GEOIP地理位置服务">&lt;/p>
-&lt;h3 id="配置与安全">配置与安全&lt;/h3>
-&lt;ul>
-&lt;li>&lt;strong>反向代理配置&lt;/strong>: 反向代理设置已迁移至配置文件，简化了批量部署与自动化运维&lt;/li>
-&lt;li>&lt;strong>安全设置免费化&lt;/strong>: 安全设置已对所有用户免费开放&lt;/li>
-&lt;li>&lt;strong>TLS兼容性&lt;/strong>: 放宽了反向代理的 TLS 验证，以兼容使用旧版 TLS 证书的系统&lt;/li>
-&lt;/ul>
-&lt;p>&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/reverse-proxy-config.png" alt="反向代理配置">
-&lt;img src="https://www.typesafe.cn/images/next-terminal/v2_6_0/security-settings.png" alt="安全设置界面">&lt;/p></description></item><item><title>我为什么开源了三年前写的漏洞验证平台？</title><link>https://www.typesafe.cn/posts/cyberpoc/</link><pubDate>Sat, 06 Sep 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/cyberpoc/</guid><description>&lt;p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。&lt;/p>
+&lt;p>把 192.168.31.19 转换为二进制是 &lt;code>11000000.10101000.00011111.00010011&lt;/code>&lt;/p></description></item><item><title>我为什么开源了三年前写的漏洞验证平台？</title><link>https://www.typesafe.cn/posts/cyberpoc/</link><pubDate>Sat, 06 Sep 2025 00:00:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/cyberpoc/</guid><description>&lt;p>大概三年前，我看到有人用代码片段分享漏洞原理，觉得很有意思，我也模仿设计了一些 Golang 的漏洞。&lt;/p>
 &lt;p>可惜想要验证，得自己搭建环境，门槛不低。&lt;/p>
 &lt;p>于是我又做了一个平台，把漏洞环境封装成 Docker 镜像。用户只需点一下，就能在几秒内启动环境，直接验证。&lt;/p>
 &lt;p>第一个版本很快上线，我陆续封装了十几个漏洞环境。但后来越做越复杂，加了虚拟机管理和分布式网络，结果部署维护麻烦到连我自己都不想搞了，再加上我了解到的 Golang 漏洞就那么多，平台没人用，项目也就搁置了。&lt;/p>
