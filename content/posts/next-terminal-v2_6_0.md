@@ -2,6 +2,8 @@
 date = '2025-09-27T12:00:00+08:00'
 draft = false
 title = 'Next Terminal v2.6.0 更新日志'
+build:
+  list: never
 +++
 
 ## 版本概览

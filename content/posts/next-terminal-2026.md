@@ -4,6 +4,8 @@ categories: [ "NextTerminal" ]
 draft: false
 slug: "next-terminal-2026"
 date: "2026-01-12 00:00:00"
+build:
+  list: never
 ---
 
 ## 起因：一次“义无反顾”的裸辞
