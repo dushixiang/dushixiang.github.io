@@ -14,7 +14,7 @@ draft: false
 
 ### Next Terminal · 运维审计与远程访问
 
-[Next Terminal](https://github.com/dushixiang/next-terminal) 是一个简洁、易用的运维审计系统，支持 RDP、SSH、VNC、Telnet、HTTP 等远程访问协议，帮助团队集中管理资产、控制访问权限并审计操作记录。
+[Next Terminal](https://github.com/next-terminal/next-terminal) 是一个简洁、易用的运维审计系统，支持 RDP、SSH、VNC、Telnet、HTTP 等远程访问协议，帮助团队集中管理资产、控制访问权限并审计操作记录。
 
 ### Termark · 跨平台 SSH 客户端
 
