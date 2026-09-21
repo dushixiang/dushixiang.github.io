@@ -278,7 +278,7 @@ Proxy-Connection: Keep-Alive
 &lt;h2 id="我做的项目">我做的项目&lt;/h2>
 &lt;p>这些项目涵盖远程访问、运维审计、服务器监控，也有日常折腾时做的小工具。&lt;/p>
 &lt;h3 id="next-terminal--运维审计与远程访问">Next Terminal · 运维审计与远程访问&lt;/h3>
-&lt;p>&lt;a href="https://github.com/dushixiang/next-terminal">Next Terminal&lt;/a> 是一个简洁、易用的运维审计系统，支持 RDP、SSH、VNC、Telnet、HTTP 等远程访问协议，帮助团队集中管理资产、控制访问权限并审计操作记录。&lt;/p>
+&lt;p>&lt;a href="https://github.com/next-terminal/next-terminal">Next Terminal&lt;/a> 是一个简洁、易用的运维审计系统，支持 RDP、SSH、VNC、Telnet、HTTP 等远程访问协议，帮助团队集中管理资产、控制访问权限并审计操作记录。&lt;/p>
 &lt;h3 id="termark--跨平台-ssh-客户端">Termark · 跨平台 SSH 客户端&lt;/h3>
 &lt;p>&lt;a href="https://www.termark.app">Termark&lt;/a> 面向日常连接和管理服务器的开发者，支持 macOS、Windows、Linux、iOS 和 Android。它将资产管理、终端会话、文件传输与 AI 辅助操作整合在一起，让桌面和移动端的远程工作更方便。&lt;/p>
 &lt;h3 id="pika--轻量级监控与安全检查">Pika · 轻量级监控与安全检查&lt;/h3>
