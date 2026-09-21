@@ -273,16 +273,28 @@ Host: baidu.com
 User-Agent: curl/8.7.1
 Accept: */*
 Proxy-Connection: Keep-Alive
-&lt;/code>&lt;/pre>&lt;p>第一行是 &lt;code>ncat&lt;/code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。&lt;/p></description></item><item><title>about</title><link>https://www.typesafe.cn/about/</link><pubDate>Wed, 01 Jan 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/about/</guid><description>&lt;p>你好，我是杜世翔，从事安全开发工作。&lt;/p>
-&lt;p>我主要使用 Golang，对 Java、JavaScript、Python 也比较熟悉。&lt;/p>
-&lt;hr>
-&lt;p>我开发了 &lt;a href="https://github.com/dushixiang/next-terminal">Next Terminal&lt;/a> ，一个简洁、安全、易用的运维审计系统，支持多种远程访问协议，包括 RDP、SSH、VNC、Telnet、HTTP 等，适用于企业级运维场景。&lt;/p>
-&lt;hr>
-&lt;p>以下是我开源的其他几个项目：&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>第一行是 &lt;code>ncat&lt;/code> 输出的信息，可以忽略。后面的内容完全是 HTTP 协议的数据。&lt;/p></description></item><item><title>关于我</title><link>https://www.typesafe.cn/about/</link><pubDate>Wed, 01 Jan 2025 23:36:35 +0800</pubDate><guid>https://www.typesafe.cn/about/</guid><description>&lt;p>你好，我是杜世翔，一名从事安全开发的程序员，也是一些开源项目和独立产品的作者。&lt;/p>
+&lt;p>我主要使用 Go，也熟悉 Java、JavaScript 和 Python。平时关注安全、Linux、网络和运维工具，喜欢从实际需求出发，把遇到的问题做成可用的工具，再慢慢打磨。&lt;/p>
+&lt;h2 id="我做的项目">我做的项目&lt;/h2>
+&lt;p>这些项目涵盖远程访问、运维审计、服务器监控，也有日常折腾时做的小工具。&lt;/p>
+&lt;h3 id="next-terminal--运维审计与远程访问">Next Terminal · 运维审计与远程访问&lt;/h3>
+&lt;p>&lt;a href="https://github.com/dushixiang/next-terminal">Next Terminal&lt;/a> 是一个简洁、易用的运维审计系统，支持 RDP、SSH、VNC、Telnet、HTTP 等远程访问协议，帮助团队集中管理资产、控制访问权限并审计操作记录。&lt;/p>
+&lt;h3 id="termark--跨平台-ssh-客户端">Termark · 跨平台 SSH 客户端&lt;/h3>
+&lt;p>&lt;a href="https://www.termark.app">Termark&lt;/a> 面向日常连接和管理服务器的开发者，支持 macOS、Windows、Linux、iOS 和 Android。它将资产管理、终端会话、文件传输与 AI 辅助操作整合在一起，让桌面和移动端的远程工作更方便。&lt;/p>
+&lt;h3 id="pika--轻量级监控与安全检查">Pika · 轻量级监控与安全检查&lt;/h3>
+&lt;p>&lt;a href="https://github.com/pika-monitor/pika">Pika&lt;/a> 是一个轻量级探针监控系统，提供服务器实时指标、历史数据和服务可用性检查，也支持 Linux 安全审计、基线检查与文件防篡改监控，方便及时发现运行异常和安全风险。&lt;/p>
+&lt;h3 id="其他开源工具">其他开源工具&lt;/h3>
 &lt;ul>
-&lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a>&lt;/strong> 一个美观简洁且强大的kafka web管理工具。&lt;/li>
-&lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/4dnat">4dnat&lt;/a>&lt;/strong> 一个专门为目的地址转发而服务的工具。&lt;/li>
-&lt;/ul></description></item><item><title>记一次曲折的N1盒子重装系统经历</title><link>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</link><pubDate>Sun, 28 Jan 2024 19:31:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</guid><description>&lt;h2 id="为什么要重装系统">为什么要重装系统？&lt;/h2>
+&lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/kafka-map">kafka-map&lt;/a>&lt;/strong>：简洁易用的 Kafka Web 管理工具，方便在浏览器中管理和查看 Kafka。&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/uart_sms_forwarder">uart_sms_forwarder&lt;/a>&lt;/strong>：基于合宙 Air780 系列设备的短信转发工具，支持短信收发、记录和来电通知，可通过钉钉、企业微信、飞书、Webhook 和邮箱推送消息。&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://github.com/dushixiang/4dnat">4dnat&lt;/a>&lt;/strong>：专注于目的地址转发的工具，用于网络转发场景。&lt;/li>
+&lt;/ul>
+&lt;h2 id="这个博客">这个博客&lt;/h2>
+&lt;p>这里记录我在开发和折腾过程中的实践：安全研究、Go 与 Java、Linux 网络与虚拟化，以及个人项目的设计、迭代和踩坑经历。也会聊聊维护开源项目、尝试产品商业化的体会。&lt;/p>
+&lt;p>希望这些记录既能帮未来的自己少走弯路，也能给遇到类似问题的人一些参考。&lt;/p>
+&lt;p>你可以在 &lt;a href="https://github.com/dushixiang">GitHub&lt;/a> 找到我的更多项目，也欢迎通过相应项目的 Issue 交流问题和建议。&lt;/p>
+&lt;blockquote>
+&lt;p>成为你自己。&lt;/p>&lt;/blockquote></description></item><item><title>记一次曲折的N1盒子重装系统经历</title><link>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</link><pubDate>Sun, 28 Jan 2024 19:31:00 +0800</pubDate><guid>https://www.typesafe.cn/posts/phicomm-n1-system-reinstallation/</guid><description>&lt;h2 id="为什么要重装系统">为什么要重装系统？&lt;/h2>
 &lt;p>倒不是为了折腾，而是我手上这台斐讯 N1 盒子（armbian系统）在上个月让我不小心 &lt;code>rm -rf /&lt;/code> 全给删除了，等我反应过来的时候已经为时已晚。&lt;/p>
 &lt;p>由于 Linux 系统的特性，我运行的程序只要不重启系统都还能正常使用，我也懒得立刻处理，就这样挺到了现在。终于在本周五下班之后我心血来潮，准备给它重装一个系统，但没有想到让我花费了将近10个小时。&lt;/p>
 &lt;h2 id="第一个坑垃圾百度云盘下载速度感人">第一个坑，垃圾百度云盘下载速度感人&lt;/h2>
